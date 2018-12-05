@@ -11,6 +11,7 @@ const COMPONENTS = {
     Tree: require('../../view/app/resources/tree'),
     Catalog: require('../../view/ui/catalog'),
     Info: require('../../view/ui/info'),
+    Stats: require('../../view/ui/stats'),
     Attic: require('../../view/app/building/attic'),
     Barrack: require('../../view/app/building/barrack'),
     House: require('../../view/app/building/house'),
@@ -21,6 +22,7 @@ const COMPONENTS = {
     StoneMine: require('../../view/app/building/stoneMine'),
     WoodcutterHut: require('../../view/app/building/woodcutterHut'),
     Builder: require('../../view/app/characters/builder'),
+    
 };
 
 

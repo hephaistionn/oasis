@@ -6,6 +6,7 @@ const Ground = require('./model/app/ground');
 const pixelMap = require('./kernel/tools/pixelmap');
 const Catalog = require('./model/ui/catalog');
 const Info = require('./model/ui/info');
+const Stats = require('./model/ui/stats');
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
     Game: require('./model/app/resources/game'),
@@ -23,7 +24,6 @@ const ENTITIES = {
     Builder: require('./model/app/characters/builder'),
 };
 
-
 module.exports = class ScreenMap extends Screen {
 
     async initComponents(model) {
@@ -37,6 +37,7 @@ module.exports = class ScreenMap extends Screen {
         this.ground = new Ground(mapConfig, ENTITIES);
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
+        this.stats = new Stats();
         this.selected = null;
         this.focused = null;
 
@@ -45,6 +46,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.ground);
         this.add(this.catalog);
         this.add(this.info);
+        this.add(this.stats);
 
         this.populate(model, mapConfig);
 

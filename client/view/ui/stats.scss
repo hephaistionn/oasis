@@ -1,0 +1,10 @@
+.stats {
+    position: absolute;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    &__item {
+
+        margin: 40px;
+    }
+}
