@@ -8,7 +8,7 @@ class StoneMine extends Building {
     }
 }
 
-StoneMine.selectable = true;
+StoneMine.removable = true;
 StoneMine.description = 'This building increase the enable places for your population';
 StoneMine.tileX = 1;
 StoneMine.tileZ = 1;

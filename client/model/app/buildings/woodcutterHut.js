@@ -8,7 +8,7 @@ class WoodcutterHut extends Building {
     }
 }
 
-WoodcutterHut.selectable = true;
+WoodcutterHut.removable = true;
 WoodcutterHut.description = 'This building increase the prosperity of your city';
 WoodcutterHut.tileX = 1;
 WoodcutterHut.tileZ = 1;

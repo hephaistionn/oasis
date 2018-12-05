@@ -14,7 +14,7 @@ class House extends Building {
     }
 }
 
-House.selectable = true;
+House.removable = true;
 House.description = 'This building increase the enable places for your population';
 House.tileX = 1;
 House.tileZ = 1;

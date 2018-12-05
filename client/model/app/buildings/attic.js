@@ -8,7 +8,7 @@ class Attic extends Building {
     }
 }
 
-Attic.selectable = true;
+Attic.removable = true;
 Attic.description = 'This building increase the enable places for your population';
 Attic.tileX = 1;
 Attic.tileZ = 1;

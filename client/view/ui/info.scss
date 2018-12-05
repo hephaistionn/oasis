@@ -8,5 +8,6 @@
     &__remove {
         background: red;
         position: relative;
+        @include button;
     }
 }

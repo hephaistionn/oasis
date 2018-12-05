@@ -1,19 +1,20 @@
+const ee = require('../../kernel/tools/eventemitter');
 
-class Detail {
+class Info {
 
     constructor(conf) {
         this._id = Math.floor((1 + Math.random()) * 0x10000000000);
+        this.entity = null;
         this.opened = false;
-        this.removeCB = null;
     }
 
-    open(mod) {
-        this.mod = mod;
+    open(entity) {
+        this.entity = entity;
         this.opened = true;
-        this.refresh(mod);
+        this.refresh(entity);
     }
 
-    refresh(mod) {
+    refresh(entity) {
         this.updated = true;
     }
 
@@ -23,13 +24,12 @@ class Detail {
     }
 
     remove() {
-        this.removeCB(this.mod);
+        ee.emit('removeEntity', this.entity._id);
+        this.entity = null;
+        this.close();
     }
 
-    onRemove(cb) {
-        this.removeCB = cb;
-    }
 }
 
-Detail.ui = true;
-module.exports = Detail;
+Info.ui = true;
+module.exports = Info;

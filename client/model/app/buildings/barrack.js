@@ -8,7 +8,7 @@ class Barrack extends Building {
     }
 }
 
-Barrack.selectable = true;
+Barrack.removable = true;
 Barrack.description = 'This building increase the enable places for your population';
 Barrack.tileX = 1;
 Barrack.tileZ = 1;

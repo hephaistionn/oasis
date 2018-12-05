@@ -13,7 +13,7 @@ class Repository extends Building {
     }
 }
 
-Repository.selectable = true;
+Repository.removable = true;
 Repository.description = 'This building increase the enable places for your population';
 Repository.tileX = 1;
 Repository.tileZ = 1;

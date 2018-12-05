@@ -10,6 +10,7 @@ const COMPONENTS = {
     Stone: require('../../view/app/resources/stone'),
     Tree: require('../../view/app/resources/tree'),
     Catalog: require('../../view/ui/catalog'),
+    Info: require('../../view/ui/info'),
     Attic: require('../../view/app/building/attic'),
     Barrack: require('../../view/app/building/barrack'),
     House: require('../../view/app/building/house'),
@@ -38,6 +39,8 @@ class Screen {
         this.raycaster = new THREE.Raycaster();
         this._px = null;
         this._pz = null;
+        this._sx = null;
+        this._sz = null;
         this._selecting = false;
         this.events = {};
         this._components = new Map();
@@ -132,14 +135,18 @@ class Screen {
             const point = intersects[0].point;
             const mesh = intersects[0].object;
             const id = mesh.name;
-            const event = {
-                x: point.x,
-                z: point.z,
-                data: mesh.userData
-            };
-            this._selecting = true;
-            ee.emit('onSelect', id);
+            if (id) {
+                const event = {
+                    x: point.x,
+                    z: point.z,
+                    data: mesh.userData
+                };
+                this._selecting = true;
+                ee.emit('onSelect', id);
+                return true;
+            }
         }
+        return false;
     }
 
     initObservers() {
@@ -176,8 +183,8 @@ class Screen {
     };
 
     _mouseDown(e) {
-        this._selecting = false;
-        this.checkCollision(e.offsetX, e.offsetY);
+        this._sx = e.offsetX;
+        this._sz = e.offsetY;
         const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
         if (!point) return;
         this._px = point.x;
@@ -188,13 +195,17 @@ class Screen {
 
     _mouseUp(e) {
         //la souris ne bouge pas et ne vient de selectionner
-        if (this._px === e.offsetX && this._pz === e.offsetY && this._selecting === false) {
-            ee.emit('mouseClick', e.offsetX, e.offsetY);
+        if (this._sx === e.offsetX && this._sz === e.offsetY) {
+            if (!this.checkCollision(e.offsetX, e.offsetY)) {
+                ee.emit('mouseClick', e.offsetX, e.offsetY);
+            }
         } else {
             ee.emit('mouseUp', e.offsetX, e.offsetY);
         }
         this._px = null;
         this._pz = null;
+        this._sx = null;
+        this._sz = null;
         e.preventDefault();
     }
 

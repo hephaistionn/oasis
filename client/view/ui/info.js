@@ -1,34 +1,29 @@
-module.exports = class Detail {
+module.exports = class Info {
 
     constructor(model, parent) {
 
         this.node = document.createElement('div');
-        this.node.className = 'detail';
+        this.node.className = 'info';
 
-        this.buttonRemove = null;
-        this.buttonHire = null;
-        this.buttonDischarge = null;
-
+        this.buttonRemove = document.createElement('div');
+        this.buttonRemove.className = 'info__remove';
+        this.buttonRemove.textContent = 'remove';
+        this.buttonRemove.onclick = model.remove.bind(model);
+        
         this.add(parent);
 
         this.update(0, model);
     }
 
     update(dt, model) {
-        if (this.buttonRemove) {
+        if(model.entity && model.entity.constructor.removable) {
+            this.node.appendChild(this.buttonRemove);
+        } else if(this.buttonRemove.parentNode == this.node) {
             this.node.removeChild(this.buttonRemove);
-            this.buttonRemove = null;
         }
 
         if (model.opened) {
             this.node.style.display = '';
-            if (model.mod.removable) {
-                this.buttonRemove = document.createElement('div');
-                this.buttonRemove.className = 'button detail__remove';
-                this.buttonRemove.textContent = 'remove';
-                this.buttonRemove.onclick = model.remove.bind(model);
-                this.node.appendChild(this.buttonRemove);
-            }
         } else {
             this.node.style.display = 'none';
         }

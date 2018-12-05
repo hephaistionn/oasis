@@ -5,6 +5,7 @@ const Light = require('./model/app/light');
 const Ground = require('./model/app/ground');
 const pixelMap = require('./kernel/tools/pixelmap');
 const Catalog = require('./model/ui/catalog');
+const Info = require('./model/ui/info');
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
     Game: require('./model/app/resources/game'),
@@ -19,14 +20,13 @@ const ENTITIES = {
     Repository: require('./model/app/buildings/repository'),
     StoneMine: require('./model/app/buildings/stoneMine'),
     WoodcutterHut: require('./model/app/buildings/woodcutterHut'),
-    Builder: require('./model/app/characters/builder')
+    Builder: require('./model/app/characters/builder'),
 };
 
 
 module.exports = class ScreenMap extends Screen {
 
     async initComponents(model) {
-
         const mapConfig = await pixelMap.compute('map/map00.png', ENTITIES);
 
         const centerX = mapConfig.nbTileX * mapConfig.tileSize / 2;
@@ -36,6 +36,7 @@ module.exports = class ScreenMap extends Screen {
         this.light = new Light({ x: 20, y: 100, z: -20 });
         this.ground = new Ground(mapConfig, ENTITIES);
         this.catalog = new Catalog(mapConfig);
+        this.info = new Info();
         this.selected = null;
         this.focused = null;
 
@@ -43,6 +44,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.light);
         this.add(this.ground);
         this.add(this.catalog);
+        this.add(this.info);
 
         this.populate(model, mapConfig);
 
@@ -82,7 +84,7 @@ module.exports = class ScreenMap extends Screen {
     removeEntity(entityId) {
         const entity = this.get(entityId);
         if(!entity) return;
-        ground.setWalkable(entity, 1);
+        this.ground.setWalkable(entity, 1);
         this.remove(entity);
     }
 
@@ -96,7 +98,7 @@ module.exports = class ScreenMap extends Screen {
     }
 
     onSelect(id) {
-        console.log(id)
+        if (this.selected) return;
         const entity = this.get(id);
         if(entity) {
             if(this.focused) {
@@ -104,22 +106,15 @@ module.exports = class ScreenMap extends Screen {
             }
             this.focused = entity;
             this.focused.select(true);
+            this.info.open(entity);
         }
-
     }
 
     onMouseClick()  {
         if(this.focused) {
             this.focused.select(false);
+            this.info.close();
         }
-    }
-
-    onUnselect() {
-        this.remove(this.selected);
-        this.selected = null;
-    }
-
-    onMouseUp(x, y) {
         if (this.selected) {
             const tiles = this.selected.getTiles();
             if (this.ground.isWalkable(tiles)) {
@@ -133,6 +128,15 @@ module.exports = class ScreenMap extends Screen {
                 this.onUnselect()
             }
         }
+    }
+
+    onUnselect() {
+        this.remove(this.selected);
+        this.selected = null;
+    }
+
+    onMouseUp(x, y) {
+
     }
 
     onMouseMove(x, y, z) {

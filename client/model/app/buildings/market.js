@@ -21,7 +21,7 @@ class Market extends Building {
 
 }
 
-Market.selectable = true;
+Market.removable = true;
 Market.description = 'This building increase the prosperity of your city';
 Market.tileX = 1;
 Market.tileZ = 1;
