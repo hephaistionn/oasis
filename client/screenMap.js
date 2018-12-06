@@ -157,18 +157,6 @@ module.exports = class ScreenMap extends Screen {
         }
     }
 
-    onMouseDown(x, y) {
-        this.camera.draggStart();
-    }
-
-    onMouseMovePress(dx, dy) {
-        this.camera.dragg(dx, dy);
-    }
-
-    onMouseWheel(delta) {
-        this.camera.scale(delta);
-    }
-
     onDismount() {
         this.store.dismount();   
     }

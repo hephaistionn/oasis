@@ -1,4 +1,5 @@
 const Entity = require('../../kernel/model/entity');
+const ee = require('../../kernel/tools/eventemitter');
 
 module.exports = class Camera extends Entity {
 
@@ -24,6 +25,10 @@ module.exports = class Camera extends Entity {
         this.minZ = this.az - config.rangeZ;
         this.maxX = this.ax + config.rangeX;
         this.maxZ = this.az + config.rangeZ;
+
+        ee.on('mouseDown', this.draggStart.bind(this));
+        ee.on('mouseMovePress', this.dragg.bind(this));
+        ee.on('mouseWheel', this.scale.bind(this));
     }
 
     look(x, y, z) {
@@ -64,5 +69,11 @@ module.exports = class Camera extends Entity {
         let newx = this._ix + dx;
         let newz = this._iz + dz;
         this.move(newx, this.y, newz);
+    }
+
+    onDismount() {
+        ee.off('mouseDown', this.draggStart.bind(this));
+        ee.off('mouseMovePress', this.dragg.bind(this));
+        ee.off('mouseWheel', this.scale.bind(this));
     }
 }
