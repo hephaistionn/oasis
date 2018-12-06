@@ -7,6 +7,8 @@ const pixelMap = require('./kernel/tools/pixelmap');
 const Catalog = require('./model/ui/catalog');
 const Info = require('./model/ui/info');
 const Stats = require('./model/ui/stats');
+const Store = require('./kernel/tools/store');
+
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
     Game: require('./model/app/resources/game'),
@@ -38,6 +40,7 @@ module.exports = class ScreenMap extends Screen {
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
         this.stats = new Stats();
+        this.store  = new Store();
         this.selected = null;
         this.focused = null;
 
@@ -50,6 +53,9 @@ module.exports = class ScreenMap extends Screen {
 
         this.populate(model, mapConfig);
 
+        this.store.watch(ENTITIES.Repository.instances);
+        this.store.watch(ENTITIES.Attic.instances);
+        this.store.watch(ENTITIES.House.instances);
     }
 
     update(dt) {
@@ -149,7 +155,6 @@ module.exports = class ScreenMap extends Screen {
             const dropable = this.ground.isWalkable(tiles);
             this.selected.setDropable(dropable);
         }
-
     }
 
     onMouseDown(x, y) {
@@ -162,6 +167,10 @@ module.exports = class ScreenMap extends Screen {
 
     onMouseWheel(delta) {
         this.camera.scale(delta);
+    }
+
+    onDismount() {
+        this.store.dismount();   
     }
 
 };

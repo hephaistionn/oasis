@@ -1,3 +1,4 @@
+const Stats = require('./stats');
 
 class Resource {
 
@@ -11,6 +12,7 @@ class Resource {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this.move(config.x || 0, config.y || 0, config.z || 0, config.a || Math.floor(Math.random() * 3.99) * Math.PI);
         this.constructor.instances.push(this);
+        this.stats = new Stats(config, false);
     }
 
     move(x, y, z, a) {

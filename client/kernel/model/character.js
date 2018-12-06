@@ -1,6 +1,7 @@
 const ee = require('../tools/eventemitter');
 const pathfinding = require('../tools/pathfinding/index');
 const Path = require('../tools/path');
+const Stats = require('./stats');
 
 class Character {
     
@@ -18,6 +19,7 @@ class Character {
         this.pathProgress = 0;
         this.pathStep = 0;
         this.selected = false;
+        this.stats = new Stats(config, false);
     }
 
     select(selected) {

@@ -54,6 +54,9 @@ module.exports = class Screen {
     dismount() {
         ee.off('onNewEntity', this.adding.bind(this));
         ee.off('onRemoveEntity', this.removing.bind(this));
+        if(this.onDismount) {
+            this.onDismount();
+        }
     }
 
 }

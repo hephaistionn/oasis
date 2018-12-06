@@ -1,4 +1,5 @@
 const ee = require('../tools/eventemitter');
+const Stats = require('./stats');
 
 class Building {
     
@@ -19,6 +20,7 @@ class Building {
         this.undroppable = false;
         this.selected = false;
         this.updated = true;
+        this.stats = new Stats(config, true);
     }
 
     move(x, y, z, roty) {
