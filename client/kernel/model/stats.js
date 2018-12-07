@@ -1,36 +1,38 @@
 const ee = require('./../tools/eventemitter');
 const eventState = 'onUpdateStats';
 
-module.exports = class Stats {
-    
+const Stats = class Stats {
+
     constructor(config, watched) {
-        this.wood = config.wood || 0;
-        this.store = config.store || 0;
-        this.berry = config.berry || 0;
-        this.pop = config.pop || 0;
+            this[this.constructor.WOOD] = 0;
+            this[this.constructor.STONE] = 0;
+            this[this.constructor.BERRY] = 0;
+            this[this.constructor.POP] = 0;
+            this.watched = watched;
     }
 
-    setWood(wood) {
-        this.wood = wood;
-        if(this.watched)
+    pull(TYPE, value) {
+        const available = this[TYPE]-Math.max(this[TYPE] - value, 0);
+        this[TYPE] -= available;
+        if (this.watched)
+            ee.emit(eventState);
+        return available;
+    }
+
+    push(TYPE, value) {
+        this[TYPE] += value;
+        if (this.watched)
             ee.emit(eventState);
     }
 
-    setStore(store) {
-        this.store = store;
-        if(this.watched)
-            ee.emit(eventState);
-    }
-
-    setBerry(berry) {
-        this.berry = berry;
-        if(this.watched)
-            ee.emit(eventState);
-    }
-
-    setPop(pop) {
-        this.wood = pop;
-        if(this.watched)
-            ee.emit(eventState);
+    set(TYPE, value) {
+        this[TYPE] = value;
     }
 };
+
+Stats.WOOD = 0;
+Stats.STONE = 1;
+Stats.BERRY = 2;
+Stats.POP = 3;
+
+module.exports = Stats;

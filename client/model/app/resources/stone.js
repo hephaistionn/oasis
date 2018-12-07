@@ -1,11 +1,13 @@
 const Resource = require('../../../kernel/model/resource');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
+const STONE = 1;
 class Stone extends Resource {
 
-    constructor(params, ground) {
-        super(params, ground);
-        this.stone = 100;
+    constructor(config, ground) {
+        super(config, ground);
+        this.stats.set(Stats.STONE, config.stone || 10000);
     }
 }
 Stone.selectable = false;

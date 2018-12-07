@@ -1,25 +1,19 @@
 const Resource = require('../../../kernel/model/resource');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Tree extends Resource {
 
-    constructor(params, ground) {
-        super(params, ground);
-        this.wood = params.wood || 10000;
-    }
-
-    deductRessource(value) {
-        this.updated = true;
-        const quantity = Math.min(value, this.wood);
-        this.wood -= value;
-        return quantity;
+    constructor(config, ground) {
+        super(config, ground);
+        this.stats.set(Stats.WOOD, config.wood || 10000);
     }
 
     getWorkerSlot() {
         const a = Math.random() * Math.PI * 2;
         const x = this.ax + Math.cos(a) * 0.35;
         const z = this.az + Math.sin(a) * 0.35;
-        return {x: x, y: this.ay, z: z, a: a+Math.PI}
+        return { x: x, y: this.ay, z: z, a: a + Math.PI }
     }
 
 }

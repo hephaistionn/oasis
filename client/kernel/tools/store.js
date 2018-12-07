@@ -1,16 +1,13 @@
 const ee = require('./eventemitter');
+const Stats = require('../model/stats');
 
 module.exports = class Store  {
 
     constructor(config) {
-      this.states = {
-          wood: 0,
-          stone: 0,
-          berry: 0,
-          pop: 0
-      };
+    
+      this.stats = new Stats();
       this.instancesGroup = [];
-      ee.off('onUpdateStats', this.refreshStats.bind(this));
+      ee.on('onUpdateStats', this.refreshStats.bind(this));
     }
 
 	watch(instances) {
@@ -18,10 +15,10 @@ module.exports = class Store  {
     }
     
     refreshStats() {
-        this.states.wood = 0;
-        this.states.stone = 0;
-        this.states.berry = 0;
-        this.states.pop = 0;
+        this.stats.set(Stats.WOOD, 0);
+        this.stats.set(Stats.STONE, 0);
+        this.stats.set(Stats.BERRY, 0);
+        this.stats.set(Stats.POP, 0);
         let instances;
         let instance;
         let i, k;
@@ -29,10 +26,10 @@ module.exports = class Store  {
             instances = this.instancesGroup[i];
             for(let k=0; k<instances.length; k++) {
                 instance = instances[k];
-                this.states.wood += instance.stats.wood;
-                this.states.stone += instance.stats.stone;
-                this.states.berry += instance.stats.berry;
-                this.stares.pop += instance.stats.pop;
+                this.stats[Stats.WOOD] += instance.stats[Stats.WOOD];
+                this.stats[Stats.STONE] += instance.stats[Stats.STONE];
+                this.stats[Stats.BERRY] += instance.stats[Stats.BERRY];
+                this.stats[Stats.POP] += instance.stats[Stats.POP];
             }
         }
     }

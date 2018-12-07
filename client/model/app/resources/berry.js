@@ -1,11 +1,12 @@
 const Resource = require('../../../kernel/model/resource');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Berry extends Resource {
 
-    constructor(params, ground) {
-        super(params, ground);
-        this.berry = 100;
+    constructor(config, ground) {
+        super(config, ground);
+        this.stats.set(Stats.BERRY, config.berry || 100);
     }
 }
 Berry.selectable = false;

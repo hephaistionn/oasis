@@ -1,10 +1,11 @@
 const Resource = require('../../../kernel/model/resource');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Game extends Resource {
 
-    constructor(params, ground) {
-        super(params, ground);
+    constructor(config, ground) {
+        super(config, ground);
         this.stone = 100;
     }
 }

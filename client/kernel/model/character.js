@@ -5,7 +5,7 @@ const Stats = require('./stats');
 const removeEntityEvent = 'removeEntity';
 
 class Character {
-    
+
     constructor(config, ground) {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this._parent = null;
@@ -50,9 +50,9 @@ class Character {
         for (let i = 0; i < this.targets.length; i++) {
             target = this.targets[i];
 
-            if(target.id) {
+            if (target.id) {
                 instanceTargets = [this.ground.getEntity(target.id)];
-                targetTiles =  [instanceTargets[0].getTiles()];
+                targetTiles = [instanceTargets[0].getTiles()];
             } else if (target.entity) {
                 instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az);
                 targetTiles = instanceTargets.map(instance => instance.getTiles());
@@ -76,19 +76,19 @@ class Character {
                 ee.emit(removeEntityEvent, this._id);
                 break;
             }
-
-
-
         }
     }
 
     update(dt) {
 
         const path = this.paths[this.pathStep];
-        if(this.pathProgress === 0) {
-            const entity  = this.ground.getEntity(path.originId);
-            if(!entity) ee.emit(removeEntityEvent, this._id);
-            this.onStartPath(entity);
+        if (this.pathProgress === 0) {
+            const entity = this.ground.getEntity(path.originId);
+            if (!entity) {
+                ee.emit(removeEntityEvent, this._id);
+            } else {
+                this.onStartPath(entity);
+            }
         }
         this.pathProgress += dt * 0.005;
         this.updated = true;
@@ -96,10 +96,13 @@ class Character {
             this.pathProgress = Math.min(this.pathProgress, path.length);
             const pos = path.getPoint(this.pathProgress);
             this.move(pos[0], pos[1], pos[2], pos[3]);
-            const entity  = this.ground.getEntity(path.targetId);
-            if(!entity) ee.emit(removeEntityEvent, this._id);
-            this.onEndPath(entity);
-            if(this.pathStep < this.paths.length - 1) {
+            const entity = this.ground.getEntity(path.targetId);
+            if (!entity) {
+                ee.emit(removeEntityEvent, this._id);
+            } else {
+                this.onEndPath(entity);
+            }
+            if (this.pathStep < this.paths.length - 1) {
                 this.pathStep++
                 this.pathProgress = 0;
             } else {

@@ -40,8 +40,8 @@ module.exports = class ScreenMap extends Screen {
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
-        this.stats = new Stats();
         this.store  = new Store();
+        this.stats = new Stats({}, this.store);
         this.drafted = null;
         this.focused = null;
 
@@ -56,7 +56,7 @@ module.exports = class ScreenMap extends Screen {
 
         this.store.watch(ENTITIES.Repository.instances);
         this.store.watch(ENTITIES.Attic.instances);
-        this.store.watch(ENTITIES.House.instances);
+        this.store.watch(ENTITIES.ForestHut.instances);
     }
 
     update(dt) {
