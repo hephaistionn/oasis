@@ -27,9 +27,11 @@ module.exports = class Screen {
     }
 
     remove(component) {
-        ee.emit('onRemoveEntity', component);
-        if (component.onDismount) {
-            component.onDismount();
+        if(component) {
+            ee.emit('onRemoveEntity', component);
+            if (component.onDismount) {
+                component.onDismount();
+            }
         }
     }
 

@@ -3,7 +3,7 @@ const Stats = require('./stats');
 
 class Building {
     
-    constructor(config) {
+    constructor(config, ground) {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this._parent = null;
         this._child = [];
@@ -22,6 +22,7 @@ class Building {
         this.updated = true;
         this.stats = new Stats(config, true);
         this.constructor.instances.push(this);
+        this.ground = ground;
     }
 
     move(x, y, z, roty) {
@@ -93,19 +94,38 @@ class Building {
         ee.emit('onRemoveEntity', child);
     }
 
-    setDropable(dropable) {
-        this.undroppable = !dropable;
+    startConstruct() {
+        if(this.drafted) {
+            ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az,
+                 type: this.constructor.name, builded: true });
+            ee.emit('removeEntity', this._id);
+        }
+    }
+    
+    isWalkable() {
+        const tiles = this.getTiles();
+        return this.ground.isWalkable(tiles);
     }
 
     onMove() {
-
+        if(this.drafted)  {
+            const tiles = this.getTiles();
+            const dropable = this.ground.isWalkable(tiles);
+            this.undroppable = !dropable;
+        }
     }
 
     onMount(parent) {
+        if(!this.drafted) {
+            if (this.constructor.walkable !== undefined) {
+                this.ground.setWalkable(this);
+            }
+        }
         this._parent = parent;
     }
 
     onDismount() {
+        this.ground.setWalkable(this, 1);
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
         this._child.forEach((children) => {

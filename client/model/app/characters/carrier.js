@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class Carrier extends Character {
 
-    constructor(params) {
-        super(params);
+    constructor(params, ground) {
+        super(params, ground);
     }
 
 }

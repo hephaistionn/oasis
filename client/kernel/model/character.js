@@ -5,7 +5,7 @@ const Stats = require('./stats');
 
 class Character {
     
-    constructor(config) {
+    constructor(config, ground) {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this._parent = null;
         this._child = [];
@@ -21,6 +21,7 @@ class Character {
         this.selected = false;
         this.stats = new Stats(config, false);
         this.constructor.instances.push(this);
+        this.ground = ground;
     }
 
     select(selected) {
@@ -37,7 +38,8 @@ class Character {
         this.onMove();
     }
 
-    buildPaths(ground) {
+    buildPaths() {
+        const ground = this.ground;
         this.paths = [];
         let target, instanceTargets, targetTiles, originTile, path;
         const origin = [Math.floor(this.ax / ground.tileSize), Math.floor(this.az / ground.tileSize)];
@@ -65,6 +67,9 @@ class Character {
     }
 
     update(dt) {
+        if(this.pathProgress === 0) {
+            this.onStartPath();
+        }
         const path = this.paths[this.pathStep];
         this.pathProgress += dt * 0.005;
         this.updated = true;
@@ -72,12 +77,25 @@ class Character {
             this.pathProgress = Math.min(this.pathProgress, path.length);
             const pos = path.getPoint(this.pathProgress);
             this.move(pos[0], pos[1], pos[2], pos[3]);
-            this.pathStep = this.pathStep < this.paths.length - 1 ? this.pathStep + 1 : 0;
-            this.pathProgress = 0
+            this.onEndPath();
+            if(this.pathStep < this.paths.length - 1) {
+                this.pathStep++
+                this.pathProgress = 0;
+            } else {
+                ee.emit('removeEntity', this._id);
+            }
         } else {
             const pos = path.getPoint(this.pathProgress);
             this.move(pos[0], pos[1], pos[2], pos[3]);
         }
+    }
+
+    onStartPath() {
+        console.log('onStartPath');
+    }
+
+    onEndPath() {
+        console.log('onEndPath');
     }
 
     onMove() {
@@ -85,6 +103,9 @@ class Character {
     }
 
     onMount(parent) {
+        if (this.targets) {
+            this.buildPaths();
+        }
         this._parent = parent;
     }
 

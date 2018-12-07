@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class Tree extends Resource {
 
-    constructor(params) {
-        super(params);
+    constructor(params, ground) {
+        super(params, ground);
         this.wood = params.wood || 10000;
     }
 

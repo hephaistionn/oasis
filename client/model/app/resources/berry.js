@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class Berry extends Resource {
 
-    constructor(params) {
-        super(params);
+    constructor(params, ground) {
+        super(params, ground);
         this.berry = 100;
     }
 }

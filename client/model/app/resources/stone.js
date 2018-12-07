@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class Stone extends Resource {
 
-    constructor(params) {
-        super(params);
+    constructor(params, ground) {
+        super(params, ground);
         this.stone = 100;
     }
 }

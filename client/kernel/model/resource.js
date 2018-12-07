@@ -2,7 +2,7 @@ const Stats = require('./stats');
 
 class Resource {
 
-    constructor(config) {
+    constructor(config, ground) {
         this.ax = 0;
         this.ay = 0;
         this.az = 0;
@@ -13,6 +13,7 @@ class Resource {
         this.move(config.x || 0, config.y || 0, config.z || 0, config.a || Math.floor(Math.random() * 3.99) * Math.PI);
         this.constructor.instances.push(this);
         this.stats = new Stats(config, false);
+        this.ground = ground;
     }
 
     move(x, y, z, a) {
@@ -34,7 +35,15 @@ class Resource {
         return [this.ax / tileSize - 0.5, this.az / tileSize - 0.5];
     }
 
+    onMount(parent) {
+        if (this.constructor.walkable !== undefined) {
+            this.ground.setWalkable(this);
+        }
+        this._parent = parent;
+    }
+
     onDismount() {
+        this.ground.setWalkable(this, 1);
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
         this._child.forEach((children) => {

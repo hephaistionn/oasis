@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class StoneMine extends Building {
 
-    constructor(config) {
-        super(config);
+    constructor(config, ground) {
+        super(config, ground);
     }
 }
 

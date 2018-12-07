@@ -42,7 +42,7 @@ module.exports = class ScreenMap extends Screen {
         this.info = new Info();
         this.stats = new Stats();
         this.store  = new Store();
-        this.selected = null;
+        this.drafted = null;
         this.focused = null;
 
         this.add(this.camera);
@@ -80,34 +80,22 @@ module.exports = class ScreenMap extends Screen {
     }
 
     addEntity(config) {
-        const entity = new ENTITIES[config.type](config);
+        const entity = new ENTITIES[config.type](config, this.ground);
         this.add(entity);
-        if (entity.constructor.walkable !== undefined) {
-            this.ground.setWalkable(entity);
-        }
-        if (entity.targets) {
-            entity.buildPaths(this.ground);
-        }
     }
 
     removeEntity(entityId) {
         const entity = this.get(entityId);
-        if(!entity) return;
-        this.ground.setWalkable(entity, 1);
         this.remove(entity);
     }
 
     onDraftEntity(config) {
-        this.selected = new ENTITIES[config.type](config);
-        this.add(this.selected);
-    }
-
-    onUndraftEntity(config) {
-        this.remove(this.selected);
+        this.drafted = new ENTITIES[config.type](config, this.ground);
+        this.add(this.drafted);
     }
 
     onSelect(id) {
-        if (this.selected) return;
+        if (this.drafted) return;
         const entity = this.get(id);
         if(entity) {
             if(this.focused) {
@@ -124,33 +112,16 @@ module.exports = class ScreenMap extends Screen {
             this.focused.select(false);
             this.info.close();
         }
-        if (this.selected) {
-            const tiles = this.selected.getTiles();
-            if (this.ground.isWalkable(tiles)) {
-                this.addEntity({
-                    type: this.selected.constructor.name,
-                    x: this.selected.ax,
-                    y: this.selected.ay,
-                    z: this.selected.az,
-                    builded: true
-                });
-                this.onUnselect()
-            }
+        if (this.drafted, this.drafted.isWalkable()) {
+            this.drafted.startConstruct()
+            this.drafted = null;
         }
     }
 
-    onUnselect() {
-        this.remove(this.selected);
-        this.selected = null;
-    }
-
     onMouseMove(x, y, z) {
-        if (this.selected) {
+        if (this.drafted) {
             const tile = this.ground.getTile(x, z);
-            this.selected.move(tile.x, tile.y, tile.z);
-            const tiles = this.selected.getTiles();
-            const dropable = this.ground.isWalkable(tiles);
-            this.selected.setDropable(dropable);
+            this.drafted.move(tile.x, tile.y, tile.z);
         }
     }
 
