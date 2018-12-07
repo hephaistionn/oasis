@@ -2,7 +2,7 @@ const pathfinding = require('../../kernel/tools/pathfinding');
 
 module.exports = class Ground {
 
-    constructor(config, ENTITIES) {
+    constructor(config, ENTITIES, entities) {
         this.nbPointX = config.nbPointX;
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
@@ -17,6 +17,7 @@ module.exports = class Ground {
         this.canvasColor = config.canvas;
         this.spawns = config.spawns;
         this.ENTITIES = ENTITIES;
+        this.entities = entities;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.updated = false;
         this._id = 2;
@@ -79,6 +80,10 @@ module.exports = class Ground {
             y: y,
             z: (zi + 0.5) * this.tileSize
         }
+    }
+
+    getEntity(id) {
+        return this.entities.get(id);
     }
 
     getSpawnerTile() {

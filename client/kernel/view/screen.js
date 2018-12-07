@@ -20,7 +20,7 @@ const COMPONENTS = {
     Market: require('../../view/app/building/market'),
     Repository: require('../../view/app/building/repository'),
     StoneMine: require('../../view/app/building/stoneMine'),
-    WoodcutterHut: require('../../view/app/building/woodcutterHut'),
+    ForestHut: require('../../view/app/building/forestHut'),
     Builder: require('../../view/app/characters/builder'),
     Lumberjack: require('../../view/app/characters/lumberjack'),
     

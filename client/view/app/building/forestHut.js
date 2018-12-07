@@ -3,7 +3,7 @@ const materialSelect = require('../../app/material/materialSelect');
 const THREE = require('three');
 const Building = require('../../../kernel/view/building');
 
-module.exports = class WoodcutterHut extends Building {
+module.exports = class ForestHut extends Building {
 
 
 	initMesh(model) {

@@ -32,10 +32,12 @@ function computePath(ground, originTile, targetTiles) {
         solutions.push(finder.findPathBetweenArea(originTile, targetTile, grid, tileType));
     }
 
+    let solutionIndex = 0;
     let solution = solutions[0];
     for (i = 1; i < solutions.length; i++) {
         if (solution.length > solutions[i].length) {
             solution = solutions[i];
+            solutionIndex = i;
         }
     }
 
@@ -50,7 +52,7 @@ function computePath(ground, originTile, targetTiles) {
         solution[i + 2];
     }
 
-    return solution;
+    return {path:solution, index: solutionIndex};
 }
 
 function getPathLength(path) {

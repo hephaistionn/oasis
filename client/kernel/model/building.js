@@ -83,7 +83,7 @@ class Building {
     }
 
     spawnCharacter(typeCharacter) {
-        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: typeCharacter });
+        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: typeCharacter, origin: this._id });
     }
 
     remove(child) {

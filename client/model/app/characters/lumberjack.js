@@ -5,8 +5,16 @@ class Lumberjack extends Character {
 
     constructor(params, ground) {
         super(params, ground);
-        this.targets.push({entity:'Tree', resource: 'wood'});
-        this.targets.push({});
+        this.targets.push({entity: 'Tree', resource: 'wood'});
+        this.targets.push({id  : this.origin});
+    }
+
+    onEndPath(entity) {
+        debugger;
+    }
+
+    onStartPath(entity) {
+        debugger;
     }
 
 }

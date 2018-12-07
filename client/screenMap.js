@@ -22,7 +22,7 @@ const ENTITIES = {
     Market: require('./model/app/buildings/market'),
     Repository: require('./model/app/buildings/repository'),
     StoneMine: require('./model/app/buildings/stoneMine'),
-    WoodcutterHut: require('./model/app/buildings/woodcutterHut'),
+    ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
 };
@@ -37,7 +37,7 @@ module.exports = class ScreenMap extends Screen {
 
         this.camera = new Camera({ x: centerX + 40, y: 60, z: centerZ + 40, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
         this.light = new Light({ x: 20, y: 100, z: -20 });
-        this.ground = new Ground(mapConfig, ENTITIES);
+        this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
         this.stats = new Stats();

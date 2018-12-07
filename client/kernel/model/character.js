@@ -2,6 +2,7 @@ const ee = require('../tools/eventemitter');
 const pathfinding = require('../tools/pathfinding/index');
 const Path = require('../tools/path');
 const Stats = require('./stats');
+const removeEntityEvent = 'removeEntity';
 
 class Character {
     
@@ -21,6 +22,7 @@ class Character {
         this.selected = false;
         this.stats = new Stats(config, false);
         this.constructor.instances.push(this);
+        this.origin = config.origin;
         this.ground = ground;
     }
 
@@ -41,48 +43,67 @@ class Character {
     buildPaths() {
         const ground = this.ground;
         this.paths = [];
-        let target, instanceTargets, targetTiles, originTile, path;
+        let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId;
+
         const origin = [Math.floor(this.ax / ground.tileSize), Math.floor(this.az / ground.tileSize)];
+
         for (let i = 0; i < this.targets.length; i++) {
             target = this.targets[i];
-            if (target.entity) {
+
+            if(target.id) {
+                instanceTargets = [this.ground.getEntity(target.id)];
+                targetTiles =  [instanceTargets[0].getTiles()];
+            } else if (target.entity) {
                 instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az);
                 targetTiles = instanceTargets.map(instance => instance.getTiles());
-            } else {
-                targetTiles = [origin];
             }
+
             if (i === 0) {
                 originTile = origin;
+                originId = this.origin;
             } else {
                 originTile = [path[path.length - 3], path[path.length - 1]];
+                originId = targetId;
             }
-            path = pathfinding.computePath(ground, originTile, targetTiles);
-            if (path) {
-                this.paths.push(new Path(path, ground.tileSize, ground.tileHeight));
+
+            solution = pathfinding.computePath(ground, originTile, targetTiles);
+
+            if (solution) {
+                path = solution.path;
+                targetId = instanceTargets[solution.index]._id;
+                this.paths.push(new Path(path, ground.tileSize, ground.tileHeight, originId, targetId));
             } else {
-                ee.emit('removeEntity', this._id);
+                ee.emit(removeEntityEvent, this._id);
                 break;
             }
+
+
+
         }
     }
 
     update(dt) {
-        if(this.pathProgress === 0) {
-            this.onStartPath();
-        }
+
         const path = this.paths[this.pathStep];
+        if(this.pathProgress === 0) {
+            const entity  = this.ground.getEntity(path.originId);
+            if(!entity) ee.emit(removeEntityEvent, this._id);
+            this.onStartPath(entity);
+        }
         this.pathProgress += dt * 0.005;
         this.updated = true;
         if (this.pathProgress >= path.length) {
             this.pathProgress = Math.min(this.pathProgress, path.length);
             const pos = path.getPoint(this.pathProgress);
             this.move(pos[0], pos[1], pos[2], pos[3]);
-            this.onEndPath();
+            const entity  = this.ground.getEntity(path.targetId);
+            if(!entity) ee.emit(removeEntityEvent, this._id);
+            this.onEndPath(entity);
             if(this.pathStep < this.paths.length - 1) {
                 this.pathStep++
                 this.pathProgress = 0;
             } else {
-                ee.emit('removeEntity', this._id);
+                ee.emit(removeEntityEvent, this._id);
             }
         } else {
             const pos = path.getPoint(this.pathProgress);

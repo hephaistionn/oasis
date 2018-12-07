@@ -2,11 +2,13 @@ const THREE = require('three');
 
 module.exports = class Path {
 
-    constructor(path, sizeX, sizeY) {
+    constructor(path, sizeX, sizeY, originId, targetId) {
         this.points = [];
         this.segmentsLength = [];
         this.angles = [];
         this.length = 0;
+        this.originId = originId;
+        this.targetId = targetId;
         this.compute(path, sizeX, sizeY);
     }
 
