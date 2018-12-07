@@ -98,6 +98,7 @@ class Character {
 
 }
 
+Character.instances = [];
 Character.entity = true;
 
 module.exports = Character;

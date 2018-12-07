@@ -24,6 +24,7 @@ const ENTITIES = {
     StoneMine: require('./model/app/buildings/stoneMine'),
     WoodcutterHut: require('./model/app/buildings/woodcutterHut'),
     Builder: require('./model/app/characters/builder'),
+    Lumberjack: require('./model/app/characters/lumberjack'),
 };
 
 module.exports = class ScreenMap extends Screen {
@@ -141,10 +142,6 @@ module.exports = class ScreenMap extends Screen {
     onUnselect() {
         this.remove(this.selected);
         this.selected = null;
-    }
-
-    onMouseUp(x, y) {
-
     }
 
     onMouseMove(x, y, z) {

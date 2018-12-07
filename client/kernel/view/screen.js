@@ -22,6 +22,7 @@ const COMPONENTS = {
     StoneMine: require('../../view/app/building/stoneMine'),
     WoodcutterHut: require('../../view/app/building/woodcutterHut'),
     Builder: require('../../view/app/characters/builder'),
+    Lumberjack: require('../../view/app/characters/lumberjack'),
     
 };
 

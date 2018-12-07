@@ -21,7 +21,6 @@ class Building {
         this.selected = false;
         this.updated = true;
         this.stats = new Stats(config, true);
-        debugger;
         this.constructor.instances.push(this);
     }
 
@@ -107,7 +106,6 @@ class Building {
     }
 
     onDismount() {
-        debugger;
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
         this._child.forEach((children) => {
