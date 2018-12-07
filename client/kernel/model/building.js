@@ -22,7 +22,35 @@ class Building {
         this.updated = true;
         this.stats = new Stats(config, true);
         this.constructor.instances.push(this);
+        this.cycleDuration = 0;
+        this.cycleProgress = 0;
+        this.started = false;
         this.ground = ground;
+    }
+
+    update(dt) {
+        this.cycleProgress += dt;
+        if(this.cycleProgress >=  this.cycleDuration) {
+            this.cycleProgress = 0; 
+            this.working(); 
+        }
+    }
+
+    start() { //start cyclical event working if cycleDuration exit
+        if(!this.drafted) {
+            if(this.cycleDuration) {
+                this.started = true;
+            }
+            this.onStart();
+        }
+    }
+
+    onStart() { // must be overwrite
+
+    }
+
+    working() { // called cyclically or manualy, must be overwrite
+
     }
 
     move(x, y, z, roty) {

@@ -5,8 +5,15 @@ class ForestHut extends Building {
 
     constructor(config, ground) {
         super(config, ground);
-        if (!this.drafted)
-            setInterval(() => { this.spawnCharacter('Lumberjack'); }, 2000);
+        this.cycleDuration = 0;
+    }
+
+    onStart() {
+        this.spawnCharacter('Lumberjack');
+    }
+
+    working() {
+        this.spawnCharacter('Lumberjack');
     }
 }
 

@@ -26,7 +26,12 @@ class Character {
         this.stats = new Stats(config, false);
         this.constructor.instances.push(this);
         this.origin = config.origin;
+        this.started = false;
         this.ground = ground;
+    }
+
+    start() {
+        this.started = true;
     }
 
     select(selected) {

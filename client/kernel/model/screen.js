@@ -24,6 +24,9 @@ module.exports = class Screen {
             throw 'component must have id !';
         }
         this._components.set(component._id, component);
+        if(component.start) {
+            component.start();
+        }
     }
 
     remove(component) {
@@ -47,7 +50,7 @@ module.exports = class Screen {
         this.update(dt);
         const components = this._components;
         for (let id of components.keys()) {
-            if (components.get(id).update) {
+            if (components.get(id).started) {
                 components.get(id).update(dt);
             }
         }

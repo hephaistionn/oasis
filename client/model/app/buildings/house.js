@@ -5,8 +5,11 @@ class House extends Building {
 
     constructor(config, ground) {
         super(config, ground);
-        if(!this.drafted)
-            setTimeout(() => { this.spawnCharacter('Builder'); }, 500);
+        this.cycleDuration = 4000;
+    }
+
+    working() {
+        this.spawnCharacter('Builder');
     }
 
 }
