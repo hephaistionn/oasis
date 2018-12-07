@@ -19,6 +19,10 @@ module.exports = class Member {
     }
 
     updateMesh(model) {
+        
+    }
+
+    updateBox(model) {
         if (model.selected && !this.boxSelector) {
             this.boxSelector = new THREE.BoxHelper(this.element, 0xffff00);
             this.boxSelector.geometry.center ();
@@ -32,6 +36,7 @@ module.exports = class Member {
     }
 
     update(dt, model) {
+        this.updateBox(model);
         this.updateMesh(model);
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.ax;

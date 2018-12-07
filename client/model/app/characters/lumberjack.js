@@ -8,7 +8,7 @@ class Lumberjack extends Character {
     constructor(params, ground) {
         super(params, ground);
         this.capacity = 5;
-        this.workingDuration = 10000; 
+        this.workingDuration = 4000; 
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
         this.targets.push({ id: this.origin });
     }
