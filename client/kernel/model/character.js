@@ -44,7 +44,7 @@ class Character {
         this.ax = x;
         this.ay = y;
         this.az = z;
-        if (roty !== undefined) this.roty = roty;
+        if (roty !== undefined) this.aroty = roty;
         this.onMove();
     }
 
