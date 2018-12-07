@@ -14,11 +14,11 @@ class Builder extends Character {
     }
 
     onEndPath(entity) {
-        debugger;
+
     }
 
     onStartPath(entity) {
-        debugger;
+
     }
 }
 

@@ -20,6 +20,9 @@ class Character {
         this.pathProgress = 0;
         this.pathStep = 0;
         this.selected = false;
+        this.working = false;
+        this.workingDuration = 4000; 
+        this.workingProgress = 0;
         this.stats = new Stats(config, false);
         this.constructor.instances.push(this);
         this.origin = config.origin;
@@ -80,8 +83,18 @@ class Character {
     }
 
     update(dt) {
-
+        this.updated = true;
         const path = this.paths[this.pathStep];
+
+        if(this.working) {
+            this.workingProgress += dt; 
+            if(this.workingProgress > this.workingDuration) {
+                this.working = false;
+                this.workingProgress = 0;
+            }
+            return;
+        }
+
         if (this.pathProgress === 0) {
             const entity = this.ground.getEntity(path.originId);
             if (!entity) {
@@ -91,7 +104,6 @@ class Character {
             }
         }
         this.pathProgress += dt * 0.005;
-        this.updated = true;
         if (this.pathProgress >= path.length) {
             this.pathProgress = Math.min(this.pathProgress, path.length);
             const pos = path.getPoint(this.pathProgress);

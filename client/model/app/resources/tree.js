@@ -11,9 +11,9 @@ class Tree extends Resource {
 
     getWorkerSlot() {
         const a = Math.random() * Math.PI * 2;
-        const x = this.ax + Math.cos(a) * 0.35;
-        const z = this.az + Math.sin(a) * 0.35;
-        return { x: x, y: this.ay, z: z, a: a + Math.PI }
+        const x = this.ax + Math.cos(a) * 1;
+        const z = this.az + Math.sin(a) * 1;
+        return { x: x, y: this.ay, z: z, rotY: a + Math.PI }
     }
 
 }

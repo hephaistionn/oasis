@@ -8,6 +8,7 @@ class Lumberjack extends Character {
     constructor(params, ground) {
         super(params, ground);
         this.capacity = 5;
+        this.workingDuration = 10000; 
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
         this.targets.push({ id: this.origin });
     }
@@ -16,6 +17,10 @@ class Lumberjack extends Character {
         if (entity.constructor.name === ForestHut) {
             const value = this.stats.pull(Stats.WOOD, this.capacity);
             entity.stats.push(Stats.WOOD, value);
+        } else if (entity.constructor.name === Tree) {
+            this.working = true;
+            const place = entity.getWorkerSlot();
+            this.move(place.x, place.y, place.z, place.rotY);
         }
     }
 
