@@ -6,10 +6,10 @@ module.exports = class Member {
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
         this.boxSelector = null;
-        this.animations = [];
+        this.animationsBody = [];
+        this.animationsHead = [];
         this.currentAnimation = null;
-        this.initBody(model);
-        this.initHead(model);
+        this.initMesh(model);
         this.update(0, model);
         this.add(parent);
     }
@@ -40,8 +40,8 @@ module.exports = class Member {
         this.updateMesh(model);
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.ax;
-        matrixWorld[14] = model.az;
         matrixWorld[13] = model.ay;
+        matrixWorld[14] = model.az;
         matrixWorld[0] = Math.cos(model.aroty);
         matrixWorld[2] = Math.sin(model.aroty);
         matrixWorld[8] = -matrixWorld[2];
@@ -50,7 +50,7 @@ module.exports = class Member {
 
     playAnimation(dt, model) {
         if (!this.element.morphTargetInfluences) return;
-        const animation = this.animations[this.currentAnimation];
+        const animation = this.animationsBody[this.currentAnimation];
         const steps = animation.steps;
         const duration = animation.duration;
         const nbSteps = steps.length - 1;
@@ -77,8 +77,15 @@ module.exports = class Member {
             const a = this.element.morphTargetInfluences[ia];
             const x = v1.x * a + v2.x * b;
             const y = v1.y * a + v2.y * b;
-            const z = v1.z * a + v2.z * b;
-            this.head.position.set(x, y, z);
+            const z = v1.z * a + v2.z * b;            
+            const matrixWorld =this.head.matrixWorld.elements;
+            matrixWorld[12] = x + model.ax;
+            matrixWorld[13] = y + model.ay;
+            matrixWorld[14] = z + model.az;
+            matrixWorld[0] = Math.cos(model.aroty);
+            matrixWorld[2] = Math.sin(model.aroty); 
+            matrixWorld[8] = -matrixWorld[2];
+            matrixWorld[10] = matrixWorld[0];
         }
     }
 
