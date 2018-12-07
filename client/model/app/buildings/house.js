@@ -9,9 +9,6 @@ class House extends Building {
             this.spawnCharacter('Builder');
     }
 
-    dismount(){
-        this.constructor.instances.splice(index, 1);
-    }
 }
 
 House.removable = true;

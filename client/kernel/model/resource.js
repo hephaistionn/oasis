@@ -34,9 +34,12 @@ class Resource {
         return [this.ax / tileSize - 0.5, this.az / tileSize - 0.5];
     }
 
-    dismount() {
+    onDismount() {
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
+        this._child.forEach((children) => {
+            this.remove(children);
+        });
     }
 
 }

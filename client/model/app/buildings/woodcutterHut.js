@@ -5,6 +5,8 @@ class WoodcutterHut extends Building {
 
     constructor(config) {
         super(config);
+        if(!this.drafted)
+            this.spawnCharacter('Builder');
     }
 }
 

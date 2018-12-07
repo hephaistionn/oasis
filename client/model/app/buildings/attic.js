@@ -3,8 +3,8 @@ const ee = require('../../../kernel/tools/eventemitter');
 
 class Attic extends Building {
 
-    constructor(params) {
-        super(params);
+    constructor(config) {
+        super(config);
     }
 }
 

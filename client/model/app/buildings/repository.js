@@ -7,10 +7,6 @@ class Repository extends Building {
         super(config);
     }
 
-    dismount() {
-        const index = this.constructor.instances.indexOf(this);
-        this.constructor.instances.splice(index, 1);
-    }
 }
 
 Repository.removable = true;
