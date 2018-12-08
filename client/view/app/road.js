@@ -1,5 +1,6 @@
 const THREE = require('three');
 const materialDraft = require('./material/materialRoadSelected');
+const materialRoad = require('./material/materialRoad');
 
 module.exports = class Road {
 
@@ -9,24 +10,42 @@ module.exports = class Road {
         this.nbPointZ = model.ground.nbPointZ;
         this.tileHeight = model.ground.tileHeight;
         this.pointsHeights = model.ground.pointsHeights;
+        this.VERTEX_BY_TILE = 6;
         this.meshDraft = null;
+        this.meshRoad = null;
         this.initDraftMesh(model);
-        this.initMesh(model)
+        this.initroadMesh(model)
 
         this.add(parent);
     }
 
-    initMesh(model) {
-
+    initroadMesh(model) {
+        this.MAX_TILES_ROAD = model.maxTileRoad;
+        this.MAX_VERTEX_DRAFT = this.VERTEX_BY_TILE * this.MAX_TILES_ROAD;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(this.MAX_VERTEX_DRAFT * 3);
+        const uv = new Float32Array(this.MAX_VERTEX_DRAFT * 2);
+        const type = new Float32Array(this.MAX_VERTEX_DRAFT * 1);
+        const normal = new Float32Array(this.MAX_VERTEX_DRAFT * 3);
+        geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        geometry.addAttribute('type', new THREE.BufferAttribute(type, 1));
+        geometry.addAttribute('normal', new THREE.BufferAttribute(normal, 3));
+        geometry.setDrawRange(0, 3);
+        this.meshRoad = new THREE.Mesh(geometry, materialRoad);
+        this.meshRoad.matrixAutoUpdate = false;
+        this.meshRoad.frustumCulled = false;
+        this.meshRoad.matrixWorldNeedsUpdate = false;
+        this.meshRoad.receiveShadow = false;
+        this.meshRoad.drawMode = THREE.TrianglesDrawMode;
     }
 
     initDraftMesh(model) {
-        this.MAX_TILES = model.maxTile;
-        this.VERTEX_BY_TILE = 6;
-        this.MAX_VERTEX = this.VERTEX_BY_TILE * this.MAX_TILES;
+        this.MAX_TILES_DRAFT = model.maxTileDraft;
+        this.MAX_VERTEX_DRAFT = this.VERTEX_BY_TILE * this.MAX_TILES_DRAFT;
         const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(this.MAX_VERTEX * 3);
-        const walkable = new Float32Array(this.MAX_VERTEX * 1);
+        const positions = new Float32Array(this.MAX_VERTEX_DRAFT * 3);
+        const walkable = new Float32Array(this.MAX_VERTEX_DRAFT * 1);
         geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.addAttribute('walkable', new THREE.BufferAttribute(walkable, 1));
         geometry.setDrawRange(0, 3);
@@ -38,8 +57,11 @@ module.exports = class Road {
         this.meshDraft.drawMode = THREE.TrianglesDrawMode;
     }
 
-    update(dt, model) {
+    updateRoad(model) {
 
+    }
+
+    updateDraft(model) {
         const tiles = model.draftRoad.tiles;
         const walkable = model.draftRoad.walkable;
         const l = model.draftRoad.length;
@@ -111,16 +133,23 @@ module.exports = class Road {
             geometry.drawRange.count = ctn / 3;
             geometry.attributes.position.needsUpdate = true;
             geometry.attributes.walkable.needsUpdate = true;
-
         }
     }
 
+    update(dt, model) {
+        if(!model.drafted) {
+            this.updateRoad(model);
+        }
+        this.updateDraft(model);
+    }
 
     remove(parent) {
+        parent.render.scene.remove(this.meshRoad);
         parent.render.scene.remove(this.meshDraft);
     }
 
     add(parent) {
+        parent.render.scene.add(this.meshRoad);
         parent.render.scene.add(this.meshDraft);
     }
 };

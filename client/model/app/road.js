@@ -8,14 +8,15 @@ module.exports = class Road {
         this.ground = ground;
         this.tileSize = ground.tileSize;
         this.drafted = false;
-        this.maxTile = 30;
+        this.maxTileDraft = 30;
+        this.maxTileRoad = 100;
         this.startXi;
         this.startZi;
         this.roadType;
 
         this.draftRoad = {
-            tiles: new Uint16Array(2 * this.maxTile),
-            walkable: new Uint8Array(this.maxTile),
+            tiles: new Uint16Array(2 * this.maxTileDraft),
+            walkable: new Uint8Array(this.maxTileDraft),
             length: 0
         };
 
@@ -31,6 +32,12 @@ module.exports = class Road {
     }
 
     startConstruct() {
+        this.draftRoad.tiles
+        this.draftRoad.walkable
+        const l = this.draftRoad.tiles.length;
+        for(let i = 0; i < l; i += 2) {
+            this.ground._grid.setWalkableAt(this.draftRoad.tiles[i], this.draftRoad.tiles[i + 1], this.draftRoad.walkable[i / 2]);
+        }
         this.drafted = false;
         this.draftRoad.length = 0;
         this.updated = true;
