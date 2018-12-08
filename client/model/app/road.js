@@ -9,6 +9,8 @@ module.exports = class Road {
         this.tileSize = ground.tileSize;
         this.drafted = false;
         this.maxTile = 30;
+        this.startXi;
+        this.startZi;
         this.roadType;
 
         this.draftRoad = {
@@ -30,22 +32,65 @@ module.exports = class Road {
 
     startConstruct() {
         this.drafted = false;
+        this.draftRoad.length = 0;
+        this.updated = true;
     }
 
     cancelConstruct() {
         this.drafted = false;
+        this.draftRoad.length = 0;
+        this.updated = true;
     }
 
 
-    draftStart(x, z) {
+    draftStart(xR, zR, x, z) {
         if (this.drafted) {
-
+            this.startXi = Math.floor(x / this.tileSize);
+            this.startZi = Math.floor(z / this.tileSize);
         }
     }
 
-    draftStaggering(dx, dz) {
+    draftStaggering(dxR, dzR, x, z) {
         if (this.drafted) {
+            const dxi = Math.floor(x / this.tileSize) - this.startXi;
+            const dzi = Math.floor(z / this.tileSize) - this.startZi;
+            const nbX = Math.abs(dxi) + 1; //tile count
+            const nbZ = Math.abs(dzi) + 1; //tile count
+            if (dxi === 0 && dzi === 0) return;
+            const signX = Math.sign(dxi);
+            const signZ = Math.sign(dzi);
+            const tiles = this.draftRoad.tiles;
+            let ctn = 0;
+            if (nbX >= nbZ) {
+                for (let i = 0; i < nbX; i++) {
+                    tiles[ctn++] = this.startXi + i * signX;
+                    tiles[ctn++] = this.startZi;
+                }
+                for (let i = 1; i < nbZ; i++) {
+                    tiles[ctn++] = this.startXi + (nbX - 1) * signX;
+                    tiles[ctn++] = this.startZi + i * signZ;
+                }
+            } else {
+                for (let i = 0; i < nbZ; i++) {
+                    tiles[ctn++] = this.startXi;
+                    tiles[ctn++] = this.startZi + i * signZ;
+                }
+                for (let i = 1; i < nbX; i++) {
+                    tiles[ctn++] = this.startXi + i * signX;
+                    tiles[ctn++] = this.startZi + (nbZ - 1) * signZ;
+                }
+            }
 
+            const length = Math.min(ctn / 2, tiles.length);
+            for (let i = 0; i < length; i++) {
+                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1])) {
+                    this.draftRoad.walkable[i] = 0;
+                } else {
+                    this.draftRoad.walkable[i] = this.roadType;
+                }
+            }
+            this.draftRoad.length = length;
+            this.updated = true;
         }
     }
 

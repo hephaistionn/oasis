@@ -186,18 +186,18 @@ class Screen {
     };
 
     _mouseDown(e) {
-
         if (e.which == 3) {
             ee.emit('mouseDownRight');
             return;
         }
         this._sx = e.offsetX;
         this._sz = e.offsetY;
-        const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+        const point = this.getPointOnMap(e.offsetX, e.offsetY);
         if (!point) return;
-        this._px = point.x;
-        this._pz = point.z;
-        ee.emit('mouseDown', point.x, point.z);
+        const relativePoint = this.getPointOnMapCameraRelative(point);
+        this._px = relativePoint.x;
+        this._pz = relativePoint.z;
+        ee.emit('mouseDown', relativePoint.x, relativePoint.z, point.x, point.z);
         e.preventDefault();
     }
 
@@ -219,9 +219,10 @@ class Screen {
 
     _mouseMove(e) {
         if (e.buttons) {
-            const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+            const point = this.getPointOnMap(e.offsetX, e.offsetY);
+            const relativePoint = this.getPointOnMapCameraRelative(point);
             if (!point) return;
-            ee.emit('mouseMovePress', (this._px - point.x), (this._pz - point.z));
+            ee.emit('mouseMovePress', (this._px - relativePoint.x), (this._pz - relativePoint.z), point.x, point.z);
         } else {
             const point = this.getPointOnMap(e.offsetX, e.offsetY);
             if (!point) return;
@@ -230,17 +231,11 @@ class Screen {
         e.preventDefault();
     }
 
-    getPointOnMapCameraRelative(screenX, screenY, recursive) {
-        this.mouse.x = (screenX / this.canvas.width) * 2 - 1;
-        this.mouse.y = -(screenY / this.canvas.height) * 2 + 1;
+    getPointOnMapCameraRelative(point) {
         const camera = this._components.get(CAMERA);
-        this.raycaster.setFromCamera(this.mouse, camera.element);
-        const intersects = this.raycaster.intersectObjects(this._components.get(GROUND).clickableArea, recursive);
-        if (intersects.length) {
-            const point = intersects[0].point;
-            point.x -= camera.element.matrixWorld.elements[12];
-            point.z -= camera.element.matrixWorld.elements[14];
-            return point;
+        return {
+            x: point.x - camera.element.matrixWorld.elements[12],
+            z: point.z - camera.element.matrixWorld.elements[14]
         }
     }
 

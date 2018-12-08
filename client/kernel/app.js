@@ -122,9 +122,9 @@ class App {
         this.view.update(dt, this.model);
     }
 
-    onMouseDown(x, z) {
+    onMouseDown(xRelatif, zRelatif, x, z) {
         if(this.model.onMouseDown)
-            this.model.onMouseDown(x, z);
+            this.model.onMouseDown(xRelatif, zRelatif, x, z);
     }
 
 
@@ -163,9 +163,9 @@ class App {
             this.model.onMouseRotate();
     }
 
-    onMouseMovePress(x, y) {
+    onMouseMovePress(xRelatif, zRelatif, x, z) {
         if(this.model.onMouseMovePress)
-            this.model.onMouseMovePress(x, y);
+            this.model.onMouseMovePress(xRelatif, zRelatif, x, z);
     }
 
     onMouseMove(x, y, z) {
