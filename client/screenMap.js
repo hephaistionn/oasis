@@ -8,6 +8,7 @@ const Catalog = require('./model/ui/catalog');
 const Info = require('./model/ui/info');
 const Stats = require('./model/ui/stats');
 const Store = require('./kernel/tools/store');
+const Road = require('./model/app/road');
 
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
@@ -38,9 +39,10 @@ module.exports = class ScreenMap extends Screen {
         this.camera = new Camera({ x: centerX + 40, y: 60, z: centerZ + 40, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
         this.light = new Light({ x: 20, y: 100, z: -20 });
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
+        this.road = new Road({}, this.ground);
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
-        this.store  = new Store();
+        this.store = new Store();
         this.stats = new Stats({}, this.store);
         this.drafted = null;
         this.focused = null;
@@ -51,6 +53,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.catalog);
         this.add(this.info);
         this.add(this.stats);
+        this.add(this.road);
 
         this.populate(model, mapConfig);
 
@@ -90,15 +93,20 @@ module.exports = class ScreenMap extends Screen {
     }
 
     onDraftEntity(config) {
-        this.drafted = new ENTITIES[config.type](config, this.ground);
-        this.add(this.drafted);
+        if (config.type === 'Road') {
+            this.camera.disable(true);
+            this.road.draft()
+        } else {
+            this.drafted = new ENTITIES[config.type](config, this.ground);
+            this.add(this.drafted);
+        }
     }
 
     onSelect(id) {
         if (this.drafted) return;
         const entity = this.get(id);
-        if(entity) {
-            if(this.focused) {
+        if (entity) {
+            if (this.focused) {
                 this.focused.select(false);
             }
             this.focused = entity;
@@ -107,14 +115,17 @@ module.exports = class ScreenMap extends Screen {
         }
     }
 
-    onMouseClick()  {
-        if(this.focused) {
+    onMouseClick() {
+        if (this.focused) {
             this.focused.select(false);
             this.info.close();
         }
-        if (this.drafted, this.drafted.isWalkable()) {
+        if (this.drafted && this.drafted.isWalkable()) {
             this.drafted.startConstruct()
             this.drafted = null;
+        }
+        if (this.road.drafted) {
+            this.road.startConstruct()
         }
     }
 
@@ -125,8 +136,20 @@ module.exports = class ScreenMap extends Screen {
         }
     }
 
+    onMouseDownRight() {
+        if (this.drafted) {
+            this.drafted.cancelConstruct();
+            this.drafted = null;
+        }
+        if (this.road.drafted) {
+            this.camera.disable(false);
+            this.road.cancelConstruct();
+        }
+
+    }
+
     onDismount() {
-        this.store.dismount();   
+        this.store.dismount();
     }
 
 };

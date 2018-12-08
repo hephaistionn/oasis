@@ -26,6 +26,8 @@ module.exports = class Camera extends Entity {
         this.maxX = this.ax + config.rangeX;
         this.maxZ = this.az + config.rangeZ;
 
+        this.disabled = false;
+
         ee.on('mouseDown', this.draggStart.bind(this));
         ee.on('mouseMovePress', this.dragg.bind(this));
         ee.on('mouseWheel', this.scale.bind(this));
@@ -66,9 +68,15 @@ module.exports = class Camera extends Entity {
     }
 
     dragg(dx, dz) {
-        let newx = this._ix + dx;
-        let newz = this._iz + dz;
-        this.move(newx, this.y, newz);
+        if(!this.disabled) {
+            let newx = this._ix + dx;
+            let newz = this._iz + dz;
+            this.move(newx, this.y, newz);
+        }
+    }
+
+    disable(value) {
+        this.disabled  = value;
     }
 
     onDismount() {

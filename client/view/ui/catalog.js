@@ -26,7 +26,7 @@ module.exports = class Catalog {
         this.buttonClose = document.createElement('div');
         this.buttonClose.className = 'catalog__closer';
         this.buttonClose.textContent = 'close';
-        this.buttonClose.onclick = model.open.bind(model);
+        this.buttonClose.onclick = model.close.bind(model);
         this.node.appendChild(this.buttonClose);
 
         this.add(parent);

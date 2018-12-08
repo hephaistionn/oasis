@@ -129,6 +129,12 @@ class Building {
             ee.emit('removeEntity', this._id);
         }
     }
+
+    cancelConstruct() {
+        if(this.drafted) {
+            ee.emit('removeEntity', this._id);
+        }
+    }
     
     isWalkable() {
         const tiles = this.getTiles();

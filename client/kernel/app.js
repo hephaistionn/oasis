@@ -49,6 +49,7 @@ class App {
         ee.on('touchDragg', this.onTouchDragg.bind(this));
 
         window.addEventListener('beforeunload', this.exit.bind(this));
+        document.addEventListener('contextmenu', event => event.preventDefault());
     }
 
     closeScreen(id) {

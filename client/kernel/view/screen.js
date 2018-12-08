@@ -23,7 +23,7 @@ const COMPONENTS = {
     ForestHut: require('../../view/app/building/forestHut'),
     Builder: require('../../view/app/characters/builder'),
     Lumberjack: require('../../view/app/characters/lumberjack'),
-    
+    Road: require('../../view/app/road'),
 };
 
 
@@ -186,6 +186,11 @@ class Screen {
     };
 
     _mouseDown(e) {
+
+        if (e.which == 3) {
+            ee.emit('mouseDownRight');
+            return;
+        }
         this._sx = e.offsetX;
         this._sz = e.offsetY;
         const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);

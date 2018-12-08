@@ -3,7 +3,7 @@ const ee = require('../../kernel/tools/eventemitter');
 class Catalog {
 
     constructor(config) {
-        this.list = ['House','Market','ForestHut','Attic','Barrack','HunterHut','LeaderHut','Repository','StoneMine','RoadDirty','RoadStone'];
+        this.list = ['Road', 'House','Market','ForestHut','Attic','Barrack','HunterHut','LeaderHut','Repository','StoneMine','RoadDirty','RoadStone'];
         this.displayed = false;
         this.updated = false;
         this._id = 4;
