@@ -95,7 +95,7 @@ module.exports = class ScreenMap extends Screen {
     onDraftEntity(config) {
         if (config.type === 'Road') {
             this.camera.disable(true);
-            this.road.draft()
+            this.road.draft(2)
         } else {
             this.drafted = new ENTITIES[config.type](config, this.ground);
             this.add(this.drafted);
