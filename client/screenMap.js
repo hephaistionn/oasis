@@ -45,7 +45,7 @@ module.exports = class ScreenMap extends Screen {
         this.store = new Store();
         this.stats = new Stats({}, this.store);
         this.drafted = null;
-        this.focused = null;
+        this.selected = this.ground; // this.selected never undefined for evoid if
 
         this.add(this.camera);
         this.add(this.light);
@@ -60,10 +60,6 @@ module.exports = class ScreenMap extends Screen {
         this.store.watch(ENTITIES.Repository.instances);
         this.store.watch(ENTITIES.Attic.instances);
         this.store.watch(ENTITIES.ForestHut.instances);
-    }
-
-    update(dt) {
-
     }
 
     populate(model, config) {
@@ -88,64 +84,53 @@ module.exports = class ScreenMap extends Screen {
     }
 
     removeEntity(entityId) {
-        const entity = this.get(entityId);
-        this.remove(entity);
+        this.remove(this.get(entityId));
     }
 
     onDraftEntity(config) {
-        if (config.type === 'Road') {
-            this.camera.disable(true);
-            this.road.draft(2)
-        } else {
-            this.drafted = new ENTITIES[config.type](config, this.ground);
-            this.add(this.drafted);
-        }
+        this.drafted = new ENTITIES[config.type](config, this.ground);
+        this.add(this.drafted);
     }
 
-    onSelect(id) {
-        if (this.drafted) return;
-        const entity = this.get(id);
-        if (entity) {
-            if (this.focused) {
-                this.focused.select(false);
-            }
-            this.focused = entity;
-            this.focused.select(true);
-            this.info.open(entity);
-        }
+    onDraftRoad(config) {
+        this.road.draft(2)
     }
 
-    onMouseClick() {
-        if (this.focused) {
-            this.focused.select(false);
-            this.info.close();
+    construcBuilding(cancel) {
+        if (this.drafted && cancel) {
+            this.drafted.cancelConstruct();
         }
         if (this.drafted && this.drafted.isWalkable()) {
             this.drafted.startConstruct()
-            this.drafted = null;
+        }
+        this.drafted = null;
+    }
+
+    construcRoad(cancel) {
+        if (this.road.drafted && cancel) {
+            this.road.cancelConstruct();
         }
         if (this.road.drafted) {
             this.road.startConstruct()
         }
     }
 
-    onMouseMove(x, y, z) {
-        if (this.drafted) {
-            const tile = this.ground.getTile(x, z);
-            this.drafted.move(tile.x, tile.y, tile.z);
-        }
+    onSelect(entity) {
+        this.selected.select(false);
+        this.selected = entity;
+        this.selected.select(true);
+    }
+
+    onMouseClick() {
+        this.selected.select(false);
+        this.construcBuilding();
+        this.construcRoad();
     }
 
     onMouseDownRight() {
-        if (this.drafted) {
-            this.drafted.cancelConstruct();
-            this.drafted = null;
-        }
-        if (this.road.drafted) {
-            this.camera.disable(false);
-            this.road.cancelConstruct();
-        }
-
+        this.selected.select(false);
+        this.construcBuilding(true);
+        this.construcRoad(true);
     }
 
     onDismount() {

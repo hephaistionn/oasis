@@ -145,7 +145,7 @@ class Screen {
                     data: mesh.userData
                 };
                 this._selecting = true;
-                ee.emit('onSelect', id);
+                ee.emit('select', id);
                 return true;
             }
         }
@@ -220,8 +220,8 @@ class Screen {
     _mouseMove(e) {
         if (e.buttons) {
             const point = this.getPointOnMap(e.offsetX, e.offsetY);
-            const relativePoint = this.getPointOnMapCameraRelative(point);
             if (!point) return;
+            const relativePoint = this.getPointOnMapCameraRelative(point);
             ee.emit('mouseMovePress', (this._px - relativePoint.x), (this._pz - relativePoint.z), point.x, point.z);
         } else {
             const point = this.getPointOnMap(e.offsetX, e.offsetY);

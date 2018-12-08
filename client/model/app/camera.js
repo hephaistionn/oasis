@@ -31,6 +31,9 @@ module.exports = class Camera extends Entity {
         ee.on('mouseDown', this.draggStart.bind(this));
         ee.on('mouseMovePress', this.dragg.bind(this));
         ee.on('mouseWheel', this.scale.bind(this));
+        ee.on('draftRoad', this.disable.bind(this));
+        ee.on('mouseClick', this.enable.bind(this));
+        ee.on('mouseDownRight', this.enable.bind(this));
     }
 
     look(x, y, z) {
@@ -68,20 +71,27 @@ module.exports = class Camera extends Entity {
     }
 
     dragg(dx, dz) {
-        if(!this.disabled) {
+        if (!this.disabled) {
             let newx = this._ix + dx;
             let newz = this._iz + dz;
             this.move(newx, this.y, newz);
         }
     }
 
-    disable(value) {
-        this.disabled  = value;
+    enable() {
+        this.disabled = false;
+    }
+
+    disable() {
+        this.disabled = true;
     }
 
     onDismount() {
         ee.off('mouseDown', this.draggStart.bind(this));
         ee.off('mouseMovePress', this.dragg.bind(this));
         ee.off('mouseWheel', this.scale.bind(this));
+        ee.off('draftRoad', this.disable.bind(this));
+        ee.off('mouseClick', this.enable.bind(this));
+        ee.off('mouseDownRight', this.enable.bind(this));
     }
 }

@@ -2,7 +2,7 @@ const ee = require('../tools/eventemitter');
 const Stats = require('./stats');
 
 class Building {
-    
+
     constructor(config, ground) {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this._parent = null;
@@ -26,19 +26,21 @@ class Building {
         this.cycleProgress = 0;
         this.started = false;
         this.ground = ground;
+        if (this.drafted)
+            ee.on('mouseMove', this.moveDraft.bind(this));
     }
 
     update(dt) {
         this.cycleProgress += dt;
-        if(this.cycleProgress >=  this.cycleDuration) {
-            this.cycleProgress = 0; 
-            this.working(); 
+        if (this.cycleProgress >= this.cycleDuration) {
+            this.cycleProgress = 0;
+            this.working();
         }
     }
 
     start() { //start cyclical event working if cycleDuration exit
-        if(!this.drafted) {
-            if(this.cycleDuration) {
+        if (!this.drafted) {
+            if (this.cycleDuration) {
                 this.started = true;
             }
             this.onStart();
@@ -123,26 +125,28 @@ class Building {
     }
 
     startConstruct() {
-        if(this.drafted) {
-            ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az,
-                 type: this.constructor.name, builded: true });
+        if (this.drafted) {
+            ee.emit('addEntity', {
+                x: this.ax, y: this.ay, z: this.az,
+                type: this.constructor.name, builded: true
+            });
             ee.emit('removeEntity', this._id);
         }
     }
 
     cancelConstruct() {
-        if(this.drafted) {
+        if (this.drafted) {
             ee.emit('removeEntity', this._id);
         }
     }
-    
+
     isWalkable() {
         const tiles = this.getTiles();
         return this.ground.isWalkable(tiles);
     }
 
     onMove() {
-        if(this.drafted)  {
+        if (this.drafted) {
             const tiles = this.getTiles();
             const dropable = this.ground.isWalkable(tiles);
             this.undroppable = !dropable;
@@ -150,7 +154,7 @@ class Building {
     }
 
     onMount(parent) {
-        if(!this.drafted) {
+        if (!this.drafted) {
             if (this.constructor.walkable !== undefined) {
                 this.ground.setWalkable(this);
             }
@@ -158,7 +162,16 @@ class Building {
         this._parent = parent;
     }
 
+    moveDraft(x, y, z) {
+        if (this.drafted) {
+            const tile = this.ground.getTile(x, z);
+            this.move(tile.x, tile.y, tile.z);
+        }
+    }
+
     onDismount() {
+        if (this.drafted)
+            ee.off('mouseMove', this.moveDraft.bind(this));
         this.ground.setWalkable(this, 1);
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);

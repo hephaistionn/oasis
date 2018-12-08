@@ -21,7 +21,12 @@ class Catalog {
 
     select(entityClass) {
         this.close();
-        ee.emit('onDraftEntity', {type:entityClass, drafted: true});
+        if(entityClass === 'Road') {
+            ee.emit('draftRoad', {drafted: true});
+        } else {
+            ee.emit('draftEntity', {type:entityClass, drafted: true});
+        }
+        
     }
 
 }

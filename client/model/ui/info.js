@@ -6,6 +6,9 @@ class Info {
         this._id = Math.floor((1 + Math.random()) * 0x10000000000);
         this.entity = null;
         this.opened = false;
+        ee.on('select', this.open.bind(this));
+        ee.on('mouseClick', this.close.bind(this));
+        ee.on('mouseDownRight', this.close.bind(this));
     }
 
     open(entity) {
@@ -29,6 +32,11 @@ class Info {
         this.close();
     }
 
+    onDismount() {
+        ee.off('select', this.open.bind(this));
+        ee.off('mouseClick', this.close.bind(this));
+        ee.off('mouseDownRight', this.close.bind(this));
+    }
 }
 
 Info.ui = true;

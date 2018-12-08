@@ -47,7 +47,7 @@ module.exports = class Screen {
     }
 
     updateScreen(dt) {
-        this.update(dt);
+        // this.update(dt);
         const components = this._components;
         for (let id of components.keys()) {
             if (components.get(id).started) {

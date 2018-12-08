@@ -92,6 +92,10 @@ module.exports = class Ground {
         return this.spawns[randomIndex];
     }
 
+    select() {
+
+    }
+
     update(dt) {
 
     }
