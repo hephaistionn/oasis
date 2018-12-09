@@ -28,8 +28,10 @@ module.exports = class Light {
     }
 
     update(dt, model) {
-        this.directionalLight.shadow.camera.zoom = model.zoom / 5;
+        //this.directionalLight.shadow.camera.zoom = model.zoom / 5;
         //this.directionalLight.shadow.camera.updateProjectionMatrix();
+        //this.directionalLight.position.set(model.ax, model.ay, model.az);
+        //this.directionalLight.target.position.set(0, 0, 0);
         this.directionalLight.matrix.elements[12] = model.ax;
         this.directionalLight.matrix.elements[13] = model.ay;
         this.directionalLight.matrix.elements[14] = model.az;

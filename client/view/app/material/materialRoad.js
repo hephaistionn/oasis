@@ -72,17 +72,15 @@ const fragShader = "" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vType; \n" +
     "uniform sampler2D textureLayout; \n" +
-    "uniform sampler2D textureA; \n" +
-    "uniform sampler2D textureB; \n" +
     "uniform vec3 ambientLightColor; \n" +
     "" +
     "void main(void) { \n" +
     "" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
-    "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
+    "vec3 colorFinal = vec3(0.54, 0.49, 0.30); \n" +
     " if(vType>2.5){ \n"+
-    "   colorFinal = texture2D( textureB, UVT ).xyz; \n" +
+    "   colorFinal = vec3(0.0, 0.0, 1.0); \n" +
     "}" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
@@ -99,7 +97,7 @@ const fragShader = "" +
     "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal * sumLights , filter.x); \n" +
+    "gl_FragColor = vec4(colorFinal * sumLights , min(filter.x, 0.8)); \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([
@@ -107,9 +105,9 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/tile_0.jpg")};
-uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/soil_1.jpg")};
-uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_2.png")};
+//uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/tile_0.jpg")};
+//uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/soil_1.jpg")};
+uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_3.png")};
 uniforms.textureLayout.value.flipY = false;
 uniforms.textureLayout.value.minFilter = THREE.NearestFilter;
 uniforms.textureLayout.value.repeat = false;

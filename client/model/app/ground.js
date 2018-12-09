@@ -13,6 +13,7 @@ module.exports = class Ground {
         this.tilesTilt = config.tilesTilt;
         this.tileSize = config.tileSize;
         this.tileHeight = config.tileHeight;
+        this.pointsNormal = config.pointsNormal;
         this.tilesColor = config.tilesColor;
         this.canvasColor = config.canvas;
         this.spawns = config.spawns;

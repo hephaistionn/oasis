@@ -7,8 +7,8 @@ module.exports = class Light extends Entity {
         this._id = 0;
         this.directionalColor = 0xffffff;
         this.targetX = config.targetX || 0;
-        this.targetY = config.targetX || 0;
-        this.targetZ = config.targetX || 0;
+        this.targetY = config.targetY || 0;
+        this.targetZ = config.targetZ || 0;
         this.offsetX = this.ax - this.targetX
         this.offsetY = this.ay - this.targetY
         this.offsetZ = this.az - this.targetZ
@@ -21,7 +21,7 @@ module.exports = class Light extends Entity {
         this.y = y;
         this.z = z;
         this.targetX = this.offsetX + this.x;
-        this.targetZ = this.offsetZ + this.x;
+        this.targetZ = this.offsetZ + this.z;
         this.updated = true;
     }
 

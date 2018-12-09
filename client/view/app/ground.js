@@ -3,6 +3,7 @@ const THREE = require('three');
 const materialGround = require('./material/materialMap');
 const materialWater = require('./material/materialWater');
 const materialBorder = require('./material/materialBorder');
+const materialA = require('./material/materialA');
 
 class Ground {
 
@@ -85,6 +86,7 @@ class Ground {
         const chunkGeo = this.createChunkGeo(nbXTiles, nbZTiles, model);
         chunkGeo.computeBoundingBox();
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
+        //const chunkMesh = new THREE.Mesh(chunkGeo, materialA);
         chunkMesh.matrixAutoUpdate = false;
         chunkMesh.matrixWorldNeedsUpdate = false;
         chunkMesh.receiveShadow = true;
@@ -94,7 +96,27 @@ class Ground {
     createChunkGeo(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
-        let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
+        
+        const chunkGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, nbXTiles, nbZTiles);
+        const posArray = chunkGeometry.attributes.position.array;
+        const length = chunkGeometry.attributes.position.count;
+        //const normalArray = new Float32Array(length * 3);
+        
+        for (let i = 0; i < length; i++) {
+            let tileX = posArray[i * 3] / this.tileSize;
+            let tileZ = posArray[i * 3 + 2] / this.tileSize;
+            let index = tileZ * this.nbPointX + tileX;
+            posArray[i * 3 + 1] = model.pointsHeights[index] * this.tileHeight;
+            //normalArray[i * 3] = model.pointsNormal[index * 3 + 0]/127;
+            //normalArray[i * 3 + 1] = model.pointsNormal[index * 3 + 1]/127;
+            //normalArray[i * 3 + 2] = model.pointsNormal[index * 3 + 2]/127;
+        }
+
+        chunkGeometry.computeVertexNormals(); 
+        //chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
+        chunkGeometry.attributes.position.needsUpdate = true;
+
+        /*let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
         chunkGeometry.rotateX(-Math.PI / 2);
         chunkGeometry.translate(xSize / 2, 0, zSize / 2)
         const vertices = chunkGeometry.vertices;
@@ -105,7 +127,8 @@ class Ground {
         }
         const modiferSimplify = new THREE.SimplifyModifier();
         chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.20));
-        chunkGeometry.computeVertexNormals();
+        chunkGeometry.computeVertexNormals();*/
+
         return chunkGeometry;
     }
 

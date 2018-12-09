@@ -1,4 +1,5 @@
 const THREE = require('three');
+const uvPath = require('../../kernel/tools/threejs/uvPath');
 const materialDraft = require('./material/materialRoadSelected');
 const materialRoad = require('./material/materialRoad');
 
@@ -10,6 +11,7 @@ module.exports = class Road {
         this.nbPointZ = model.ground.nbPointZ;
         this.tileHeight = model.ground.tileHeight;
         this.pointsHeights = model.ground.pointsHeights;
+        this.pointsNormal = model.ground.pointsNormal;
         this.VERTEX_BY_TILE = 6;
         this.meshDraft = null;
         this.meshRoad = null;
@@ -58,6 +60,122 @@ module.exports = class Road {
     }
 
     updateRoad(model) {
+        const grid = model.ground.grid;
+        const nodes = grid.nodes;
+        const sizeNode = grid.sizeNode;
+        const l = nodes.length
+        const indexWalkable = grid.indexWalkable;
+        const indexX = grid.indexX;
+        const indexY = grid.indexY;
+        const geometry = this.meshRoad.geometry;
+        const positions = geometry.attributes.position.array;
+        const normals = geometry.attributes.normal.array;
+        const uvs = geometry.attributes.uv.array;
+        const types = geometry.attributes.type.array;
+
+        let roadType, x, z, a, b, c, d, e, f, g, h, uvref, vx, vz, i, k;
+        let ctnP = 0, ctnN = 0, ctnU = 0, ctnT = 0;
+
+        for (i = 0; i < l; i += sizeNode) {
+            roadType = nodes[i + indexWalkable];
+            if (roadType > 1) {
+                x = nodes[i + indexX];
+                z = nodes[i + indexY];
+                a = grid.isWalkableAt(x - 1, z - 1) > 1 ? 1 : 0;
+                b = grid.isWalkableAt(x, z - 1) > 1 ? 1 : 0;
+                c = grid.isWalkableAt(x + 1, z - 1) > 1 ? 1 : 0;
+                d = grid.isWalkableAt(x + 1, z) > 1 ? 1 : 0;
+                e = grid.isWalkableAt(x + 1, z + 1) > 1 ? 1 : 0;
+                f = grid.isWalkableAt(x, z + 1) > 1 ? 1 : 0;
+                g = grid.isWalkableAt(x - 1, z + 1) > 1 ? 1 : 0;
+                h = grid.isWalkableAt(x - 1, z) > 1 ? 1 : 0;
+                uvref = uvPath[a * 128 + b * 64 + c * 32 + d * 16 + e * 8 + f * 4 + g * 2 + h];
+
+                vx = x;
+                vz = z + 1;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[6];
+                uvs[ctnU++] = uvref[7];
+                types[ctnT++] = roadType;
+
+                vx = x + 1;
+                vz = z;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[2];
+                uvs[ctnU++] = uvref[3];
+                types[ctnT++] = roadType;
+
+                vx = x;
+                vz = z;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[0];
+                uvs[ctnU++] = uvref[1];
+                types[ctnT++] = roadType;
+
+                vx = x + 1;
+                vz = z + 1;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[4];
+                uvs[ctnU++] = uvref[5];
+                types[ctnT++] = roadType;
+
+                vx = x + 1;
+                vz = z;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[2];
+                uvs[ctnU++] = uvref[3];
+                types[ctnT++] = roadType;
+
+                vx = x;
+                vz = z + 1;
+                k = vz * this.nbPointX + vx;
+                normals[ctnN++] = this.pointsNormal[k * 3] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 1] / 127;
+                normals[ctnN++] = this.pointsNormal[k * 3 + 2] / 127;
+                positions[ctnP++] = vx * this.tileSize;
+                positions[ctnP++] = this.pointsHeights[k] * this.tileHeight + 0.1;
+                positions[ctnP++] = vz * this.tileSize;
+                uvs[ctnU++] = uvref[6];
+                uvs[ctnU++] = uvref[7];
+                types[ctnT++] = roadType;
+            }
+        }
+
+        geometry.drawRange.count = ctnT;
+        geometry.attributes.position.needsUpdate = true;
+        geometry.attributes.uv.needsUpdate = true;
+        geometry.attributes.type.needsUpdate = true;
+        geometry.attributes.normal.needsUpdate = true;
 
     }
 
@@ -131,13 +249,13 @@ module.exports = class Road {
             positions[ctn++] = vz * this.tileSize;
 
             geometry.drawRange.count = ctn / 3;
-            geometry.attributes.position.needsUpdate = true;
-            geometry.attributes.walkable.needsUpdate = true;
         }
+        geometry.attributes.position.needsUpdate = true;
+        geometry.attributes.walkable.needsUpdate = true;
     }
 
     update(dt, model) {
-        if(!model.drafted) {
+        if (!model.drafted) {
             this.updateRoad(model);
         }
         this.updateDraft(model);

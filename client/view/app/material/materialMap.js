@@ -53,6 +53,7 @@ const fragShader = "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
     "   vec2 UV = vec2(vAbsolutePosition.x+0.0, vAbsolutePosition.z)/textureSize; \n" +
+    //"   vec2 UV = vec2(0.0, 0.0)/textureSize; \n" +
     "   vec3 colorFinal = texture2D( texture, UV ).xyz;"+
     "   vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "   DirectionalLight directionalLight;" +
@@ -62,7 +63,7 @@ const fragShader = "" +
     "           float shadowFactor = bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord ) : 1.0; \n" +
     "           sumLights *= shadowFactor; \n" +
     "   } \n" +
-    "   sumLights = ambientLightColor + sumLights; \n" +
+    "   sumLights = ambientLightColor + max(vec3(0.0,0.0,0.0),sumLights); \n" +
     "   colorFinal *= sumLights; \n" +
     "   if(vAbsolutePosition.y<3.0){ \n" +
     "       colorFinal = mix(vec3(0.1,0.5,0.6), colorFinal, vAbsolutePosition.y/3.0); \n"  +

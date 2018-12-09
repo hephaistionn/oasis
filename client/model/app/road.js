@@ -20,7 +20,6 @@ module.exports = class Road {
             length: 0
         };
 
-
         ee.on('mouseDown', this.draftStart.bind(this));
         ee.on('mouseMovePress', this.draftStaggering.bind(this));
         ee.on('mouseMove', this.draftMove.bind(this));
@@ -32,11 +31,9 @@ module.exports = class Road {
     }
 
     startConstruct() {
-        this.draftRoad.tiles
-        this.draftRoad.walkable
         const l = this.draftRoad.tiles.length;
-        for(let i = 0; i < l; i += 2) {
-            this.ground._grid.setWalkableAt(this.draftRoad.tiles[i], this.draftRoad.tiles[i + 1], this.draftRoad.walkable[i / 2]);
+        for (let i = 0; i < l; i += 2) {
+            this.ground.grid.setWalkableAt(this.draftRoad.tiles[i], this.draftRoad.tiles[i + 1], this.draftRoad.walkable[i / 2]);
         }
         this.drafted = false;
         this.draftRoad.length = 0;

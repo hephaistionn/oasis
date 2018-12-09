@@ -37,7 +37,8 @@ module.exports = class ScreenMap extends Screen {
         const centerZ = mapConfig.nbTileZ * mapConfig.tileSize / 2;
 
         this.camera = new Camera({ x: centerX + 40, y: 60, z: centerZ + 40, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
-        this.light = new Light({ x: 20, y: 100, z: -20 });
+        //this.light = new Light({ x: 80, y: 30, z: 80 });
+        this.light = new Light({ x: -1, y: 1, z: 1 });
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.road = new Road({}, this.ground);
         this.catalog = new Catalog(mapConfig);
@@ -121,10 +122,13 @@ module.exports = class ScreenMap extends Screen {
         this.selected.select(true);
     }
 
+    onMouseUp() {
+        this.construcRoad();
+    }
+
     onMouseClick() {
         this.selected.select(false);
         this.construcBuilding();
-        this.construcRoad();
     }
 
     onMouseDownRight() {
