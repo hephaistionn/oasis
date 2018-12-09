@@ -13,7 +13,7 @@ const vertShader = "" +
 const fragShader = "" +
     "varying float vlighting; \n" +
     "void main(void) { \n" +
-    "vec3 color = vec3(0.0,0.39,0.6); \n" +
+    "vec3 color = vec3(0.5,0.78,1.0); \n" +
     "gl_FragColor.xyz = color  * vlighting; \n" +
     "gl_FragColor.a = 0.50; \n" +
     "} ";

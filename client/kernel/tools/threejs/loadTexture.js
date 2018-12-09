@@ -16,8 +16,8 @@ THREE.loadTexture = function loadTexture(path) {
     } else {
         texture = new THREE.Texture(path);//is canvas
     }
-    //texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    //texture.anisotropy = 1;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.anisotropy = 1;
     texture.flipY = false;
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.LinearMipMapLinearFilter;

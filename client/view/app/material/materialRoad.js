@@ -15,7 +15,7 @@ const vertShader = "" +
     "void main() { \n" +
     "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
-    "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz; \n" +
+    "vecNormal = normalMatrix * normal; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
     "	for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {\n " +
@@ -72,16 +72,20 @@ const fragShader = "" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vType; \n" +
     "uniform sampler2D textureLayout; \n" +
-    "uniform vec3 ambientLightColor; \n" +
+    "uniform sampler2D textureDust; \n"+
+    "uniform float textureSize; \n" +
     "" +
     "void main(void) { \n" +
     "" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
+    "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/textureSize; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
-    "vec3 colorFinal = vec3(0.54, 0.49, 0.30); \n" +
-    " if(vType>2.5){ \n"+
+    "vec3 colorFinal = texture2D( textureDust, UV ).xyz; \n" +
+    "if(vType>2.5){ \n"+
     "   colorFinal = vec3(0.0, 0.0, 1.0); \n" +
     "}" +
+    //"colorFinal *= (sin(vAbsolutePosition.x*2.0)*0.04+1.0 + cos(vAbsolutePosition.z*2.0)*0.04);"+ 
+
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
     "DirectionalLight directionalLight;" +
@@ -95,23 +99,22 @@ const fragShader = "" +
     "    #endif \n" +
     "} \n" +
     "" +
-    "sumLights = ambientLightColor + sumLights; \n" +
+    "sumLights = sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal * sumLights , min(filter.x, 0.8)); \n" +
+    "gl_FragColor = vec4(colorFinal * sumLights , min(filter.x, 1.0)); \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
-    THREE.UniformsLib['ambient']
 ]);
 
-//uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/tile_0.jpg")};
-//uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/soil_1.jpg")};
 uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_3.png")};
+uniforms.textureDust = {type: 't', value: THREE.loadTexture("pic/map7g.png")};
 uniforms.textureLayout.value.flipY = false;
 uniforms.textureLayout.value.minFilter = THREE.NearestFilter;
 uniforms.textureLayout.value.repeat = false;
 uniforms.textureLayout.value.generateMipmaps = false;
+uniforms.textureSize = {type: 'f', value: 25.0};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

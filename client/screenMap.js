@@ -37,7 +37,7 @@ module.exports = class ScreenMap extends Screen {
         const centerZ = mapConfig.nbTileZ * mapConfig.tileSize / 2;
 
         this.camera = new Camera({ x: centerX + 40, y: 60, z: centerZ + 40, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
-        this.light = new Light({ x: 50, y: 100, z: -50 });
+        this.light = new Light({ x: 50, y: 180, z: -50 });
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.road = new Road({}, this.ground);
         this.catalog = new Catalog(mapConfig);

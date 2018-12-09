@@ -19,19 +19,20 @@ const fragShader = "" +
     "uniform sampler2D texture; \n" +
     "uniform float textureSize; \n" +
     "void main(void) { \n" +
-    "   vec2 UV = vec2(vAbsolutePosition.x-0.01, vAbsolutePosition.y-0.01)/textureSize; \n" +
-    "   vec3 color = texture2D( texture, UV ).xyz; \n" +
+    "   vec3 colorDust = vec3(0.42,0.42,0.48); \n" +
+    //"   vec3 colorDust = vec3(0.0,0.0,0.0); \n" +
+    "   vec3 colorGreen = vec3(0.7764,0.6666,0.4235); \n" +
     "   if(vColor>0.0) {   \n" +
     "       if(vColor>0.99){ \n"+
-    "           gl_FragColor.xyz = vec3(0.3,0.2,0.1)*(color.y+0.5)*0.9; \n"  +
+    "           gl_FragColor.xyz = colorDust*0.7; \n"  +
     "       }else{ \n" +
-    "           gl_FragColor.xyz = color*0.9; \n" +
+    "           gl_FragColor.xyz = colorGreen*0.7; \n" +
     "       } \n" +
     "   }else{ \n" +
     "       if(vColor<-0.99){ \n"+
-    "           gl_FragColor.xyz = vec3(0.3,0.2,0.1)*(color.y+0.5)*0.7; \n" +
+    "           gl_FragColor.xyz = colorDust*0.85; \n" +
     "       }else{" +
-    "           gl_FragColor.xyz = color*0.7; \n" +
+    "           gl_FragColor.xyz = colorGreen*0.85; \n" +
     "       }" +
     "   }" +
     "}";

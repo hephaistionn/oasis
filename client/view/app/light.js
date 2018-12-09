@@ -8,7 +8,7 @@ module.exports = class Light {
         this.element.userData.id = model.id;
         this.element.name = 'lights';
 
-        this.ambient = new THREE.AmbientLight(0x333333);
+        this.ambient = new THREE.AmbientLight(0x555555);
 
         this.directionalLight = new THREE.DirectionalLight(model.directionalColor);
         this.directionalLight.matrixAutoUpdate = false;

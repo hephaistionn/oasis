@@ -19,6 +19,7 @@ class Ground {
         this.tileHeight = model.tileHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
+        this.tilesColor = model.tilesColor;
 
         this.createGround(model);
         this.add(parent);
@@ -47,8 +48,8 @@ class Ground {
         const heightWater = 4;
         if (this.chunkMesh.geometry.boundingBox.min.y <= heightWater) {
 
-            const sizeX = this.tileSize * model.nbTileX - 0.3;
-            const sizeZ = this.tileSize * model.nbTileZ - 0.3;
+            const sizeX = this.tileSize * model.nbTileX - 0.05;
+            const sizeZ = this.tileSize * model.nbTileZ - 0.05;
             const sizeY = 6;
 
             const waterGeometry = new THREE.BufferGeometry();
@@ -101,19 +102,28 @@ class Ground {
         const posArray = chunkGeometry.attributes.position.array;
         const length = chunkGeometry.attributes.position.count;
         //const normalArray = new Float32Array(length * 3);
+        const colorArray = new Float32Array(length * 3);
+        const typeArray = new Float32Array(length * 1);
         
         for (let i = 0; i < length; i++) {
             let tileX = posArray[i * 3] / this.tileSize;
             let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * this.nbPointX + tileX;
             posArray[i * 3 + 1] = model.pointsHeights[index] * this.tileHeight;
+            colorArray[i * 3] = this.tilesColor[i * 4]/255;
+            colorArray[i * 3 + 1] = this.tilesColor[i * 4 + 1]/255;
+            colorArray[i * 3 + 2] = this.tilesColor[i * 4 + 2]/255;
+            typeArray[i] = this.tilesColor[i * 4+1]/255;
             //normalArray[i * 3] = model.pointsNormal[index * 3 + 0]/127;
             //normalArray[i * 3 + 1] = model.pointsNormal[index * 3 + 1]/127;
             //normalArray[i * 3 + 2] = model.pointsNormal[index * 3 + 2]/127;
         }
 
         chunkGeometry.computeVertexNormals(); 
+        window.chunkGeometry = chunkGeometry;
         //chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
+        chunkGeometry.addAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        chunkGeometry.addAttribute('type', new THREE.BufferAttribute(typeArray, 1));
         chunkGeometry.attributes.position.needsUpdate = true;
 
         /*let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
@@ -274,9 +284,9 @@ class Ground {
 
     refreshTexture(model) {
         this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        //this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        //this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
     }
 
     update(dt, model) {
