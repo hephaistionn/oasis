@@ -19,6 +19,7 @@ Repository.require = { inactive: 2 };
 Repository.enabled = { wood: 5 };
 Repository.displayed = ['wood', 'stone'];
 Repository.constuctDuration = 1000;
+Repository.waterLevelNeeded = 0;
 Repository.instances = [];
 
 module.exports = Repository;

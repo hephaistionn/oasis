@@ -17,6 +17,7 @@ LeaderHut.cost = {wood: 5};
 LeaderHut.require = {inactive: 2};
 LeaderHut.enabled = { population: 6};
 LeaderHut.constuctDuration = 1000;
+LeaderHut.waterLevelNeeded = 40;
 LeaderHut.instances = [];
 
 module.exports = LeaderHut;

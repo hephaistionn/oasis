@@ -8,6 +8,10 @@ module.exports = class Ground {
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
         this.tiltMax = config.tiltMax || 55;
+        this.waterLevel = 13;
+        this.waterInfluence = 3;
+        this.waterLevelMax = 255;
+        this.waterLevelDecrease = Math.floor(this.waterLevelMax / (this.waterInfluence + 1));
         this.pointsHeights = config.pointsHeights;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
@@ -20,21 +24,62 @@ module.exports = class Ground {
         this.ENTITIES = ENTITIES;
         this.entities = entities;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
+        this.gridWater = new Uint16Array(this.nbTileX * this.nbTileZ);
         this.updated = false;
         this._id = 2;
         this.initGridByHeight(this.tilesTilt);
+        this.initGridWater();
+    }
+
+    initGridWater() {
+        let length = this.tilesHeight.length, i;
+
+        for (let i = 0; i < length; i++) {
+            if (this.tilesHeight[i] < this.waterLevel) {
+                this.gridWater[i] = 255;
+                this.setIrrigationTiles(i);
+            }
+        }
+    }
+
+    setIrrigationTiles(x, z) {
+        let xx, zz, xi, zi, i, level, levelX, levelZ;
+        if (z === undefined) {
+            xx = x % this.nbTileX || this.nbTileX;
+            zz = Math.floor(x / this.nbTileX);
+        } else {
+            xx = x;
+            zz = z;
+        }
+
+        const xmin = Math.max(xx - this.waterInfluence, 0);
+        const xmax = Math.min(xx + this.waterInfluence + 1, this.nbTileX);
+        const zmin = Math.max(zz - this.waterInfluence);
+        const zmax = Math.min(zz + this.waterInfluence + 1, this.nbTileZ);
+
+        for (xi = xmin; xi < xmax; xi++) {
+            levelX = this.waterLevelMax - Math.abs(xx - xi) * this.waterLevelDecrease;
+            for (zi = zmin; zi < zmax; zi++) {
+                levelZ = this.waterLevelMax - Math.abs(zz - zi) * this.waterLevelDecrease;
+                i = zi * this.nbTileX + xi;
+                level = Math.min(levelX, levelZ);
+                if (this.gridWater[i] < level) {
+                    this.gridWater[i] = level;
+                }
+            }
+        }
     }
 
     initGridByHeight() {
         let length = this.tilesTilt.length;
         for (let i = 0; i < length; i++) {
-            let x = i % this.nbTileX;
+            let x = i % this.nbTileX || this.nbTileX;
             let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
             let height = this.tilesHeight[i];
             if (tilt > this.tiltMax) {
                 this.grid.setWalkableAt(x, z, 0);
-            } else if (height < 13) {
+            } else if (height < this.waterLevel) {
                 this.grid.setWalkableAt(x, z, 0);
             }
         }
@@ -51,7 +96,6 @@ module.exports = class Ground {
     isWalkable(x, z) {
         if (x.length) {
             for (let i = 0; i < x.length; i += 2) {
-
                 const xi = Math.floor(x[i]);
                 const zi = Math.floor(x[i + 1]);
                 if (!this.grid.isWalkableAt(xi, zi)) {
@@ -66,15 +110,31 @@ module.exports = class Ground {
         }
     }
 
+    isWaterable(levelNeeded, x, z) {
+        if (x.length) {
+            for (let i = 0; i < x.length; i += 2) {
+                if (this.gridWater[x[i + 1] * this.nbTileX + x[i]] >= levelNeeded) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            const xi = Math.floor(x);
+            const zi = Math.floor(z);
+            return this.gridWater[zi * this.nbTileX + xi] >= levelNeeded
+        }
+    }
+
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] * this.tileHeight;
     }
 
-    getTile(x, z) {
+    getTileCenter(x, z) {
         const xi = Math.floor(x / this.tileSize);
         const zi = Math.floor(z / this.tileSize);
         const index = zi * this.nbTileX + xi;
+        // console.log('i:', index, ' xi:', xi, ' zi:', zi)
         const y = this.tilesHeight[index] * this.tileHeight;
         return {
             x: (xi + 0.5) * this.tileSize,

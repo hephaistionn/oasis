@@ -71,8 +71,8 @@ module.exports = class ScreenMap extends Screen {
             type = config.codeToEntities.get(value);
             z = Math.floor(i / this.ground.nbTileX);
             x = (i % this.ground.nbTileX);
-            if (type && this.ground.isWalkable(x, z) === true) {
-                tile = this.ground.getTile(x * size, z * size);
+            if (type/* && this.ground.isWalkable(x, z) === true*/) {
+                tile = this.ground.getTileCenter(x * size, z * size);
                 this.addEntity({ x: tile.x, y: tile.y, z: tile.z, type: type });
             }
         }

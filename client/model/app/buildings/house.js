@@ -23,6 +23,7 @@ House.cost = {wood: 20, stone: 1};
 House.require = {};
 House.enabled = {};
 House.constuctDuration = 1000;
+House.waterLevelNeeded = 40;
 House.instances = [];
 
 module.exports = House;

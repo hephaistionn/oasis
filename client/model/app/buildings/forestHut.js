@@ -27,5 +27,6 @@ ForestHut.enabled = { stone: 2 };
 ForestHut.displayed = ['workers', 'wood'];
 ForestHut.walkable = 0;
 ForestHut.constuctDuration = 1000;
+ForestHut.waterLevelNeeded = 100;
 ForestHut.instances = [];
 module.exports = ForestHut;

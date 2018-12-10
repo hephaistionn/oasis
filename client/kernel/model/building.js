@@ -148,8 +148,9 @@ class Building {
     onMove() {
         if (this.drafted) {
             const tiles = this.getTiles();
-            const dropable = this.ground.isWalkable(tiles);
-            this.undroppable = !dropable;
+            const walkable = this.ground.isWalkable(tiles);
+            const waterable = this.ground.isWaterable(this.constructor.waterLevelNeeded, tiles);
+            this.undroppable = !walkable || !waterable;
         }
     }
 
@@ -164,7 +165,7 @@ class Building {
 
     moveDraft(x, y, z) {
         if (this.drafted) {
-            const tile = this.ground.getTile(x, z);
+            const tile = this.ground.getTileCenter(x, z);
             this.move(tile.x, tile.y, tile.z);
         }
     }

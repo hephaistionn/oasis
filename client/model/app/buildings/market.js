@@ -18,5 +18,6 @@ Market.require = {inactive: 2};
 Market.enabled = {wood: 5, population: 4};
 Market.walkable = 0;
 Market.constuctDuration = 1000;
+Market.waterLevelNeeded = 40;
 Market.instances = [];
 module.exports = Market;
