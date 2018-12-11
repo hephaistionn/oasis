@@ -126,6 +126,15 @@ class Ground {
         chunkGeometry.addAttribute('type', new THREE.BufferAttribute(typeArray, 1));
         chunkGeometry.attributes.position.needsUpdate = true;
 
+        //TEST : REMOVING TILES
+        chunkGeometry.index.array[6] = 0;
+        chunkGeometry.index.array[7] = 0;
+        chunkGeometry.index.array[8] = 0;
+        chunkGeometry.index.array[9] = 0;
+        chunkGeometry.index.array[10] = 0;
+        chunkGeometry.index.array[11] = 0;
+        chunkGeometry.index.needsUpdate = true;
+
         /*let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
         chunkGeometry.rotateX(-Math.PI / 2);
         chunkGeometry.translate(xSize / 2, 0, zSize / 2)

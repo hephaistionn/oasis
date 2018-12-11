@@ -125,6 +125,26 @@ module.exports = class Ground {
         }
     }
 
+    isBank(xi, zi) {
+        if (this.gridWater[zi * this.nbTileX + xi] !== this.waterLevelMax) {
+            return false;
+        }
+        let count = 0;
+        if (this.gridWater[zi * this.nbTileX + xi + 1] === this.waterLevelMax) {
+            count++;
+        }
+        if (this.gridWater[zi * this.nbTileX + xi - 1] === this.waterLevelMax) {
+            count++;
+        }
+        if (this.gridWater[(zi + 1) * this.nbTileX + xi] === this.waterLevelMax) {
+            count++;
+        }
+        if (this.gridWater[(zi - 1) * this.nbTileX + xi] === this.waterLevelMax) {
+            count++;
+        }
+        return count === 3;
+    }
+
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] * this.tileHeight;

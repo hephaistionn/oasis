@@ -3,7 +3,7 @@ const ee = require('../../kernel/tools/eventemitter');
 class Catalog {
 
     constructor(config) {
-        this.list = ['Road', 'House','Market','ForestHut','Attic','Barrack','HunterHut','LeaderHut','Repository','StoneMine','RoadDirty','RoadStone'];
+        this.list = ['Canal', 'Road', 'House', 'Market', 'ForestHut', 'Attic', 'Barrack', 'HunterHut', 'LeaderHut', 'Repository', 'StoneMine', 'RoadDirty', 'RoadStone'];
         this.displayed = false;
         this.updated = false;
         this._id = 4;
@@ -21,12 +21,16 @@ class Catalog {
 
     select(entityClass) {
         this.close();
-        if(entityClass === 'Road') {
-            ee.emit('draftRoad', {drafted: true});
-        } else {
-            ee.emit('draftEntity', {type:entityClass, drafted: true});
+        switch (entityClass) {
+            case 'Canal':
+                ee.emit('draftCanal', { drafted: true });
+                break;
+            case 'Road':
+                ee.emit('draftRoad', { drafted: true });
+                break;
+            default:
+                ee.emit('draftEntity', { type: entityClass, drafted: true });
         }
-        
     }
 
 }

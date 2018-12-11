@@ -9,6 +9,7 @@ const Info = require('./model/ui/info');
 const Stats = require('./model/ui/stats');
 const Store = require('./kernel/tools/store');
 const Road = require('./model/app/road');
+const Canal = require('./model/app/canal');
 
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
@@ -40,6 +41,7 @@ module.exports = class ScreenMap extends Screen {
         this.light = new Light({ x: 50, y: 180, z: -50 });
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.road = new Road({}, this.ground);
+        this.canal = new Canal({}, this.ground);
         this.catalog = new Catalog(mapConfig);
         this.info = new Info();
         this.store = new Store();
@@ -54,6 +56,8 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.info);
         this.add(this.stats);
         this.add(this.road);
+        this.add(this.canal);
+
 
         this.populate(model, mapConfig);
 
@@ -96,6 +100,10 @@ module.exports = class ScreenMap extends Screen {
         this.road.draft(2)
     }
 
+    onDraftCanal(config) {
+        this.canal.draft()
+    }
+
     construcBuilding(cancel) {
         if (this.drafted && cancel) {
             this.drafted.cancelConstruct();
@@ -112,6 +120,9 @@ module.exports = class ScreenMap extends Screen {
         }
         if (this.road.drafted) {
             this.road.startConstruct()
+        }
+        if (this.canal.drafted) {
+            this.canal.startConstruct()
         }
     }
 

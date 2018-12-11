@@ -32,6 +32,7 @@ module.exports = class Camera extends Entity {
         ee.on('mouseMovePress', this.dragg.bind(this));
         ee.on('mouseWheel', this.scale.bind(this));
         ee.on('draftRoad', this.disable.bind(this));
+        ee.on('draftCanal', this.disable.bind(this));
         ee.on('mouseClick', this.enable.bind(this));
         ee.on('mouseDownRight', this.enable.bind(this));
     }
@@ -91,6 +92,7 @@ module.exports = class Camera extends Entity {
         ee.off('mouseMovePress', this.dragg.bind(this));
         ee.off('mouseWheel', this.scale.bind(this));
         ee.off('draftRoad', this.disable.bind(this));
+        ee.off('draftCanal', this.disable.bind(this));
         ee.off('mouseClick', this.enable.bind(this));
         ee.off('mouseDownRight', this.enable.bind(this));
     }

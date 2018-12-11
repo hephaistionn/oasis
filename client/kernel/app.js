@@ -37,6 +37,7 @@ class App {
         ee.on('select', this.onSelect.bind(this));
         ee.on('draftEntity', this.onDraftEntity.bind(this));
         ee.on('draftRoad', this.onDraftRoad.bind(this));
+        ee.on('draftCanal', this.onDraftCanal.bind(this));
         ee.on('addEntity', this.addEntity.bind(this));
         ee.on('removeEntity', this.removeEntity.bind(this))
         
@@ -263,6 +264,11 @@ class App {
     onDraftRoad(entityClass) { // Road is business logic, should not be here :)
         if(this.model.onDraftRoad)
             this.model.onDraftRoad(entityClass);
+    }
+
+    onDraftCanal(entityClass) { // Road is business logic, should not be here :)
+        if(this.model.onDraftCanal)
+            this.model.onDraftCanal(entityClass);
     }
 
     addEntity(config) {
