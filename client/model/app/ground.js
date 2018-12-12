@@ -11,6 +11,8 @@ module.exports = class Ground {
         this.waterLevel = 13;
         this.waterInfluence = 3;
         this.waterLevelMax = 255;
+        this.canalMax = 40;
+        this.canalSize = 0;
         this.waterLevelDecrease = Math.floor(this.waterLevelMax / (this.waterInfluence + 1));
         this.pointsHeights = config.pointsHeights;
         this.tilesHeight = config.tilesHeight;
@@ -25,6 +27,7 @@ module.exports = class Ground {
         this.entities = entities;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.gridWater = new Uint16Array(this.nbTileX * this.nbTileZ);
+        this.gridCanal = new Uint16Array(this.canalMax * 2);
         this.updated = false;
         this._id = 2;
         this.initGridByHeight(this.tilesTilt);
@@ -163,6 +166,12 @@ module.exports = class Ground {
         }
     }
 
+    addCanal(xi, zi, value) {
+        this.gridCanal[this.canalSize++] = xi;
+        this.gridCanal[this.canalSize++] = zi;
+        this.updated = true;
+    }
+
     getEntity(id) {
         return this.entities.get(id);
     }
@@ -174,10 +183,6 @@ module.exports = class Ground {
     }
 
     select() {
-
-    }
-
-    update(dt) {
 
     }
 

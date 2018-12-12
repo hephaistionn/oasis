@@ -8,7 +8,6 @@ module.exports = class Canal {
         this.tileSize = ground.tileSize;
         this.drafted = false;
         this.maxTileDraft = 8;
-        this.maxTileCanal = 100;
         this.heightMax = 6;
         this.startXi;
         this.startZi;
@@ -33,6 +32,7 @@ module.exports = class Canal {
         const l = this.draftCanal.tiles.length;
         for (let i = 0; i < l; i += 2) {
             this.ground.grid.setWalkableAt(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 0);
+            this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 1);
         }
         this.drafted = false;
         this.draftCanal.length = 0;
@@ -84,7 +84,7 @@ module.exports = class Canal {
                 }
             }
 
-            const length = Math.min(ctn / 2, tiles.length);
+            const length = Math.min(ctn / 2, tiles.length/2);
 
             for (i = 0; i < length; i++) {
                 this.draftCanal.valid[i] = 1;

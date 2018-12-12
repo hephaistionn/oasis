@@ -126,14 +126,7 @@ class Ground {
         chunkGeometry.addAttribute('type', new THREE.BufferAttribute(typeArray, 1));
         chunkGeometry.attributes.position.needsUpdate = true;
 
-        //TEST : REMOVING TILES
-        chunkGeometry.index.array[6] = 0;
-        chunkGeometry.index.array[7] = 0;
-        chunkGeometry.index.array[8] = 0;
-        chunkGeometry.index.array[9] = 0;
-        chunkGeometry.index.array[10] = 0;
-        chunkGeometry.index.array[11] = 0;
-        chunkGeometry.index.needsUpdate = true;
+
 
         /*let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
         chunkGeometry.rotateX(-Math.PI / 2);
@@ -299,11 +292,27 @@ class Ground {
     }
 
     update(dt, model) {
-
+        this.updateCanal(model);
     }
 
-    updateState(model) {
-
+    updateCanal(model) {   
+        const geometry = this.chunkMesh.geometry;
+        let xi, zi, type, k;
+        for(let i=0; i<model.canalSize; i++) {
+            xi = model.gridCanal[i * 2];
+            zi = model.gridCanal[i  * 2 + 1];
+            k = zi * model.nbTileX + xi;
+            geometry.index.array[k*6] = 0;
+            geometry.index.array[k*6+1] = 0;
+            geometry.index.array[k*6+2] = 0;
+            geometry.index.array[k*6+3] = 0;
+            geometry.index.array[k*6+4] = 0;
+            geometry.index.array[k*6+5] = 0;
+        }
+        if(model.canalSize){
+            geometry.index.needsUpdate = true;
+        }
+            
     }
 
     remove(parent) {
