@@ -11,7 +11,7 @@ module.exports = class Ground {
         this.waterLevel = 13;
         this.waterInfluence = 3;
         this.waterLevelMax = 255;
-        this.canalMax = 40;
+        this.canalMax = 50;
         this.canalSize = 0;
         this.waterLevelDecrease = Math.floor(this.waterLevelMax / (this.waterInfluence + 1));
         this.pointsHeights = config.pointsHeights;
@@ -27,7 +27,7 @@ module.exports = class Ground {
         this.entities = entities;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.gridWater = new Uint16Array(this.nbTileX * this.nbTileZ);
-        this.gridCanal = new Uint16Array(this.canalMax * 2);
+        this.gridCanal = new Uint8Array(this.nbTileX * this.nbTileZ);
         this.updated = false;
         this._id = 2;
         this.initGridByHeight(this.tilesTilt);
@@ -48,7 +48,7 @@ module.exports = class Ground {
     setIrrigationTiles(x, z) {
         let xx, zz, xi, zi, i, level, levelX, levelZ;
         if (z === undefined) {
-            xx = x % this.nbTileX || this.nbTileX;
+            xx = x % this.nbTileX;
             zz = Math.floor(x / this.nbTileX);
         } else {
             xx = x;
@@ -76,7 +76,7 @@ module.exports = class Ground {
     initGridByHeight() {
         let length = this.tilesTilt.length;
         for (let i = 0; i < length; i++) {
-            let x = i % this.nbTileX || this.nbTileX;
+            let x = i % this.nbTileX;
             let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
             let height = this.tilesHeight[i];
@@ -157,8 +157,8 @@ module.exports = class Ground {
         const xi = Math.floor(x / this.tileSize);
         const zi = Math.floor(z / this.tileSize);
         const index = zi * this.nbTileX + xi;
-        // console.log('i:', index, ' xi:', xi, ' zi:', zi)
         const y = this.tilesHeight[index] * this.tileHeight;
+        //console.log('i:', index, ' xi:', xi,' y:', y, ' zi:', zi)
         return {
             x: (xi + 0.5) * this.tileSize,
             y: y,
@@ -166,10 +166,48 @@ module.exports = class Ground {
         }
     }
 
-    addCanal(xi, zi, value) {
-        this.gridCanal[this.canalSize++] = xi;
-        this.gridCanal[this.canalSize++] = zi;
+    addCanal(xi, zi) {
+        const o = zi * this.nbTileX + xi;
+        const xo = zi * this.nbTileX + xi+1;
+        const ox = zi * this.nbTileX + xi-1;
+        const zo = zi+1 * this.nbTileX + xi;
+        const oz = zi-1 * this.nbTileX + xi;
+        this.gridCanal[o] = 1;
+    }
+
+    updateCanalType() {
+        let xi, zi, o, xo, ox, zo,oz, wallZ, wallX;
+        for (xi = 0; xi < this.nbTileX; xi++) {
+            for (zi = 0; zi < this.nbTileZ; zi++) {
+                o = zi * this.nbTileX + xi;
+                if(this.gridCanal[o] !==0) {
+                    ox = zi * this.nbTileX + xi-1;
+                    oz = (zi-1) * this.nbTileX + xi;
+                    wallZ = false;
+                    wallX = false;
+                    if( xi ===0 || this.gridCanal[ox] === 0) {
+                        wallX = true;
+                    }
+                    if( zi ===0 || this.gridCanal[oz] === 0) {
+                        wallZ = true;
+                    }
+                    if(wallZ && !wallX) {
+                        this.gridCanal[o] = 1;
+                    } else if  (!wallZ && wallX){
+                        this.gridCanal[o] = 2;
+                    } else if  (!wallZ && !wallX){
+                        this.gridCanal[o] = 3;
+                    } else if  (wallZ && wallX){
+                        this.gridCanal[o] = 4;
+                    }
+                }
+            }
+        }
         this.updated = true;
+    }
+
+    removeCanal(xi, zi) {
+
     }
 
     getEntity(id) {

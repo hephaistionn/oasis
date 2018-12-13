@@ -97,32 +97,32 @@ class Ground {
     createChunkGeo(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
-        
+
         const chunkGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, nbXTiles, nbZTiles);
         const posArray = chunkGeometry.attributes.position.array;
         const length = chunkGeometry.attributes.position.count;
         //const normalArray = new Float32Array(length * 3);
-        const colorArray = new Float32Array(length * 3);
+        //const colorArray = new Float32Array(length * 3);
         const typeArray = new Float32Array(length * 1);
-        
+
         for (let i = 0; i < length; i++) {
             let tileX = posArray[i * 3] / this.tileSize;
             let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * this.nbPointX + tileX;
             posArray[i * 3 + 1] = model.pointsHeights[index] * this.tileHeight;
-            colorArray[i * 3] = this.tilesColor[i * 4]/255;
-            colorArray[i * 3 + 1] = this.tilesColor[i * 4 + 1]/255;
-            colorArray[i * 3 + 2] = this.tilesColor[i * 4 + 2]/255;
-            typeArray[i] = this.tilesColor[i * 4+1]/255;
+            //colorArray[i * 3] = this.tilesColor[i * 4]/255;
+            //colorArray[i * 3 + 1] = this.tilesColor[i * 4 + 1]/255;
+            //colorArray[i * 3 + 2] = this.tilesColor[i * 4 + 2]/255;
+            typeArray[i] = this.tilesColor[i * 4 + 1] / 255;
             //normalArray[i * 3] = model.pointsNormal[index * 3 + 0]/127;
             //normalArray[i * 3 + 1] = model.pointsNormal[index * 3 + 1]/127;
             //normalArray[i * 3 + 2] = model.pointsNormal[index * 3 + 2]/127;
         }
 
-        chunkGeometry.computeVertexNormals(); 
+        chunkGeometry.computeVertexNormals();
         window.chunkGeometry = chunkGeometry;
         //chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
-        chunkGeometry.addAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        //chunkGeometry.addAttribute('color', new THREE.BufferAttribute(colorArray, 3));
         chunkGeometry.addAttribute('type', new THREE.BufferAttribute(typeArray, 1));
         chunkGeometry.attributes.position.needsUpdate = true;
 
@@ -279,7 +279,6 @@ class Ground {
         mesh.matrixAutoUpdate = false;
         mesh.frustumCulled = false;
         mesh.matrixWorldNeedsUpdate = false;
-        this.element.add(mesh);
 
         return mesh;
     }
@@ -295,24 +294,24 @@ class Ground {
         this.updateCanal(model);
     }
 
-    updateCanal(model) {   
+    updateCanal(model) {
         const geometry = this.chunkMesh.geometry;
-        let xi, zi, type, k;
-        for(let i=0; i<model.canalSize; i++) {
-            xi = model.gridCanal[i * 2];
-            zi = model.gridCanal[i  * 2 + 1];
-            k = zi * model.nbTileX + xi;
-            geometry.index.array[k*6] = 0;
-            geometry.index.array[k*6+1] = 0;
-            geometry.index.array[k*6+2] = 0;
-            geometry.index.array[k*6+3] = 0;
-            geometry.index.array[k*6+4] = 0;
-            geometry.index.array[k*6+5] = 0;
+        let updated = false;
+        for (let i = 0, l = model.gridCanal.length; i < l; i++) {
+            if (model.gridCanal[i] !== 0) {
+                geometry.index.array[i * 6] = 0;
+                geometry.index.array[i * 6 + 1] = 0;
+                geometry.index.array[i * 6 + 2] = 0;
+                geometry.index.array[i * 6 + 3] = 0;
+                geometry.index.array[i * 6 + 4] = 0;
+                geometry.index.array[i * 6 + 5] = 0;
+                updated = true;
+            }
         }
-        if(model.canalSize){
+        if (updated) {
             geometry.index.needsUpdate = true;
         }
-            
+
     }
 
     remove(parent) {

@@ -1,7 +1,6 @@
 const THREE = require('three');
-const uvPath = require('../../kernel/tools/threejs/uvPath');
 const materialDraft = require('./material/materialRoadSelected');
-const materialRoad = require('./material/materialRoad');
+const materialMap = require('./material/materialMap');
 
 module.exports = class Canal {
 
@@ -9,6 +8,8 @@ module.exports = class Canal {
         this.tileSize = model.tileSize;
         this.nbPointX = model.ground.nbPointX;
         this.nbPointZ = model.ground.nbPointZ;
+        this.nbTileX = this.nbPointX - 1;
+        this.nbTileZ = this.nbPointZ - 1;
         this.tileHeight = model.ground.tileHeight;
         this.pointsHeights = model.ground.pointsHeights;
         this.pointsNormal = model.ground.pointsNormal;
@@ -16,6 +17,7 @@ module.exports = class Canal {
         this.meshDraft = null;
         this.meshCanal = null;
         this.initDraftMesh(model);
+        this.inittMesh(model);
 
         this.add(parent);
     }
@@ -37,8 +39,121 @@ module.exports = class Canal {
         this.meshDraft.drawMode = THREE.TrianglesDrawMode;
     }
 
-    updateCanal(model) {
+    inittMesh(model) {
+        this.MAX_TILES = model.ground.canalMax;
+        this.MAX_VERTEX = this.MAX_TILES * 18;  //  deux des faces ne peut être visibles sinon vertex 30 vetices par faces
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(this.MAX_VERTEX * 3);
+        const normal = new Float32Array(this.MAX_VERTEX * 3);
+        const typeArray = new Float32Array(this.MAX_VERTEX * 1);
+        geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.addAttribute('normal', new THREE.BufferAttribute(normal, 3));
+        geometry.addAttribute('type', new THREE.BufferAttribute(typeArray, 1));
+        geometry.setDrawRange(0, 3);
+        this.meshCanal = new THREE.Mesh(geometry, materialMap);
+        this.meshCanal.matrixAutoUpdate = false;
+        this.meshCanal.frustumCulled = false;
+        this.meshCanal.matrixWorldNeedsUpdate = false;
+        this.meshCanal.receiveShadow = false;
+        this.meshCanal.drawMode = THREE.TrianglesDrawMode;
+    }
 
+    updateCanal(model) {
+        const gridCanal = model.ground.gridCanal;
+        const l = gridCanal.length;
+        let type = 0, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4;
+        let xi, zi, i;
+        const geometry = this.meshCanal.geometry;
+        const position = geometry.attributes.position.array;
+        const normal = geometry.attributes.normal.array;
+        let cntN = 0;
+        let cntP = 0;
+        const down = 0;
+        for (xi = 0; xi < this.nbTileX; xi++) {
+            for (zi = 0; zi < this.nbTileZ; zi++) {
+                type = gridCanal[zi * this.nbTileX + xi];
+                if (type !== 0) {
+                    debugger;
+                    x1 = xi * this.tileSize;
+                    z1 = zi * this.tileSize;
+                    y1 = this.pointsHeights[zi * this.nbPointX + xi] * this.tileHeight;
+                    x2 = xi * this.tileSize + this.tileSize;
+                    z2 = zi * this.tileSize;
+                    y2 = this.pointsHeights[zi * this.nbPointX + xi + 1] * this.tileHeight;
+                    x3 = x2;
+                    z3 = zi * this.tileSize + this.tileSize;
+                    y3 = this.pointsHeights[(zi + 1) * this.nbPointX + xi + 1] * this.tileHeight;
+                    x4 = x1;
+                    z4 = z3;
+                    y4 = this.pointsHeights[(zi + 1) * this.nbPointX + xi] * this.tileHeight;
+                    switch (type) {
+                        case 1:
+                            bottomX0();
+                            faceZ0();
+                            break;
+                        case 2:
+                            bottomX0();
+                            faceX0();
+                            break;
+                        case 3:
+                            bottomX0();
+                            break;
+                        default:
+                            bottomX0();
+                            faceZ0();
+                            faceX0();
+                    }
+                }
+            }
+        }
+        geometry.setDrawRange(0, cntP / 3);
+        geometry.attributes.position.needsUpdate = true;
+        geometry.attributes.normal.needsUpdate = true;
+
+        function faceZ0() {
+            position[cntP++] = x1; position[cntP++] = y1; position[cntP++] = z1;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z2;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            position[cntP++] = x2; position[cntP++] = y2; position[cntP++] = z2;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            position[cntP++] = x2; position[cntP++] = y2; position[cntP++] = z2;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            position[cntP++] = x2; position[cntP++] = down; position[cntP++] = z2;
+            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+        }
+
+        function faceX0() {
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            position[cntP++] = x1; position[cntP++] = y1; position[cntP++] = z1;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            position[cntP++] = x4; position[cntP++] = y4; position[cntP++] = z4;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            position[cntP++] = x4; position[cntP++] = y4; position[cntP++] = z4;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            position[cntP++] = x4; position[cntP++] = down; position[cntP++] = z4;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
+            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+        }
+
+        function bottomX0() {
+            position[cntP++] = x3; position[cntP++] = down; position[cntP++] = z3;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+            position[cntP++] = x2; position[cntP++] = down; position[cntP++] = z2;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+            position[cntP++] = x3; position[cntP++] = down; position[cntP++] = z3;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+            position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+            position[cntP++] = x4; position[cntP++] = down; position[cntP++] = z4;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 0;
+        }
     }
 
     updateDraft(model) {
@@ -124,12 +239,12 @@ module.exports = class Canal {
     }
 
     remove(parent) {
-        //parent.render.scene.remove(this.meshCanal);
+        parent.render.scene.remove(this.meshCanal);
         parent.render.scene.remove(this.meshDraft);
     }
 
     add(parent) {
-        //parent.render.scene.add(this.meshCanal);
+        parent.render.scene.add(this.meshCanal);
         parent.render.scene.add(this.meshDraft);
     }
 };

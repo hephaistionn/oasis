@@ -29,11 +29,12 @@ module.exports = class Canal {
     }
 
     startConstruct() {
-        const l = this.draftCanal.tiles.length;
+        const l = this.draftCanal.length * 2;
         for (let i = 0; i < l; i += 2) {
             this.ground.grid.setWalkableAt(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 0);
-            this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 1);
+            this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1]);
         }
+        this.ground.updateCanalType()// la forme d'un block de canal dépend de ses voisins
         this.drafted = false;
         this.draftCanal.length = 0;
         this.updated = true;
@@ -84,7 +85,7 @@ module.exports = class Canal {
                 }
             }
 
-            const length = Math.min(ctn / 2, tiles.length/2);
+            const length = Math.min(ctn / 2, tiles.length / 2);
 
             for (i = 0; i < length; i++) {
                 this.draftCanal.valid[i] = 1;
