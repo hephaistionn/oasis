@@ -114,15 +114,14 @@ module.exports = class ScreenMap extends Screen {
         this.drafted = null;
     }
 
-    construcRoad(cancel) {
-        if (this.road.drafted && cancel) {
-            this.road.cancelConstruct();
-        }
+    constructDraft(cancel) {
         if (this.road.drafted) {
-            this.road.startConstruct()
+            if(cancel) this.road.cancelConstruct();
+            else this.road.startConstruct()
         }
         if (this.canal.drafted) {
-            this.canal.startConstruct()
+            if(cancel) this.canal.cancelConstruct()
+            else this.canal.startConstruct()
         }
     }
 
@@ -133,7 +132,7 @@ module.exports = class ScreenMap extends Screen {
     }
 
     onMouseUp() {
-        this.construcRoad();
+        this.constructDraft();
     }
 
     onMouseClick() {
@@ -144,7 +143,7 @@ module.exports = class ScreenMap extends Screen {
     onMouseDownRight() {
         this.selected.select(false);
         this.construcBuilding(true);
-        this.construcRoad(true);
+        this.constructDraft(true);
     }
 
     onDismount() {

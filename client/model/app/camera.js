@@ -35,6 +35,7 @@ module.exports = class Camera extends Entity {
         ee.on('draftCanal', this.disable.bind(this));
         ee.on('mouseClick', this.enable.bind(this));
         ee.on('mouseDownRight', this.enable.bind(this));
+        ee.on('mouseUp', this.enable.bind(this));
     }
 
     look(x, y, z) {
@@ -95,5 +96,6 @@ module.exports = class Camera extends Entity {
         ee.off('draftCanal', this.disable.bind(this));
         ee.off('mouseClick', this.enable.bind(this));
         ee.off('mouseDownRight', this.enable.bind(this));
+        ee.off('mouseUp', this.enable.bind(this));
     }
 }
