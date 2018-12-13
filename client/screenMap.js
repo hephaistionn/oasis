@@ -91,21 +91,6 @@ module.exports = class ScreenMap extends Screen {
         this.remove(this.get(entityId));
     }
 
-    onDraftEntity(config) {
-        this.drafted = new ENTITIES[config.type](config, this.ground);
-        this.add(this.drafted);
-    }
-
-    construcBuilding(cancel) {
-        if (this.drafted && cancel) {
-            this.drafted.cancelConstruct();
-        }
-        if (this.drafted && this.drafted.isWalkable()) {
-            this.drafted.startConstruct()
-        }
-        this.drafted = null;
-    }
-
     onSelect(entity) {
         this.selected.select(false);
         this.selected = entity;
@@ -118,12 +103,10 @@ module.exports = class ScreenMap extends Screen {
 
     onMouseClick() {
         this.selected.select(false);
-        this.construcBuilding();
     }
 
     onMouseDownRight() {
         this.selected.select(false);
-        this.construcBuilding(true);
     }
 
     onDismount() {

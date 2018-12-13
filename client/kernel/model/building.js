@@ -26,8 +26,11 @@ class Building {
         this.cycleProgress = 0;
         this.started = false;
         this.ground = ground;
-        if (this.drafted)
+        if (this.drafted) {
             ee.on('mouseMove', this.moveDraft.bind(this));
+            ee.on('mouseClick', this.startConstruct.bind(this));
+            ee.on('mouseDownRight', this.cancelConstruct.bind(this));    
+        }
     }
 
     update(dt) {
@@ -125,7 +128,7 @@ class Building {
     }
 
     startConstruct() {
-        if (this.drafted) {
+        if (this.drafted && this.isWalkable()) {
             ee.emit('addEntity', {
                 x: this.ax, y: this.ay, z: this.az,
                 type: this.constructor.name, builded: true
@@ -171,8 +174,11 @@ class Building {
     }
 
     onDismount() {
-        if (this.drafted)
+        if (this.drafted) {
             ee.off('mouseMove', this.moveDraft.bind(this));
+            ee.off('mouseClick', this.startConstruct.bind(this));
+            ee.off('mouseDownRight', this.cancelConstruct.bind(this));    
+        }
         this.ground.setWalkable(this, 1);
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);

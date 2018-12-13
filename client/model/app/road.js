@@ -126,5 +126,6 @@ module.exports = class Road {
         ee.off('draftRoad', this.draft.bind(this));
         ee.off('mouseUp', this.startConstruct.bind(this));
         ee.off('mouseClick', this.startConstruct.bind(this));
+        ee.off('mouseDownRight', this.cancelConstruct.bind(this));
     }
 }

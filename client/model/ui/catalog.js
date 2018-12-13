@@ -29,7 +29,7 @@ class Catalog {
                 ee.emit('draftRoad', { drafted: true });
                 break;
             default:
-                ee.emit('draftEntity', { type: entityClass, drafted: true });
+                ee.emit('addEntity', { type: entityClass, drafted: true });
         }
     }
 

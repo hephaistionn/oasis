@@ -35,7 +35,6 @@ class App {
         ee.on('mouseRotate', this.onMouseRotate.bind(this));
         
         ee.on('select', this.onSelect.bind(this));
-        ee.on('draftEntity', this.onDraftEntity.bind(this));
         ee.on('addEntity', this.addEntity.bind(this));
         ee.on('removeEntity', this.removeEntity.bind(this))
         
@@ -252,11 +251,6 @@ class App {
         const entity = this.model.get(id);
         if(this.model.onSelect && entity && !entity.drafted) // drafted is business logic, should not be here :)
             this.model.onSelect(entity);
-    }
-
-    onDraftEntity(entityClass) {
-        if(this.model.onDraftEntity)
-            this.model.onDraftEntity(entityClass);
     }
 
     addEntity(config) {
