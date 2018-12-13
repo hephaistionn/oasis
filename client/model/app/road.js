@@ -23,11 +23,16 @@ module.exports = class Road {
         ee.on('mouseDown', this.draftStart.bind(this));
         ee.on('mouseMovePress', this.draftStaggering.bind(this));
         ee.on('mouseMove', this.draftMove.bind(this));
+        ee.on('draftRoad', this.draft.bind(this));
+        ee.on('mouseUp', this.startConstruct.bind(this));
+        ee.on('mouseClick', this.startConstruct.bind(this));
+        ee.on('mouseDownRight', this.cancelConstruct.bind(this));
+        
     }
 
-    draft(roadType) {
+    draft(config) {
         this.drafted = true;
-        this.roadType = roadType;
+        this.roadType = 2;
     }
 
     startConstruct() {
@@ -47,7 +52,7 @@ module.exports = class Road {
     }
 
 
-    draftStart(xR, zR, x, z) {
+    draftStart(xR, zR, x, z) { 
         if (this.drafted) {
             this.startXi = Math.floor(x / this.tileSize);
             this.startZi = Math.floor(z / this.tileSize);
@@ -118,5 +123,8 @@ module.exports = class Road {
         ee.off('mouseDown', this.draftStart.bind(this));
         ee.off('mouseMovePress', this.draftStaggering.bind(this));
         ee.off('mouseMove', this.draftMove.bind(this));
+        ee.off('draftRoad', this.draft.bind(this));
+        ee.off('mouseUp', this.startConstruct.bind(this));
+        ee.off('mouseClick', this.startConstruct.bind(this));
     }
 }

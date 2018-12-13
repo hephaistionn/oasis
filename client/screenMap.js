@@ -96,14 +96,6 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.drafted);
     }
 
-    onDraftRoad(config) {
-        this.road.draft(2)
-    }
-
-    onDraftCanal(config) {
-        this.canal.draft()
-    }
-
     construcBuilding(cancel) {
         if (this.drafted && cancel) {
             this.drafted.cancelConstruct();
@@ -114,17 +106,6 @@ module.exports = class ScreenMap extends Screen {
         this.drafted = null;
     }
 
-    constructDraft(cancel) {
-        if (this.road.drafted) {
-            if(cancel) this.road.cancelConstruct();
-            else this.road.startConstruct()
-        }
-        if (this.canal.drafted) {
-            if(cancel) this.canal.cancelConstruct()
-            else this.canal.startConstruct()
-        }
-    }
-
     onSelect(entity) {
         this.selected.select(false);
         this.selected = entity;
@@ -132,7 +113,7 @@ module.exports = class ScreenMap extends Screen {
     }
 
     onMouseUp() {
-        this.constructDraft();
+        
     }
 
     onMouseClick() {
@@ -143,7 +124,6 @@ module.exports = class ScreenMap extends Screen {
     onMouseDownRight() {
         this.selected.select(false);
         this.construcBuilding(true);
-        this.constructDraft(true);
     }
 
     onDismount() {

@@ -22,10 +22,14 @@ module.exports = class Canal {
         ee.on('mouseDown', this.draftStart.bind(this));
         ee.on('mouseMovePress', this.draftStaggering.bind(this));
         ee.on('mouseMove', this.draftMove.bind(this));
+        ee.on('draftCanal', this.draft.bind(this));
+        ee.on('mouseUp', this.startConstruct.bind(this));
+        ee.on('mouseClick', this.startConstruct.bind(this));
+        ee.on('mouseDownRight', this.cancelConstruct.bind(this));
     }
 
     draft() {
-        this.drafted = true;
+        this.drafted = true; 
     }
 
     startConstruct() {
@@ -127,5 +131,9 @@ module.exports = class Canal {
         ee.off('mouseDown', this.draftStart.bind(this));
         ee.off('mouseMovePress', this.draftStaggering.bind(this));
         ee.off('mouseMove', this.draftMove.bind(this));
+        ee.off('draftCanal', this.draft.bind(this));
+        ee.off('mouseUp', this.startConstruct.bind(this));
+        ee.off('mouseClick', this.startConstruct.bind(this));
+        ee.off('mouseDownRight', this.cancelConstruct.bind(this));
     }
 }
