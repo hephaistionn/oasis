@@ -28,7 +28,7 @@ class Building {
         if (this.drafted) {
             this._moveDraft = this.moveDraft.bind(this);
             this._startConstruct = this.startConstruct.bind(this);
-            this._cancelConstruct = this.moveDraft.bind(this);
+            this._cancelConstruct = this.cancelConstruct.bind(this);
             ee.on('mouseMove', this._moveDraft);
             ee.on('mouseClick', this._startConstruct);
             ee.on('mouseDownRight', this._cancelConstruct);    
@@ -75,7 +75,7 @@ class Building {
         this.aroty = (this.roty + this._parent.aroty) % (Math.PI * 2);
 
         for (let i = 0; i < this._child.length; i++) {
-            this._child[i].move()
+            this._child[i].move();
         }
 
         this.onMove();
@@ -132,7 +132,7 @@ class Building {
     }
 
     startConstruct() {
-        if (this.drafted && this.isWalkable()) {
+        if (this.drafted && !this.undroppable) {
             ee.emit('addEntity', {
                 x: this.ax, y: this.ay, z: this.az,
                 type: this.constructor.name, builded: true
@@ -157,7 +157,7 @@ class Building {
             const tiles = this.getTiles();
             const walkable = this.ground.isWalkable(tiles);
             const waterable = this.ground.isWaterable(this.constructor.waterLevelNeeded, tiles);
-            this.undroppable = !walkable;
+            this.undroppable = !walkable || !waterable;
         }
     }
 

@@ -171,12 +171,10 @@ module.exports = class Ground {
     }
 
     addCanal(xi, zi) {
-        const o = zi * this.nbTileX + xi;
-        const xo = zi * this.nbTileX + xi+1;
-        const ox = zi * this.nbTileX + xi-1;
-        const zo = zi+1 * this.nbTileX + xi;
-        const oz = zi-1 * this.nbTileX + xi;
-        this.gridCanal[o] = 1;
+        const i = zi * this.nbTileX + xi;
+        this.gridCanal[i] = 1;
+        this.gridWater[i] = 255;
+        this.setIrrigationTiles(i);
     }
 
     updateCanalType() {
