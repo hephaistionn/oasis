@@ -154,8 +154,12 @@ module.exports = class Ground {
     }
 
     getTileCenter(x, z) {
-        const xi = Math.floor(x / this.tileSize);
-        const zi = Math.floor(z / this.tileSize);
+        let xi = Math.floor(x / this.tileSize);
+        let zi = Math.floor(z / this.tileSize);
+        xi = Math.max(xi, 0);
+        zi = Math.max(zi, 0);
+        xi = Math.min(xi, this.nbTileX-1);
+        zi = Math.min(zi, this.nbTileZ-1);
         const index = zi * this.nbTileX + xi;
         const y = this.tilesHeight[index] * this.tileHeight;
         //console.log('i:', index, ' xi:', xi,' y:', y, ' zi:', zi)

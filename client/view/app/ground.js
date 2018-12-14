@@ -30,8 +30,7 @@ class Ground {
         this.materialBorder = materialBorder;
         this.materialWater = materialWater;
         ///this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
-
-        this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
+        this.chunkMesh = this.drawGroundMesh(model.nbTileX, model.nbTileZ, model);
         this.waterMesh = this.drawWaterMesh(model);
         this.borderMesh = this.drawBorderMesh(model);
 
@@ -39,9 +38,22 @@ class Ground {
         this.element.add(this.waterMesh);
         this.element.add(this.borderMesh);
 
-        this.clickableArea = [this.chunkMesh];
+        this.clickableArea = this.drawClickableArea(model);
 
         this.refreshTexture(model);
+    }
+
+    drawClickableArea(model)  {
+        const xSize = this.tileSize * (model.nbTileX+100);
+        const zSize = this.tileSize * (model.nbTileZ+100);
+        const geometry = new THREE.PlaneBufferGeometry(xSize, zSize);
+        const mesh = new THREE.Mesh(geometry);
+        mesh.position.set(-40,6,-40);
+        mesh.updateMatrixWorld();
+        mesh.matrixAutoUpdate = false;
+        mesh.matrixWorldNeedsUpdate = false;
+        mesh.receiveShadow = true;
+        return [mesh];
     }
 
     drawWaterMesh(model) {
@@ -83,18 +95,7 @@ class Ground {
         }
     }
 
-    drawChunkMesh(nbXTiles, nbZTiles, model) {
-        const chunkGeo = this.createChunkGeo(nbXTiles, nbZTiles, model);
-        chunkGeo.computeBoundingBox();
-        const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-        //const chunkMesh = new THREE.Mesh(chunkGeo, materialA);
-        chunkMesh.matrixAutoUpdate = false;
-        chunkMesh.matrixWorldNeedsUpdate = false;
-        chunkMesh.receiveShadow = true;
-        return chunkMesh;
-    }
-
-    createChunkGeo(nbXTiles, nbZTiles, model) {
+    drawGroundMesh(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 
@@ -141,7 +142,13 @@ class Ground {
         chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.20));
         chunkGeometry.computeVertexNormals();*/
 
-        return chunkGeometry;
+        chunkGeometry.computeBoundingBox();
+        const chunkMesh = new THREE.Mesh(chunkGeometry, this.materialGround);
+        //const chunkMesh = new THREE.Mesh(chunkGeometry, materialA);
+        chunkMesh.matrixAutoUpdate = false;
+        chunkMesh.matrixWorldNeedsUpdate = false;
+        chunkMesh.receiveShadow = true;
+        return chunkMesh;
     }
 
     drawBorderMesh(model) {
