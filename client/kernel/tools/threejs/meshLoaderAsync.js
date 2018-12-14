@@ -2,6 +2,7 @@ const THREE = require('three');
 
 const cacheGeo = new Map();
 const requested = new Map();
+const defaultGeo = new THREE.PlaneBufferGeometry(1, 1);
 
 function computeGeo(buffers, indexUV) {
 
@@ -53,7 +54,7 @@ THREE.getMesh = function getMesh(url, material, name, indexUV) {
         mesh.name = name;
         return mesh;
     } else {
-        const mesh = new THREE.Mesh(undefined, material);
+        const mesh = new THREE.Mesh(defaultGeo, material);
         mesh.matrixAutoUpdate = false;
         mesh.frustumCulled = false;
         mesh.castShadow = true;
