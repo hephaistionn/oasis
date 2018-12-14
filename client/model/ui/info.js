@@ -2,16 +2,20 @@ const ee = require('../../kernel/tools/eventemitter');
 
 class Info {
 
-    constructor(conf) {
+    constructor(conf, entities) {
         this._id = Math.floor((1 + Math.random()) * 0x10000000000);
         this.entity = null;
         this.opened = false;
-        ee.on('select', this.open.bind(this));
-        ee.on('mouseClick', this.close.bind(this));
-        ee.on('mouseDownRight', this.close.bind(this));
+        this.entities = entities;
+        this._open = this.open.bind(this);
+        this._close = this.close.bind(this);
+        ee.on('select', this._open);
+        ee.on('mouseClick', this._close);
+        ee.on('mouseDownRight', this._close);
     }
 
-    open(entity) {
+    open(entityId) {
+        const entity = this.entities.get(entityId);
         this.entity = entity;
         this.opened = true;
         this.refresh(entity);
@@ -33,9 +37,9 @@ class Info {
     }
 
     onDismount() {
-        ee.off('select', this.open.bind(this));
-        ee.off('mouseClick', this.close.bind(this));
-        ee.off('mouseDownRight', this.close.bind(this));
+        ee.off('select', this._open);
+        ee.off('mouseClick', this._close);
+        ee.off('mouseDownRight', this._close);
     }
 }
 

@@ -4,8 +4,10 @@ module.exports = class Screen {
 
     constructor() {
         this._components = new Map();
-        ee.on('onNewEntity', this.adding.bind(this));
-        ee.on('onRemoveEntity', this.removing.bind(this));
+        this._adding = this.adding.bind(this);
+        this._removing = this.removing.bind(this);
+        ee.on('onNewEntity', this._adding);
+        ee.on('onRemoveEntity', this._removing);
         this.ax = 0;
         this.ay = 0;
         this.az = 0;
@@ -57,8 +59,8 @@ module.exports = class Screen {
     }
 
     dismount() {
-        ee.off('onNewEntity', this.adding.bind(this));
-        ee.off('onRemoveEntity', this.removing.bind(this));
+        ee.off('onNewEntity', this._adding);
+        ee.off('onRemoveEntity', this._removing);
         if(this.onDismount) {
             this.onDismount();
         }

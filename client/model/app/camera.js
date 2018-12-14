@@ -28,14 +28,19 @@ module.exports = class Camera extends Entity {
 
         this.disabled = false;
 
-        ee.on('mouseDown', this.draggStart.bind(this));
-        ee.on('mouseMovePress', this.dragg.bind(this));
-        ee.on('mouseWheel', this.scale.bind(this));
-        ee.on('draftRoad', this.disable.bind(this));
-        ee.on('draftCanal', this.disable.bind(this));
-        ee.on('mouseClick', this.enable.bind(this));
-        ee.on('mouseDownRight', this.enable.bind(this));
-        ee.on('mouseUp', this.enable.bind(this));
+        this._draggStart = this.draggStart.bind(this);
+        this._dragg = this.dragg.bind(this);
+        this._scale = this.scale.bind(this);
+        this._disable = this.disable.bind(this);
+        this._enable = this.enable.bind(this);
+        ee.on('mouseDown', this._draggStart);
+        ee.on('mouseMovePress', this._dragg);
+        ee.on('mouseWheel', this._scale);
+        ee.on('draftRoad', this._disable);
+        ee.on('draftCanal', this._disable);
+        ee.on('mouseClick', this._enable);
+        ee.on('mouseDownRight', this._enable);
+        ee.on('mouseUp', this._enable);
     }
 
     look(x, y, z) {
@@ -89,13 +94,13 @@ module.exports = class Camera extends Entity {
     }
 
     onDismount() {
-        ee.off('mouseDown', this.draggStart.bind(this));
-        ee.off('mouseMovePress', this.dragg.bind(this));
-        ee.off('mouseWheel', this.scale.bind(this));
-        ee.off('draftRoad', this.disable.bind(this));
-        ee.off('draftCanal', this.disable.bind(this));
-        ee.off('mouseClick', this.enable.bind(this));
-        ee.off('mouseDownRight', this.enable.bind(this));
-        ee.off('mouseUp', this.enable.bind(this));
+        ee.off('mouseDown', this._draggStart);
+        ee.off('mouseMovePress', this._dragg);
+        ee.off('mouseWheel', this._scale);
+        ee.off('draftRoad', this._disable);
+        ee.off('draftCanal', this._disable);
+        ee.off('mouseClick', this._enable);
+        ee.off('mouseDownRight', this._enable);
+        ee.off('mouseUp', this._enable);
     }
 }

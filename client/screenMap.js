@@ -43,11 +43,9 @@ module.exports = class ScreenMap extends Screen {
         this.road = new Road({}, this.ground);
         this.canal = new Canal({}, this.ground);
         this.catalog = new Catalog(mapConfig);
-        this.info = new Info();
+        this.info = new Info({}, this._components);
         this.store = new Store();
         this.stats = new Stats({}, this.store);
-        this.drafted = null;
-        this.selected = this.ground; // this.selected never undefined for evoid if
 
         this.add(this.camera);
         this.add(this.light);
@@ -91,22 +89,16 @@ module.exports = class ScreenMap extends Screen {
         this.remove(this.get(entityId));
     }
 
-    onSelect(entity) {
-        this.selected.select(false);
-        this.selected = entity;
-        this.selected.select(true);
-    }
-
     onMouseUp() {
         
     }
 
     onMouseClick() {
-        this.selected.select(false);
+        
     }
 
     onMouseDownRight() {
-        this.selected.select(false);
+        
     }
 
     onDismount() {

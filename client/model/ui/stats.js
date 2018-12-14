@@ -12,7 +12,8 @@ class Stats {
             berry: {label:'berry', value:0}
         }
         this.store = store;
-        ee.on('onUpdateStats', this.refresh.bind(this));
+        this._refresh = this.refresh.bind(this)
+        ee.on('onUpdateStats', this._refresh);
     }
 
     refresh() {
@@ -26,7 +27,7 @@ class Stats {
     }
 
     onDismount() {
-        ee.off('onUpdateStats', this.refresh.bind(this));
+        ee.off('onUpdateStats', this._refresh);
     }
 
 }

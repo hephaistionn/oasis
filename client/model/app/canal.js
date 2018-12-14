@@ -19,13 +19,20 @@ module.exports = class Canal {
             length: 0
         };
 
-        ee.on('mouseDown', this.draftStart.bind(this));
-        ee.on('mouseMovePress', this.draftStaggering.bind(this));
-        ee.on('mouseMove', this.draftMove.bind(this));
-        ee.on('draftCanal', this.draft.bind(this));
-        ee.on('mouseUp', this.startConstruct.bind(this));
-        ee.on('mouseClick', this.startConstruct.bind(this));
-        ee.on('mouseDownRight', this.cancelConstruct.bind(this));
+        this._draftStart = this.draftStart.bind(this);
+        this._draftStaggering = this.draftStaggering.bind(this);
+        this._draftMove = this.draftMove.bind(this);
+        this._draft = this.draft.bind(this);
+        this._startConstruct = this.startConstruct.bind(this);
+        this._cancelConstruct = this.cancelConstruct.bind(this);
+
+        ee.on('mouseDown', this._draftStart);
+        ee.on('mouseMovePress', this._draftStaggering);
+        ee.on('mouseMove', this._draftMove);
+        ee.on('draftCanal', this._draft);
+        ee.on('mouseUp', this._startConstruct);
+        ee.on('mouseClick', this._startConstruct);
+        ee.on('mouseDownRight', this._cancelConstruct);
     }
 
     draft() {
@@ -33,10 +40,13 @@ module.exports = class Canal {
     }
 
     startConstruct() {
+        if(!this.drafted) return;
         const l = this.draftCanal.length * 2;
         for (let i = 0; i < l; i += 2) {
-            this.ground.grid.setWalkableAt(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 0);
-            this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1]);
+            if(this.draftCanal.valid[i/2]) {
+                this.ground.grid.setWalkableAt(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 0);
+                this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1]);
+            }
         }
         this.ground.updateCanalType()// la forme d'un block de canal dépend de ses voisins
         this.drafted = false;
@@ -128,12 +138,12 @@ module.exports = class Canal {
     }
 
     onDismount() {
-        ee.off('mouseDown', this.draftStart.bind(this));
-        ee.off('mouseMovePress', this.draftStaggering.bind(this));
-        ee.off('mouseMove', this.draftMove.bind(this));
-        ee.off('draftCanal', this.draft.bind(this));
-        ee.off('mouseUp', this.startConstruct.bind(this));
-        ee.off('mouseClick', this.startConstruct.bind(this));
-        ee.off('mouseDownRight', this.cancelConstruct.bind(this));
+        ee.off('mouseDown', this._draftStart);
+        ee.off('mouseMovePress', this._draftStaggering);
+        ee.off('mouseMove', this._draftMove);
+        ee.off('draftRoad', this._draft);
+        ee.off('mouseUp', this._startConstruct);
+        ee.off('mouseClick', this._startConstruct);
+        ee.off('mouseDownRight', this._cancelConstruct);
     }
 }

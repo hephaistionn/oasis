@@ -21,15 +21,19 @@ class Building {
         this.selected = false;
         this.updated = true;
         this.stats = new Stats(config, true);
-        this.constructor.instances.push(this);
         this.cycleDuration = 0;
         this.cycleProgress = 0;
         this.started = false;
         this.ground = ground;
         if (this.drafted) {
-            ee.on('mouseMove', this.moveDraft.bind(this));
-            ee.on('mouseClick', this.startConstruct.bind(this));
-            ee.on('mouseDownRight', this.cancelConstruct.bind(this));    
+            this._moveDraft = this.moveDraft.bind(this);
+            this._startConstruct = this.startConstruct.bind(this);
+            this._cancelConstruct = this.moveDraft.bind(this);
+            ee.on('mouseMove', this._moveDraft);
+            ee.on('mouseClick', this._startConstruct);
+            ee.on('mouseDownRight', this._cancelConstruct);    
+        } else {
+            this.constructor.instances.push(this);
         }
     }
 
@@ -153,7 +157,7 @@ class Building {
             const tiles = this.getTiles();
             const walkable = this.ground.isWalkable(tiles);
             const waterable = this.ground.isWaterable(this.constructor.waterLevelNeeded, tiles);
-            this.undroppable = !walkable || !waterable;
+            this.undroppable = !walkable;
         }
     }
 
@@ -175,13 +179,14 @@ class Building {
 
     onDismount() {
         if (this.drafted) {
-            ee.off('mouseMove', this.moveDraft.bind(this));
-            ee.off('mouseClick', this.startConstruct.bind(this));
-            ee.off('mouseDownRight', this.cancelConstruct.bind(this));    
+            ee.off('mouseMove', this._moveDraft);
+            ee.off('mouseClick', this._startConstruct);
+            ee.off('mouseDownRight', this._cancelConstruct); 
+        } else {
+            this.ground.setWalkable(this, 1);
+            const index = this.constructor.instances.indexOf(this);
+            this.constructor.instances.splice(index, 1);
         }
-        this.ground.setWalkable(this, 1);
-        const index = this.constructor.instances.indexOf(this);
-        this.constructor.instances.splice(index, 1);
         this._child.forEach((children) => {
             this.remove(children);
         });

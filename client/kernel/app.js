@@ -13,6 +13,7 @@ class App {
         this.params = {};
         this.currentScreenId = null;
         this.requestAnimation = null;
+        this.selected  = null;
 
         for(let i = 0; i < arguments.length; i++) {
             this.models[arguments[i].name] = arguments[i];
@@ -128,11 +129,15 @@ class App {
 
 
     onMouseDownRight(x, z) {
+        if(this.selected)
+            this.selected.select(false);
         if(this.model.onMouseDownRight)
             this.model.onMouseDownRight(x, z);
     }
 
     onMouseClick(x, z, id) {
+        if(this.selected)
+            this.selected.select(false);
         if(this.model.onMouseClick)
             this.model.onMouseClick(x, z, id);
     }
@@ -249,8 +254,12 @@ class App {
 
     onSelect(id) {
         const entity = this.model.get(id);
-        if(this.model.onSelect && entity && !entity.drafted) // drafted is business logic, should not be here :)
-            this.model.onSelect(entity);
+        if(entity && !entity.drafted) {
+            if(this.selected)
+                this.selected.select(false);
+            this.selected = entity;
+            this.selected.select(true);
+        }
     }
 
     addEntity(config) {

@@ -73,7 +73,6 @@ module.exports = class Canal {
             for (zi = 0; zi < this.nbTileZ; zi++) {
                 type = gridCanal[zi * this.nbTileX + xi];
                 if (type !== 0) {
-                    debugger;
                     x1 = xi * this.tileSize;
                     z1 = zi * this.tileSize;
                     y1 = this.pointsHeights[zi * this.nbPointX + xi] * this.tileHeight;
