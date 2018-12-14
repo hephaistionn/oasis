@@ -2,7 +2,7 @@ const THREE = require('three');
 
 const vertShader = "" +
     "varying vec3 vNormal; \n" +
-    "varying vec3 vColor; \n" +
+    //"varying vec3 vColor; \n" +
     "varying float vType; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     //"attribute vec3 color;  \n"+
@@ -18,9 +18,11 @@ const vertShader = "" +
 
     "vType = 1.0;\n"+
     "if(type < 0.65) { \n"+
+    "   vType = 0.5;\n"+
+    "}\n"+
+    "if(type < 0.1) { \n"+
     "   vType = 0.0;\n"+
     "}\n"+
-
 
     //"vType = type; \n" +
     //"vColor = vec3(0.0, 0.0, 1.0); \n" +
@@ -78,8 +80,12 @@ const fragShader = "" +
     "}\n"+
     */
 
-    "float inter = smoothstep(0.4,0.6,vType);\n"+
-    "vec3 colorFinal =  inter * texture2D( textureGrass, UV ).xyz + (1.0-inter) * texture2D( textureDust, UV ).xyz; \n" +
+    "vec3 colorFinal= vec3(0.7764,0.6666,0.4235);\n"+
+    
+    "if(vType>0.5) {"+
+    "float inter = smoothstep(0.7,0.8,vType);\n"+
+    "colorFinal =  inter * texture2D( textureGrass, UV ).xyz + (1.0-inter) * texture2D( textureDust, UV ).xyz; \n" +
+    "}"+
 
     /*"if(vType < 0.6 && vType > 0.5) { \n"+
     "   colorFinal = (vec3(0.52, 0.662, 0.278)+colorFinal)/vec3(2.0, 2.0, 2.0);; \n" +
@@ -97,8 +103,14 @@ const fragShader = "" +
     "   } \n" +
     "   sumLights = max(vec3(0.6,0.6,0.6),sumLights); \n" +
     "   colorFinal *= sumLights; \n" +
-    "   if(vAbsolutePosition.y<3.0){ \n" +
-    "       colorFinal = mix(vec3(0.5,0.78,1.0), colorFinal, vAbsolutePosition.y/3.0); \n"  +
+    "   if(vAbsolutePosition.y<4.0 && vAbsolutePosition.y>3.0){ \n" +
+    "        float a = (vAbsolutePosition.y-3.0); \n" +
+    "       vec3 borderwater = mix(vec3(0.7,0.7,0.9), colorFinal, 1.0-a);  \n" +
+    //"       colorFinal = (borderwater + borderwater)/2.0; \n"  +
+    "       colorFinal = borderwater; \n"  +
+    "   }" +
+    "   if(vAbsolutePosition.y<4.0){ \n" +
+    "       colorFinal = mix(vec3(0.5,0.78,1.0), colorFinal, vAbsolutePosition.y/4.0); \n"  +
     "   }" +
     "   gl_FragColor = vec4(colorFinal , 1.0); \n" +
     "}";
