@@ -10,6 +10,7 @@ const Stats = require('./model/ui/stats');
 const Store = require('./kernel/tools/store');
 const Road = require('./model/app/road');
 const Canal = require('./model/app/canal');
+const Remover = require('./model/app/remover');
 
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
@@ -46,6 +47,7 @@ module.exports = class ScreenMap extends Screen {
         this.info = new Info({}, this._components);
         this.store = new Store();
         this.stats = new Stats({}, this.store);
+        this.remover = new Remover({}, this.ground);
 
         this.add(this.camera);
         this.add(this.light);
@@ -55,7 +57,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.stats);
         this.add(this.road);
         this.add(this.canal);
-
+        this.add(this.remover);
 
         this.populate(model, mapConfig);
 

@@ -25,6 +25,7 @@ const COMPONENTS = {
     Lumberjack: require('../../view/app/characters/lumberjack'),
     Road: require('../../view/app/road'),
     Canal: require('../../view/app/canal'),
+    Remover: require('../../view/app/remover'),
 };
 
 
