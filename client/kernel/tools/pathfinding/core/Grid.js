@@ -45,8 +45,8 @@ Grid.prototype._buildNodes = function _buildNodes(width, height, initValue) {
 
     var y, x, index;
 
-    for(y = 0; y < height; ++y) {
-        for(x = 0; x < width; ++x) {
+    for (y = 0; y < height; ++y) {
+        for (x = 0; x < width; ++x) {
             index = (y * width + x) * sizeNode;
             nodes[index] = x;
             nodes[index + 1] = y;
@@ -71,7 +71,7 @@ Grid.prototype.getIndexNodeAt = function getIndexNodeAt(x, y) {
  * @return {number} - The walkability of the node.
  */
 Grid.prototype.isWalkableAt = function isWalkableAt(x, y) {
-    if((x >= 0 && x < this.width) && (y >= 0 && y < this.height)) {
+    if ((x >= 0 && x < this.width) && (y >= 0 && y < this.height)) {
         return this.nodes[(y * this.width + x) * this.sizeNode + this.indexWalkable];
     }
 };
@@ -85,6 +85,10 @@ Grid.prototype.isWalkableAt = function isWalkableAt(x, y) {
  */
 Grid.prototype.setWalkableAt = function setWalkableAt(x, y, walkable) {
     this.nodes[(y * this.width + x) * this.sizeNode + this.indexWalkable] = walkable;
+};
+
+Grid.prototype.getWalkableAt = function getWalkableAt(x, y, walkable) {
+    return this.nodes[(y * this.width + x) * this.sizeNode + this.indexWalkable];
 };
 
 Grid.prototype.setWalkableAtByIndex = function setWalkableAtByIndex(index, walkable) {
@@ -110,7 +114,7 @@ Grid.prototype.setWalkableAtByIndex = function setWalkableAtByIndex(index, walka
  * @param {DiagonalMovement} diagonalMovement
  */
 Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement, nodeType) {
-    nodeType = nodeType||1;
+    nodeType = nodeType || 1;
     nodeType--;
     const nodes = this.nodes;
     var x = nodes[nodeIndex + this.indexX],
@@ -125,47 +129,47 @@ Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement,
     neighbors.pop();
 
     // ↑
-    if(nodeType < this.isWalkableAt(tx, ty)) {
+    if (nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s0 = true;
     }
     // →
     tx = x + 1;
     ty = y;
-    if(nodeType < this.isWalkableAt(tx, ty)) {
+    if (nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s1 = true;
     }
     // ↓
     tx = x;
     ty = y + 1;
-    if(nodeType < this.isWalkableAt(tx, ty)) {
+    if (nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s2 = true;
     }
     // ←
     tx = x - 1;
     ty = y;
-    if(nodeType < this.isWalkableAt(tx, ty)) {
+    if (nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s3 = true;
     }
 
-    if(diagonalMovement === DiagonalMovement.Never) {
+    if (diagonalMovement === DiagonalMovement.Never) {
         return neighbors;
     }
 
-    if(diagonalMovement === DiagonalMovement.OnlyWhenNoObstacles) {
+    if (diagonalMovement === DiagonalMovement.OnlyWhenNoObstacles) {
         d0 = s3 && s0;
         d1 = s0 && s1;
         d2 = s1 && s2;
         d3 = s2 && s3;
-    } else if(diagonalMovement === DiagonalMovement.IfAtMostOneObstacle) {
+    } else if (diagonalMovement === DiagonalMovement.IfAtMostOneObstacle) {
         d0 = s3 || s0;
         d1 = s0 || s1;
         d2 = s1 || s2;
         d3 = s2 || s3;
-    } else if(diagonalMovement === DiagonalMovement.Always) {
+    } else if (diagonalMovement === DiagonalMovement.Always) {
         d0 = true;
         d1 = true;
         d2 = true;
@@ -177,25 +181,25 @@ Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement,
     // ↖
     tx = x - 1;
     ty = y - 1;
-    if(d0 && nodeType < this.isWalkableAt(tx, ty)) {
+    if (d0 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↗
     tx = x + 1;
     ty = y - 1;
-    if(d1 && nodeType < this.isWalkableAt(tx, ty)) {
+    if (d1 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↘
     tx = x + 1;
     ty = y + 1;
-    if(d2 && nodeType < this.isWalkableAt(tx, ty)) {
+    if (d2 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↙
     tx = x - 1;
     ty = y + 1;
-    if(d3 && nodeType < this.isWalkableAt(tx, ty)) {
+    if (d3 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
 
@@ -230,7 +234,7 @@ Grid.prototype.clear = function clear() {
     const indexH = this.indexH;
     const indexParent = this.indexParent
 
-    for(i = 0; i < size; i += sizeNode) {
+    for (i = 0; i < size; i += sizeNode) {
         nodes[i + indexOpended] = 0;
         nodes[i + indexClosed] = 0;
         nodes[i + indexF] = 0;
@@ -242,7 +246,7 @@ Grid.prototype.clear = function clear() {
 };
 
 
-Grid.prototype.getSpecialNodes = function getSpecialNodes(){
+Grid.prototype.getSpecialNodes = function getSpecialNodes() {
     let i;
     const nodes = this.nodes;
     const size = nodes.length;
@@ -250,8 +254,8 @@ Grid.prototype.getSpecialNodes = function getSpecialNodes(){
     const indexWalkable = this.indexWalkable;
     const walkable = [];
     const index = [];
-    for(i = 0; i < size; i += sizeNode) {
-        if(nodes[i + indexWalkable]>1){
+    for (i = 0; i < size; i += sizeNode) {
+        if (nodes[i + indexWalkable] > 1) {
             walkable.push(nodes[i + indexWalkable]);
             index.push(i);
         }

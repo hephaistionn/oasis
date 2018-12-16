@@ -22,7 +22,7 @@ function nearestEntities(ENTITIES, entity, resource, x, z) {
     return instances.splice(0, 3);
 }
 
-function computePath(ground, originTile, targetTiles) {
+function computePath(ground, originTile, targetTiles, remote) {
     const grid = ground.grid;
     let targetTile, i;
     tileType = 1;
@@ -48,11 +48,14 @@ function computePath(ground, originTile, targetTiles) {
         tx = solution[i];
         tz = solution[i + 2];
         solution[i + 1] = ground.tilesHeight[ground.nbTileX * tz + tx];
-        solution[i];
-        solution[i + 2];
+    }
+    if (remote) {
+        return { path: solution.slice(0, solution.length - 3), index: solutionIndex };
+    } else {
+        return { path: solution, index: solutionIndex };
     }
 
-    return {path:solution, index: solutionIndex};
+
 }
 
 function getPathLength(path) {

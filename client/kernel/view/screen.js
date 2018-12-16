@@ -23,6 +23,7 @@ const COMPONENTS = {
     ForestHut: require('../../view/app/building/forestHut'),
     Builder: require('../../view/app/characters/builder'),
     Lumberjack: require('../../view/app/characters/lumberjack'),
+    Hunter: require('../../view/app/characters/hunter'),
     Road: require('../../view/app/road'),
     Canal: require('../../view/app/canal'),
     Remover: require('../../view/app/remover'),

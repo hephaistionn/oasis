@@ -8,14 +8,7 @@ class Tree extends Resource {
         super(config, ground);
         this.stats.set(Stats.WOOD, config.wood || 10000);
     }
-
-    getWorkerSlot() {
-        const a = Math.random() * Math.PI * 2;
-        const x = this.ax + Math.cos(a) * 1;
-        const z = this.az + Math.sin(a) * 1;
-        return { x: x, y: this.ay, z: z, rotY: a + Math.PI }
-    }
-
+    
 }
 Tree.selectable = false;
 Tree.tileX = 1;

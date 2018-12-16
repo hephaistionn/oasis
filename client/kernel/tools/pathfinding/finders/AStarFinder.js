@@ -25,11 +25,14 @@ function AStarFinder(opt) {
     this.weight = opt.weight || 1;
     this.diagonalMovement = opt.diagonalMovement;
 
-    if(!this.diagonalMovement) {
-        if(!this.allowDiagonal) {
+    this.sourceSave = new Uint16Array(30);
+    this.targetSave = new Uint16Array(30);
+
+    if (!this.diagonalMovement) {
+        if (!this.allowDiagonal) {
             this.diagonalMovement = DiagonalMovement.Never;
         } else {
-            if(this.dontCrossCorners) {
+            if (this.dontCrossCorners) {
                 this.diagonalMovement = DiagonalMovement.OnlyWhenNoObstacles;
             } else {
                 this.diagonalMovement = DiagonalMovement.IfAtMostOneObstacle;
@@ -39,7 +42,7 @@ function AStarFinder(opt) {
 
     // When diagonal movement is allowed the manhattan heuristic is not
     //admissible. It should be octile instead
-    if(this.diagonalMovement === DiagonalMovement.Never) {
+    if (this.diagonalMovement === DiagonalMovement.Never) {
         this.heuristic = opt.heuristic || Heuristic.manhattan;
     } else {
         this.heuristic = opt.heuristic || Heuristic.octile;
@@ -51,7 +54,7 @@ function AStarFinder(opt) {
  * @return {Array<Array<number>>} The path, including both start and
  *     end positions.
  */
-AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, nodeType) {
+AStarFinder.prototype.findPath = function (startX, startY, endX, endY, grid, nodeType) {
     nodeType = nodeType || 1;
     const indexOpended = grid.indexOpended;
     const indexClosed = grid.indexClosed;
@@ -62,7 +65,7 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, node
     const nodes = grid.nodes;
     var index;
 
-    let openList = new Heap(function(IndexNodeA, IndexNodeB) {
+    let openList = new Heap(function (IndexNodeA, IndexNodeB) {
         return nodes[IndexNodeA + indexF] - nodes[IndexNodeB + indexF];
     });
 
@@ -83,13 +86,13 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, node
     nodes[startNodeIndex + indexOpended] = 1;
 
     // while the open list is not empty
-    while(!openList.empty()) {
+    while (!openList.empty()) {
         // pop the position of node which has the minimum `f` value.
         index = openList.pop();
         nodes[index + indexClosed] = 1;
 
         // if reached the end position, construct the path and return it
-        if(nodes[index] === nodes[endNodeIndex] && nodes[index + 1] === nodes[endNodeIndex + 1]) {
+        if (nodes[index] === nodes[endNodeIndex] && nodes[index + 1] === nodes[endNodeIndex + 1]) {
             const path = Util.backtrace(nodes, endNodeIndex);
             grid.clear();
             return path;
@@ -97,10 +100,10 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, node
 
         // get neigbours of the current node
         neighborsIndex = grid.getNeighbors(index, diagonalMovement, nodeType);
-        for(i = 0, l = neighborsIndex.length; i < l; ++i) {
+        for (i = 0, l = neighborsIndex.length; i < l; ++i) {
             neighborIndex = neighborsIndex[i];
 
-            if(nodes[neighborIndex + indexClosed]) {
+            if (nodes[neighborIndex + indexClosed]) {
                 continue;
             }
 
@@ -113,13 +116,13 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, node
 
             // check if the neighbor has not been inspected yet, or
             // can be reached with smaller cost from the current node
-            if(!nodes[neighborIndex + indexOpended] || ng < nodes[neighborIndex + indexG]) {
+            if (!nodes[neighborIndex + indexOpended] || ng < nodes[neighborIndex + indexG]) {
                 nodes[neighborIndex + indexG] = ng;
                 nodes[neighborIndex + indexH] = nodes[neighborIndex + indexH] || weight * heuristic(abs(x - endX), abs(y - endY));
                 nodes[neighborIndex + indexF] = nodes[neighborIndex + indexG] + nodes[neighborIndex + indexH];
                 nodes[neighborIndex + indexParent] = index;
 
-                if(!nodes[neighborIndex + indexOpended]) {
+                if (!nodes[neighborIndex + indexOpended]) {
                     openList.push(neighborIndex);
                     nodes[neighborIndex + indexOpended] = 1;
                 } else {
@@ -136,50 +139,39 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, node
     grid.clear();
     return [];
 };
-AStarFinder.prototype.findPathBetweenArea = function(source, target, grid, tileType) {
+AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tileType) {
 
     let i, x, y = 0;
     let l = source.length;
-    for(i = 0; i < l; i += 2) {
+    for (i = 0; i < l; i += 2) {
+        this.sourceSave[i / 2] = grid.getWalkableAt(source[i], source[i + 1]);
         grid.setWalkableAt(source[i], source[i + 1], tileType);
     }
     l = target.length;
-    for(i = 0; i < l; i += 2) {
+    for (i = 0; i < l; i += 2) {
+        this.targetSave[i / 2] = grid.getWalkableAt(target[i], target[i + 1]);
         grid.setWalkableAt(target[i], target[i + 1], tileType);
     }
 
-    const sourceX1 = source[0];
-    const sourceZ1 = source[1];
-    //const sourceX2 = source[source.length - 2];
-    //const sourceZ2 = source[source.length - 1];
-    const targetX1 = target[0];
-    const targetZ1 = target[1];
-    //const targetX2 = target[target.length - 2];
-    //const targetZ2 = target[target.length - 1];
+    let path = this.findPath(source[0], source[1], target[0], target[1], grid, tileType); //tileType authorized tile for path
 
-    let path = this.findPath(sourceX1, sourceZ1, targetX1, targetZ1, grid, tileType); //tileType authorized tile for path
 
-    const result = [0];
-    result.pop();//optimisation
-    l = path.length;
-    for(i = 0; i < l; i += 2) {
-        x = path[i];
-        y = path[i + 1];
-        //if(x < sourceX1 || x > sourceX2 || y < sourceZ1 || y > sourceZ2) {
-        //    if(x < targetX1 || x > targetX2 || y < targetZ1 || y > targetZ2) {
-        result.push(x);
-        result.push(0);
-        result.push(y);
-        //    }
-        //}
+    l = path.length / 2;
+    const result = new Uint16Array(l * 3);
+    for (i = 0; i < l; i += 1) {
+        x = path[i * 2];
+        y = path[i * 2 + 1];
+        result[i * 3] = x;
+        result[i * 3 + 1] = 0;
+        result[i * 3 + 2] = y;
     }
     l = source.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(source[i], source[i + 1], 0);
+    for (i = 0; i < l; i += 2) {
+        grid.setWalkableAt(source[i], source[i + 1], this.sourceSave[i / 2]);
     }
     l = target.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(target[i], target[i + 1], 0);
+    for (i = 0; i < l; i += 2) {
+        grid.setWalkableAt(target[i], target[i + 1], this.targetSave[i / 2]);
     }
 
     return result;

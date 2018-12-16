@@ -54,7 +54,6 @@ class Character {
         let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId;
 
         const origin = [Math.floor(this.ax / ground.tileSize), Math.floor(this.az / ground.tileSize)];
-
         for (let i = 0; i < this.targets.length; i++) {
             target = this.targets[i];
 
@@ -74,7 +73,7 @@ class Character {
                 originId = targetId;
             }
 
-            solution = pathfinding.computePath(ground, originTile, targetTiles);
+            solution = pathfinding.computePath(ground, originTile, targetTiles, target.remote);
 
             if (solution) {
                 path = solution.path;

@@ -5,6 +5,15 @@ class HunterHut extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        this.cycleDuration = 0;
+    }
+
+    onStart() {
+        this.spawnCharacter('Hunter');
+    }
+
+    working() {
+        this.spawnCharacter('Hunter');
     }
 }
 

@@ -35,6 +35,17 @@ class Resource {
         return [this.ax / tileSize - 0.5, this.az / tileSize - 0.5];
     }
 
+    getDirection(ax, az) {
+        return Math.atan2(this.az - az, this.ax - ax);
+    }
+
+    getWorkerSlot() {
+        const a = Math.random() * Math.PI * 2;
+        const x = this.ax + Math.cos(a) * 1;
+        const z = this.az + Math.sin(a) * 1;
+        return { x: x, y: this.ay, z: z, rotY: a + Math.PI }
+    }
+
     onMount(parent) {
         if (this.constructor.walkable !== undefined) {
             this.ground.setWalkable(this);

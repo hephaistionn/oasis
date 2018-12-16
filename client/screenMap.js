@@ -28,6 +28,7 @@ const ENTITIES = {
     ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
+    Hunter: require('./model/app/characters/hunter'),
 };
 
 module.exports = class ScreenMap extends Screen {
@@ -64,6 +65,7 @@ module.exports = class ScreenMap extends Screen {
         this.store.watch(ENTITIES.Repository.instances);
         this.store.watch(ENTITIES.Attic.instances);
         this.store.watch(ENTITIES.ForestHut.instances);
+        this.store.watch(ENTITIES.HunterHut.instances);
     }
 
     populate(model, config) {
