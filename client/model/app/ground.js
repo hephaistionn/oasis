@@ -177,6 +177,12 @@ module.exports = class Ground {
         this.setIrrigationTiles(i);
     }
 
+    removeCanal(xi, zi) {
+        const i = zi * this.nbTileX + xi;
+        this.gridCanal[i] = 0;
+        this.gridWater[i] = 0;
+    }
+
     updateCanalType() {
         let xi, zi, o, xo, ox, zo,oz, wallZ, wallX;
         for (xi = 0; xi < this.nbTileX; xi++) {
@@ -206,10 +212,6 @@ module.exports = class Ground {
             }
         }
         this.updated = true;
-    }
-
-    removeCanal(xi, zi) {
-
     }
 
     getEntity(id) {

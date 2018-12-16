@@ -25,6 +25,7 @@ module.exports = class Canal {
         this._draft = this.draft.bind(this);
         this._startConstruct = this.startConstruct.bind(this);
         this._cancelConstruct = this.cancelConstruct.bind(this);
+        this._removeCanal = this.removeCanal.bind(this);
 
         ee.on('mouseDown', this._draftStart);
         ee.on('mouseMovePress', this._draftStaggering);
@@ -33,6 +34,23 @@ module.exports = class Canal {
         ee.on('mouseUp', this._startConstruct);
         ee.on('mouseClick', this._startConstruct);
         ee.on('mouseDownRight', this._cancelConstruct);
+        ee.on('removeCanal', this._removeCanal);
+    }
+
+    removeCanal(tiles, l) {
+        let x, z, i, o;
+        for (i = 0; i < l; i++) {
+            x = tiles[i * 2];
+            z = tiles[i * 2 + 1];
+            o = z * this.ground.nbTileX + x;
+            if( this.ground.gridCanal[o]  !== 0) {
+                this.ground.removeCanal(x, z);
+                this.ground.grid.setWalkableAt(x, z, 1);
+            }
+        }
+        this.ground.updateCanalType();
+        this.ground.initGridWater();
+        this.updated = true;
     }
 
     draft() {
@@ -48,7 +66,7 @@ module.exports = class Canal {
                 this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1]);
             }
         }
-        this.ground.updateCanalType()// la forme d'un block de canal dépend de ses voisins
+        this.ground.updateCanalType();// la forme d'un block de canal dépend de ses voisins
         this.drafted = false;
         this.draftCanal.length = 0;
         this.updated = true;

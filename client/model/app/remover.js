@@ -40,7 +40,13 @@ module.exports = class Remover {
 
     startRemove() {
         if(!this.enable) return;
-        const l = this.area.length * 2;
+        const l = this.area.length;
+        const tiles = this.area.tiles;
+        const remove = this.area.remove;
+
+        ee.emit('removeRoad', tiles, l);
+        ee.emit('removeCanal', tiles, l);
+
         this.enable = false;
         this.area.length = 0;
         this.updated = true;

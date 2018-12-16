@@ -21,6 +21,8 @@ class Ground {
         this.nbPointZ = model.nbPointZ;
         this.tilesColor = model.tilesColor;
 
+        this.initGridIndex = null;
+
         this.createGround(model);
         this.add(parent);
     }
@@ -39,6 +41,8 @@ class Ground {
         this.element.add(this.borderMesh);
 
         this.clickableArea = this.drawClickableArea(model);
+
+        this.initGridIndex = this.chunkMesh.geometry.index.array.slice(0);
 
         this.refreshTexture(model);
     }
@@ -313,6 +317,13 @@ class Ground {
                 geometry.index.array[i * 6 + 4] = 0;
                 geometry.index.array[i * 6 + 5] = 0;
                 updated = true;
+            } else {
+                geometry.index.array[i * 6] = this.initGridIndex[i * 6];
+                geometry.index.array[i * 6 + 1] = this.initGridIndex[i * 6 + 1];
+                geometry.index.array[i * 6 + 2] = this.initGridIndex[i * 6 + 2];
+                geometry.index.array[i * 6 + 3] = this.initGridIndex[i * 6 + 3];
+                geometry.index.array[i * 6 + 4] = this.initGridIndex[i * 6 + 4];
+                geometry.index.array[i * 6 + 5] = this.initGridIndex[i * 6 + 5];
             }
         }
         if (updated) {

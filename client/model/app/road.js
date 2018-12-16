@@ -26,6 +26,7 @@ module.exports = class Road {
         this._draft = this.draft.bind(this);
         this._startConstruct = this.startConstruct.bind(this);
         this._cancelConstruct = this.cancelConstruct.bind(this);
+        this._removeRoad = this.removeRoad.bind(this);
 
         ee.on('mouseDown', this._draftStart);
         ee.on('mouseMovePress', this._draftStaggering);
@@ -34,6 +35,19 @@ module.exports = class Road {
         ee.on('mouseUp', this._startConstruct);
         ee.on('mouseClick', this._startConstruct);
         ee.on('mouseDownRight', this._cancelConstruct);
+        ee.on('removeRoad', this._removeRoad);
+    }
+
+    removeRoad(tiles, l) {
+        let xi, zi,  i
+        for (i = 0; i < l; i++) {
+            xi = tiles[i * 2];
+            zi = tiles[i * 2 + 1];
+            if(this.ground.grid.isWalkableAt(xi, zi) === 2) {
+                this.ground.grid.setWalkableAt(xi, zi, 1);
+            }
+        }
+        this.updated = true;
     }
 
     draft(config) {
