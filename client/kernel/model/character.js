@@ -21,13 +21,15 @@ class Character {
         this.pathStep = 0;
         this.selected = false;
         this.working = false;
-        this.workingDuration = 4000; 
+        this.workingDuration = 4000;
         this.workingProgress = 0;
         this.stats = new Stats(config, false);
         this.constructor.instances.push(this);
         this.origin = config.origin;
         this.started = false;
         this.ground = ground;
+        this.forceTargetId;
+        this.stop = false;
     }
 
     start() {
@@ -46,6 +48,12 @@ class Character {
         this.az = z;
         if (roty !== undefined) this.aroty = roty;
         this.onMove();
+    }
+
+    setWorking(value, targetId) {
+        this.working = value;
+        this.forceTargetId = targetId;
+        this.setStop(false);
     }
 
     buildPaths() {
@@ -86,15 +94,24 @@ class Character {
         }
     }
 
+    setStop(value) {
+        this.stop = value;
+    }
+
     update(dt) {
         this.updated = true;
+
+        if (this.stop) return;
+
         const path = this.paths[this.pathStep];
 
-        if(this.working) {
-            this.workingProgress += dt; 
-            if(this.workingProgress > this.workingDuration) {
+        if (this.working) {
+            this.workingProgress += dt;
+            if (this.workingProgress > this.workingDuration) {
                 this.working = false;
                 this.workingProgress = 0;
+                const entity = this.ground.getEntity(this.forceTargetId || path.targetId);
+                this.onEndWorking(entity);
             }
             return;
         }
@@ -136,6 +153,10 @@ class Character {
 
     onEndPath() {
         console.log('onEndPath');
+    }
+
+    onEndWorking() {
+
     }
 
     onMove() {

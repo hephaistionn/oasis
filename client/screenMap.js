@@ -29,6 +29,7 @@ const ENTITIES = {
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
     Hunter: require('./model/app/characters/hunter'),
+    Soldier: require('./model/app/characters/soldier'),
 };
 
 module.exports = class ScreenMap extends Screen {

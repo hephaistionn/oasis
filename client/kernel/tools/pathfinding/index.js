@@ -16,7 +16,7 @@ function init(ground, entities) {
 
 function nearestEntities(ENTITIES, entity, resource, x, z) {
     const max = 80;
-    let instances = ENTITIES[entity].instances.filter(instance => instance.stats[resource]);
+    let instances = resource ? ENTITIES[entity].instances.filter(instance => instance.stats[resource]) : ENTITIES[entity].instances;
     instances = instances.filter(instance => Math.abs(instance.ax - x) < max && Math.abs(instance.az - z) < max);
     instances.sort((a, b) => Math.abs(a.ax - x) + Math.abs(a.az - z) - Math.abs(b.ax - x) + Math.abs(b.az - z));
     return instances.splice(0, 3);

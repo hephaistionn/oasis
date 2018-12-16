@@ -6,18 +6,17 @@ const material = require('../material/materialMorph');
 const WALK = 0;
 const WORK = 1;
 
+animationsBodySolier = {};
 
-animationsBodyHunter = {};
-
-animationsBodyHunter[WALK] = { duration: 500, steps: new Uint8Array([0, 1, 2, 3, 0]) };
-animationsBodyHunter[WORK] = { duration: 500, steps: new Uint8Array([4, 5, 6]) };
+animationsBodySolier[WALK] = { duration: 500, steps: new Uint8Array([0, 1, 2, 3, 0]) };
+animationsBodySolier[WORK] = { duration: 500, steps: new Uint8Array([4, 5, 6]) };
 
 
-module.exports = class Hunter extends Character {
+module.exports = class Soldier extends Character {
 
     initMesh(model) {
         this.currentAnimation = WALK;
-        this.animationsBody = animationsBodyHunter; 
+        this.animationsBody = animationsBodySolier; 
 
         this.element = THREE.getMesh('obj/characters/hunter.obj', material, model._id);
     }
