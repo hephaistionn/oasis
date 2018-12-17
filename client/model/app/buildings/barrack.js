@@ -5,6 +5,20 @@ class Barrack extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        if (!this.drafted) {
+            this._spawnStart = this.spawnStart.bind(this);
+            ee.on('alert', this._spawnStart);
+        }
+    }
+
+    spawnStart() {
+        console.log('spawnStart');
+    }
+
+    onDismount() {
+        super.onDismount();
+        if (!this.drafted)
+            ee.off('alert', this._spawnStart);
     }
 }
 
@@ -13,9 +27,9 @@ Barrack.description = 'This building increase the enable places for your populat
 Barrack.tileX = 1;
 Barrack.tileZ = 1;
 Barrack.walkable = 0;
-Barrack.cost = {wood: 5, stone: 2};
-Barrack.require = {inactive: 2};
-Barrack.enabled = { population: 6};
+Barrack.cost = { wood: 5, stone: 2 };
+Barrack.require = { inactive: 2 };
+Barrack.enabled = { population: 6 };
 Barrack.constuctDuration = 1000;
 Barrack.waterLevelNeeded = 0;
 Barrack.instances = [];

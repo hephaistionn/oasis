@@ -24,7 +24,7 @@ const COMPONENTS = {
     Builder: require('../../view/app/characters/builder'),
     Lumberjack: require('../../view/app/characters/lumberjack'),
     Hunter: require('../../view/app/characters/hunter'),
-    Soldier: require('../../view/app/characters/soldier'),
+    Militiaman: require('../../view/app/characters/militiaman'),
     Road: require('../../view/app/road'),
     Canal: require('../../view/app/canal'),
     Remover: require('../../view/app/remover'),

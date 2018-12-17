@@ -31,7 +31,7 @@ class Building {
             this._cancelConstruct = this.cancelConstruct.bind(this);
             ee.on('mouseMove', this._moveDraft);
             ee.on('mouseClick', this._startConstruct);
-            ee.on('mouseDownRight', this._cancelConstruct);    
+            ee.on('mouseDownRight', this._cancelConstruct);
         } else {
             this.constructor.instances.push(this);
         }
@@ -181,7 +181,7 @@ class Building {
         if (this.drafted) {
             ee.off('mouseMove', this._moveDraft);
             ee.off('mouseClick', this._startConstruct);
-            ee.off('mouseDownRight', this._cancelConstruct); 
+            ee.off('mouseDownRight', this._cancelConstruct);
         } else {
             this.ground.setWalkable(this, 1);
             const index = this.constructor.instances.indexOf(this);
@@ -190,6 +190,10 @@ class Building {
         this._child.forEach((children) => {
             this.remove(children);
         });
+    }
+
+    hit() {
+
     }
 
 }

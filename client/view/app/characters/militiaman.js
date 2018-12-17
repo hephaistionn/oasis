@@ -12,7 +12,7 @@ animationsBodySolier[WALK] = { duration: 500, steps: new Uint8Array([0, 1, 2, 3,
 animationsBodySolier[WORK] = { duration: 500, steps: new Uint8Array([4, 5, 6]) };
 
 
-module.exports = class Soldier extends Character {
+module.exports = class Militiaman extends Character {
 
     initMesh(model) {
         this.currentAnimation = WALK;

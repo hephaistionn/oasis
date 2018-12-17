@@ -22,7 +22,6 @@ module.exports = class Ground {
         this.pointsNormal = config.pointsNormal;
         this.tilesColor = config.tilesColor;
         this.canvasColor = config.canvas;
-        this.spawns = config.spawns;
         this.ENTITIES = ENTITIES;
         this.entities = entities;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
@@ -107,9 +106,7 @@ module.exports = class Ground {
             }
             return true;
         } else {
-            const xi = Math.floor(x);
-            const zi = Math.floor(z);
-            return this.grid.isWalkableAt(xi, zi) ? true : false;
+            return this.grid.isWalkableAt(x, z) ? true : false;
         }
     }
 
@@ -218,10 +215,15 @@ module.exports = class Ground {
         return this.entities.get(id);
     }
 
-    getSpawnerTile() {
-        const nbSpwans = this.spawns.length;
-        const randomIndex = Math.floor(Math.random() * (nbSpwans - 0.001));
-        return this.spawns[randomIndex];
+    getFreeRandomBorder() {
+        let xi = Math.floor(Math.random() * this.nbTileX);
+        let zi = 0;
+        while(this.isWalkable(xi, zi) === false) {
+            xi = Math.floor(Math.random() * this.nbTileX);
+            zi = 0;
+        }
+        const yi = this.tilesHeight[zi * this.nbTileX + xi] * this.tileHeight;
+        return [(xi+0.5)*this.tileSize, yi, (zi+0.5)*this.tileSize];
     }
 
     select() {

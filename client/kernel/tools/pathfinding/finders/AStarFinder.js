@@ -140,6 +140,8 @@ AStarFinder.prototype.findPath = function (startX, startY, endX, endY, grid, nod
     return [];
 };
 AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tileType) {
+    if (source[0] === target[0] && source[1] === target[1]) return [];
+
 
     let i, x, y = 0;
     let l = source.length;

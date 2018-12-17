@@ -11,6 +11,7 @@ const Store = require('./kernel/tools/store');
 const Road = require('./model/app/road');
 const Canal = require('./model/app/canal');
 const Remover = require('./model/app/remover');
+const Spawner = require('./model/app/spawner');
 
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
@@ -29,7 +30,7 @@ const ENTITIES = {
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
     Hunter: require('./model/app/characters/hunter'),
-    Soldier: require('./model/app/characters/soldier'),
+    Militiaman: require('./model/app/characters/militiaman'),
 };
 
 module.exports = class ScreenMap extends Screen {
@@ -50,6 +51,7 @@ module.exports = class ScreenMap extends Screen {
         this.store = new Store();
         this.stats = new Stats({}, this.store);
         this.remover = new Remover({}, this.ground);
+        this.spawner = new Spawner({}, this.ground);
 
         this.add(this.camera);
         this.add(this.light);
@@ -85,6 +87,11 @@ module.exports = class ScreenMap extends Screen {
         }
     }
 
+    update(dt) {
+        if (this.spawner)
+            this.spawner.update(dt);
+    }
+
     addEntity(config) {
         const entity = new ENTITIES[config.type](config, this.ground);
         this.add(entity);
@@ -95,19 +102,20 @@ module.exports = class ScreenMap extends Screen {
     }
 
     onMouseUp() {
-        
+
     }
 
     onMouseClick() {
-        
+
     }
 
     onMouseDownRight() {
-        
+
     }
 
     onDismount() {
         this.store.dismount();
+        this.spawner.dismount();
     }
 
 };

@@ -22,6 +22,13 @@ function nearestEntities(ENTITIES, entity, resource, x, z) {
     return instances.splice(0, 3);
 }
 
+function nearestInstances(instances, x, z) {
+    const max = 80;
+    instances = instances.filter(instance => Math.abs(instance.ax - x) < max && Math.abs(instance.az - z) < max);
+    instances.sort((a, b) => Math.abs(a.ax - x) + Math.abs(a.az - z) - Math.abs(b.ax - x) + Math.abs(b.az - z));
+    return instances.splice(0, 3);
+}
+
 function computePath(ground, originTile, targetTiles, remote) {
     const grid = ground.grid;
     let targetTile, i;
@@ -41,7 +48,7 @@ function computePath(ground, originTile, targetTiles, remote) {
         }
     }
 
-    if (!solution) return;
+    if (!solution || !solution.length) return;
 
     let length = solution.length, tx, tz;
     for (i = 0; i < length; i += 3) {
@@ -85,6 +92,7 @@ const pathfinding = {
     Grid: Grid,
     init: init,
     nearestEntities: nearestEntities,
+    nearestInstances: nearestInstances,
     computePath: computePath,
     getPathLength: getPathLength,
     revert: revert

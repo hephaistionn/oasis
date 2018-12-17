@@ -28,7 +28,6 @@ class Character {
         this.origin = config.origin;
         this.started = false;
         this.ground = ground;
-        this.forceTargetId;
         this.stop = false;
     }
 
@@ -50,9 +49,8 @@ class Character {
         this.onMove();
     }
 
-    setWorking(value, targetId) {
+    setWorking(value) {
         this.working = value;
-        this.forceTargetId = targetId;
         this.setStop(false);
     }
 
@@ -110,7 +108,7 @@ class Character {
             if (this.workingProgress > this.workingDuration) {
                 this.working = false;
                 this.workingProgress = 0;
-                const entity = this.ground.getEntity(this.forceTargetId || path.targetId);
+                const entity = this.ground.getEntity( path.targetId);
                 this.onEndWorking(entity);
             }
             return;
@@ -164,7 +162,7 @@ class Character {
     }
 
     onMount(parent) {
-        if (this.targets) {
+        if (this.targets && this.targets.length) {
             this.buildPaths();
         }
         this._parent = parent;
