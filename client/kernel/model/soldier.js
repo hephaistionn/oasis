@@ -50,7 +50,6 @@ class Soldier {
     setWorking(value, targetId) {
         this.working = value;
         this.forceTargetId = targetId;
-        this.setStop(false);
     }
 
     buildPath(entities) {
@@ -73,8 +72,8 @@ class Soldier {
             this.pathProgress = 0;
             if (targetId) {
                 const targetEntity = this.ground.getEntity(targetId);
-                if (targetEntity && targetEntity.stop === false) {
-                    targetEntity.setStop(true);
+                if (targetEntity && targetEntity.path) {
+                    targetEntity.stopPath();
                 }
             }
         } else {
@@ -84,8 +83,6 @@ class Soldier {
 
     update(dt) {
         this.updated = true;
-        if (this.path === null) return;
-
         if (this.working) {
             this.workingProgress += dt;
             if (this.workingProgress > this.workingDuration) {
@@ -96,7 +93,7 @@ class Soldier {
             }
             return;
         }
-
+        if (this.path === null) return;
         if (this.pathProgress === 0) {
             const entity = this.ground.getEntity(this.path.originId);
             if (entity) {
@@ -118,6 +115,15 @@ class Soldier {
             const pos = this.path.getPoint(this.pathProgress);
             this.move(pos[0], pos[1], pos[2], pos[3]);
         }
+    }
+
+    stopPath() {
+      this.path = null;
+    }
+
+    getTiles() {
+        const tileSize = this.ground.tileSize;
+        return [Math.floor(this.ax / tileSize), Math.floor(this.az / tileSize)];
     }
 
     onStartPath() {

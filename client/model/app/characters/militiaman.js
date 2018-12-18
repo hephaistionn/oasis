@@ -25,18 +25,13 @@ class Militiaman extends Soldier {
     updatePath() {
         const soldiers = this.ground.ENTITIES[MILITIAMAN].instances.filter(inst => inst.enemy !== this.enemy);
         const repository = this.ground.ENTITIES[REPOSITORY].instances;
-
         if (this.mustBack) {
-            console.log('-----go home----');
             this.buildPath();
         } else if (soldiers.length) {
-            console.log('-----go soldiers----');
             this.buildPath(soldiers);
-        } else if (repository.length) {
-            console.log('-----go repo----');
+        } else if (repository.length && this.enemy) {
             this.buildPath(repository);
         } else {
-            console.log('-----go home----');
             this.buildPath();
         }
     }
@@ -44,14 +39,21 @@ class Militiaman extends Soldier {
     hit(degat) {
         this.hp -= degat;
         this.hp = Math.max(0, this.hp);
-        if (hp === 0) {
+        if (this.hp === 0) {
             ee.emit(removeEntityEvent, this._id);
         }
     }
 
     onEndWorking(entity) {
-        entity.hit(this.attack);
+        if(!entity) {
+            this.setWorking(false);
+            this.updatePath();
+            return;
+        }else{
+            entity.hit(this.attack);
+        }
         if (!entity.hp) {
+            this.setWorking(false);
             this.updatePath();
         }
     }
@@ -63,6 +65,7 @@ class Militiaman extends Soldier {
             this.mustBack = true;
         } else if (entity.constructor.name === MILITIAMAN) {
             entity.setWorking(true, this._id);
+            this.setWorking(true, entity._id)
         }
     }
 }

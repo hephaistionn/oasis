@@ -5,6 +5,11 @@ class Barrack extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        this.quantity = 3;
+        this.cycleDuration = 3000;
+        this.cycleProgress = 0;
+        this.count = 0;
+        this.working = false;
         if (!this.drafted) {
             this._spawnStart = this.spawnStart.bind(this);
             ee.on('alert', this._spawnStart);
@@ -12,7 +17,24 @@ class Barrack extends Building {
     }
 
     spawnStart() {
-        console.log('spawnStart');
+        this.working = true;
+    }
+
+    update(dt) {
+        if(this.working === false) return;
+        this.cycleProgress += dt
+        if (this.cycleProgress > this.cycleDuration) {
+            this.cycleProgress = 0;
+            this.spawn();
+            if (this.count > this.quantity) {
+                this.working = false;
+            }
+        }
+    }
+
+    spawn() {
+        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: 'Militiaman'});
+        this.count++
     }
 
     onDismount() {

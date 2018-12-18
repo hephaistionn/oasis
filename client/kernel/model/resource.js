@@ -31,7 +31,7 @@ class Resource {
     }
 
     getTiles() {
-        const tileSize = 4;
+        const tileSize = this.ground.tileSize;
         return [this.ax / tileSize - 0.5, this.az / tileSize - 0.5];
     }
 
