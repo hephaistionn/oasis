@@ -65,7 +65,9 @@ module.exports = class Member {
         }
         const ia = steps[indexStep];
         const ib = steps[indexStep + 1];
-        this.element.morphTargetInfluences[ib] = this.element.animProgress / (1 / nbSteps) - indexStep;
+        if(ia !== ib) {
+            this.element.morphTargetInfluences[ib] = this.element.animProgress / (1 / nbSteps) - indexStep;
+        }
         this.element.morphTargetInfluences[ia] = 1 - this.element.morphTargetInfluences[ib];
 
         if (this.head) {
