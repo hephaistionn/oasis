@@ -29,14 +29,21 @@ function nearestInstances(instances, x, z) {
     return instances.splice(0, 3);
 }
 
-function computePath(ground, originTile, targetTiles, remote) {
+function computePath(ground, originTile, targetTiles, remote, inner) {
     const grid = ground.grid;
     let targetTile, i;
     tileType = 1;
     const solutions = [];
-    for (i = 0; i < targetTiles.length; i++) {
-        targetTile = targetTiles[i];
-        solutions.push(finder.findPathBetweenArea(originTile, targetTile, grid, tileType));
+    if (inner) { //Pour les unités et non les batiments
+        for (i = 0; i < targetTiles.length; i++) {
+            targetTile = targetTiles[i];
+            solutions.push(finder.findPathBetweenAreaIn(originTile, targetTile, grid));
+        }
+    } else {
+        for (i = 0; i < targetTiles.length; i++) {
+            targetTile = targetTiles[i];
+            solutions.push(finder.findPathBetweenArea(originTile, targetTile, grid, tileType));
+        }
     }
 
     let solutionIndex = 0;
@@ -61,8 +68,6 @@ function computePath(ground, originTile, targetTiles, remote) {
     } else {
         return { path: solution, index: solutionIndex };
     }
-
-
 }
 
 function getPathLength(path) {
@@ -87,6 +92,24 @@ function revert(path) {
     return newPath;
 }
 
+function breakPath(path) {
+    const l = path.length / 3;
+    let l1 = Math.ceil(l / 2);
+    let l2 = Math.ceil(l / 2);
+    if (l % 2 == 0) {
+        l1 += 1;
+    }
+    const p1 = path.slice(0, l1 * 3);
+    const p2 = new Uint16Array(l2 * 3);
+    const l3 = l * 3;
+    const l23 = l2 * 3;
+    for (let i = 0; i < l23; i += 3) {
+        p2[i] = path[l3 - i - 3];
+        p2[i + 1] = path[l3 - i - 2];
+        p2[i + 2] = path[l3 - i - 1];
+    }
+    return [p1, p2];
+}
 
 const pathfinding = {
     Grid: Grid,
@@ -95,7 +118,8 @@ const pathfinding = {
     nearestInstances: nearestInstances,
     computePath: computePath,
     getPathLength: getPathLength,
-    revert: revert
+    revert: revert,
+    breakPath: breakPath
 };
 
 module.exports = pathfinding;

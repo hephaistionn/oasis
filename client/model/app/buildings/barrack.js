@@ -5,8 +5,8 @@ class Barrack extends Building {
 
     constructor(config, ground) {
         super(config, ground);
-        this.quantity = 3;
-        this.cycleDuration = 3000;
+        this.quantity = 5;
+        this.cycleDuration = 5000;
         this.cycleProgress = 0;
         this.count = 0;
         this.working = false;
@@ -21,19 +21,19 @@ class Barrack extends Building {
     }
 
     update(dt) {
-        if(this.working === false) return;
+        if (this.working === false) return;
         this.cycleProgress += dt
         if (this.cycleProgress > this.cycleDuration) {
             this.cycleProgress = 0;
             this.spawn();
-            if (this.count > this.quantity) {
+            if (this.count >= this.quantity) {
                 this.working = false;
             }
         }
     }
 
     spawn() {
-        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: 'Militiaman'});
+        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: 'Militiaman' });
         this.count++
     }
 

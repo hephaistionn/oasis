@@ -6,12 +6,12 @@ module.exports = class Spawner {
 
     constructor(config, ground) {
         this.ground = ground;
-        this.cycleDuration = 8000;
+        this.cycleDuration = 5000;
         this.cycleProgress = 0;
         this.count = 0;
-        this.quantity = 4;
+        this.quantity = 5;
         this.working = true;
-        window.spawn  = this;
+        window.spawn = this;
     }
 
     update(dt) {
@@ -19,7 +19,7 @@ module.exports = class Spawner {
         if (this.cycleProgress > this.cycleDuration) {
             this.cycleProgress = 0;
             const repository = this.ground.ENTITIES[REPOSITORY].instances;
-            if(repository.length && this.count <= this.quantity) {
+            if (repository.length && this.count < this.quantity) {
                 this.spawn();
                 this.count++;
             }
@@ -27,11 +27,10 @@ module.exports = class Spawner {
     }
 
     spawn() {
-        console.log('SPAWN')
         const tile = this.ground.getFreeRandomBorder();
         ee.emit('addEntity', { x: tile[0], y: tile[1], z: tile[2], type: 'Militiaman', enemy: true });
         ee.emit('alert');
-        
+
     }
 
     dismount() {

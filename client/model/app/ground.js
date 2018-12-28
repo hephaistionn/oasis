@@ -145,6 +145,14 @@ module.exports = class Ground {
         return count === 3;
     }
 
+    isInSameTile(entityA, entityB) {
+        let xiA = Math.floor(entityA.ax / this.tileSize);
+        let ziA = Math.floor(entityA.az / this.tileSize);
+        let xiB = Math.floor(entityB.ax / this.tileSize);
+        let ziB = Math.floor(entityB.az / this.tileSize);
+        return xiA === xiB && ziB === ziB;
+    }
+
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] * this.tileHeight;
@@ -155,8 +163,8 @@ module.exports = class Ground {
         let zi = Math.floor(z / this.tileSize);
         xi = Math.max(xi, 0);
         zi = Math.max(zi, 0);
-        xi = Math.min(xi, this.nbTileX-1);
-        zi = Math.min(zi, this.nbTileZ-1);
+        xi = Math.min(xi, this.nbTileX - 1);
+        zi = Math.min(zi, this.nbTileZ - 1);
         const index = zi * this.nbTileX + xi;
         const y = this.tilesHeight[index] * this.tileHeight;
         //console.log('i:', index, ' xi:', xi,' y:', y, ' zi:', zi)
@@ -181,28 +189,28 @@ module.exports = class Ground {
     }
 
     updateCanalType() {
-        let xi, zi, o, xo, ox, zo,oz, wallZ, wallX;
+        let xi, zi, o, xo, ox, zo, oz, wallZ, wallX;
         for (xi = 0; xi < this.nbTileX; xi++) {
             for (zi = 0; zi < this.nbTileZ; zi++) {
                 o = zi * this.nbTileX + xi;
-                if(this.gridCanal[o] !==0) {
-                    ox = zi * this.nbTileX + xi-1;
-                    oz = (zi-1) * this.nbTileX + xi;
+                if (this.gridCanal[o] !== 0) {
+                    ox = zi * this.nbTileX + xi - 1;
+                    oz = (zi - 1) * this.nbTileX + xi;
                     wallZ = false;
                     wallX = false;
-                    if( xi ===0 || this.gridCanal[ox] === 0) {
+                    if (xi === 0 || this.gridCanal[ox] === 0) {
                         wallX = true;
                     }
-                    if( zi ===0 || this.gridCanal[oz] === 0) {
+                    if (zi === 0 || this.gridCanal[oz] === 0) {
                         wallZ = true;
                     }
-                    if(wallZ && !wallX) {
+                    if (wallZ && !wallX) {
                         this.gridCanal[o] = 1;
-                    } else if  (!wallZ && wallX){
+                    } else if (!wallZ && wallX) {
                         this.gridCanal[o] = 2;
-                    } else if  (!wallZ && !wallX){
+                    } else if (!wallZ && !wallX) {
                         this.gridCanal[o] = 3;
-                    } else if  (wallZ && wallX){
+                    } else if (wallZ && wallX) {
                         this.gridCanal[o] = 4;
                     }
                 }
@@ -218,12 +226,12 @@ module.exports = class Ground {
     getFreeRandomBorder() {
         let xi = Math.floor(Math.random() * this.nbTileX);
         let zi = 0;
-        while(this.isWalkable(xi, zi) === false) {
+        while (this.isWalkable(xi, zi) === false) {
             xi = Math.floor(Math.random() * this.nbTileX);
             zi = 0;
         }
         const yi = this.tilesHeight[zi * this.nbTileX + xi] * this.tileHeight;
-        return [(xi+0.5)*this.tileSize, yi, (zi+0.5)*this.tileSize];
+        return [(xi + 0.5) * this.tileSize, yi, (zi + 0.5) * this.tileSize];
     }
 
     select() {

@@ -140,8 +140,7 @@ AStarFinder.prototype.findPath = function (startX, startY, endX, endY, grid, nod
     return [];
 };
 AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tileType) {
-    if (source[0] === target[0] && source[1] === target[1]) return [];
-
+    if (source[0] === target[0] && source[1] === target[1]) return [source[0], 0, source[1]];
 
     let i, x, y = 0;
     let l = source.length;
@@ -174,6 +173,29 @@ AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tile
     l = target.length;
     for (i = 0; i < l; i += 2) {
         grid.setWalkableAt(target[i], target[i + 1], this.targetSave[i / 2]);
+    }
+
+    return result;
+};
+
+
+AStarFinder.prototype.findPathBetweenAreaIn = function (source, target, grid) {
+    if (source[0] === target[0] && source[1] === target[1]) return [source[0], 0, source[1]];
+
+    let i, x, y = 0;
+    let l = source.length;
+
+    let path = this.findPath(source[0], source[1], target[0], target[1], grid);
+
+
+    l = path.length / 2;
+    const result = new Uint16Array(l * 3);
+    for (i = 0; i < l; i += 1) {
+        x = path[i * 2];
+        y = path[i * 2 + 1];
+        result[i * 3] = x;
+        result[i * 3 + 1] = 0;
+        result[i * 3 + 2] = y;
     }
 
     return result;

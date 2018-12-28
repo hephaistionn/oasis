@@ -9,9 +9,7 @@ const MILITIAMAN = "Militiaman";
 
 class Soldier {
   constructor(config, ground) {
-    this._id = config._id
-      ? parseInt(config._id, 10)
-      : Math.floor((1 + Math.random()) * 0x10000000000);
+    this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
     this._parent = null;
     this.ax = config.x;
     this.ay = config.y;
@@ -35,6 +33,7 @@ class Soldier {
     ];
     this.enemy = config.enemy || false;
     this.targetId = null;
+    this.halfPath = false;// target soldier
   }
 
   start() {
@@ -58,6 +57,7 @@ class Soldier {
     this.fighting = true;
     this.targetId = targetId;
     const entity = this.ground.getEntity(this.targetId);
+    this.path = null;
     if (entity.targetId !== undefined) {
       // si c'est un solider
       this.setFightPosition(entity);
@@ -69,40 +69,50 @@ class Soldier {
     this.targetId = null;
   }
 
-  buildPath(entities) {
-    const currentTile = [
-      Math.floor(this.ax / this.ground.tileSize),
-      Math.floor(this.az / this.ground.tileSize)
-    ];
+  buildPath(entities, dynamic) {
+    const currentTile = [Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize)];
     let instanceTargets, targetTiles;
     if (!entities) {
       // back
       instanceTargets = null;
       targetTiles = [this.originTile];
+      this.mustBack = true;
     } else {
-      instanceTargets = pathfinding.nearestInstances(
-        entities,
-        this.ax,
-        this.az
-      );
+      instanceTargets = pathfinding.nearestInstances(entities, this.ax, this.az);
       targetTiles = instanceTargets.map(instance => instance.getTiles());
     }
-    const solution = pathfinding.computePath(
-      this.ground,
-      currentTile,
-      targetTiles,
-      this.remote
-    );
-    if (solution) {
+
+    if (dynamic) {
+      const solution = pathfinding.computePath(this.ground, currentTile, targetTiles, this.remote, true);
+      if (!solution) {
+        return ee.emit(removeEntityEvent, this._id);
+      }
       const path = solution.path;
-      this.targetId = instanceTargets
-        ? instanceTargets[solution.index]._id
-        : null;
-      this.path = new Path(path, this.ground.tileSize, this.ground.tileHeight);
-      this.pathProgress = 0;
+      const targetId = instanceTargets ? instanceTargets[solution.index]._id : null;
+      if (instanceTargets[solution.index].halfPath) {
+        this.setPath(path, targetId);
+      } else {
+        const paths = pathfinding.breakPath(path);
+        this.setPath(paths[0], targetId, true);
+        instanceTargets[solution.index].setPath(paths[1], this._id, true);
+      }
     } else {
-      ee.emit(removeEntityEvent, this._id);
+      const solution = pathfinding.computePath(this.ground, currentTile, targetTiles, this.remote);
+      if (!solution) {
+        return ee.emit(removeEntityEvent, this._id);
+      }
+      const path = solution.path;
+      const targetId = instanceTargets ? instanceTargets[solution.index]._id : null;
+      this.setPath(path, targetId);
     }
+  }
+
+  setPath(path, targetId, halfPath) {
+    this.path = new Path(path, this.ground.tileSize, this.ground.tileHeight, null, null, true);
+    this.pathProgress = 0;
+    if (targetId)
+      this.targetId = targetId;
+    this.halfPath = halfPath || false;
   }
 
   update(dt) {
@@ -116,22 +126,24 @@ class Soldier {
       }
       return;
     }
-    if (this.path === null) return;
-    if (this.pathProgress === 0) {
-      const entity = this.ground.getEntity(this.targetId);
-      this.onStartPath(entity);
+    if (this.path === null) {
+      this.fightingProgress += dt;
+      if (this.fightingProgress > this.fightingDuration) {
+        this.fightingProgress = 0;
+        const entity = this.ground.getEntity(this.targetId);
+        this.onEndPath(entity)
+      }
+      return;
     }
     this.pathProgress += dt * 0.005;
     if (this.pathProgress >= this.path.length) {
       this.pathProgress = Math.min(this.pathProgress, this.path.length);
       const pos = this.path.getPoint(this.pathProgress);
-      this.move(pos[0], pos[1], pos[2], pos[3]);
-      const entity = this.ground.getEntity(this.targetId);
-      if (!entity) {
-        ee.emit(removeEntityEvent, this._id);
-      } else {
-        this.onEndPath(entity);
+      if (pos) {
+        this.move(pos[0], pos[1], pos[2], pos[3]);
       }
+      const entity = this.ground.getEntity(this.targetId);
+      this.onEndPath(entity);
     } else {
       const pos = this.path.getPoint(this.pathProgress);
       this.move(pos[0], pos[1], pos[2], pos[3]);
@@ -140,6 +152,7 @@ class Soldier {
 
   await() {
     this.path = null;
+    this.fightingProgress = 0;
   }
 
   getTiles() {
@@ -156,7 +169,7 @@ class Soldier {
     if (this.mustBack) {
       this.buildPath();
     } else if (soldiers.length) {
-      this.buildPath(soldiers);
+      this.buildPath(soldiers, true);
     } else if (repository.length && this.enemy) {
       this.buildPath(repository);
     } else {
@@ -187,36 +200,34 @@ class Soldier {
   }
 
   onEndPath(entity) {
-    if (entity.constructor.name === REPOSITORY) {
+    if(!entity) {
+      if(this.mustBack) { // Lacycle de vie est terminé
+        return ee.emit(removeEntityEvent, this._id);
+      } else { // la cible n'existe plus
+        this.updatePath();
+      }
+    } else if (entity.constructor.name === REPOSITORY) {
       this.startFight(entity._id);
       this.mustBack = true;
     } else if (entity.constructor.name === MILITIAMAN) {
-      entity.startFight(this._id);
-      this.startFight(entity._id);
-    }
-  }
-
-  onStartPath(entity) {
-    if (entity && entity.path) {
-      entity.await();
+      if (this.ground.isInSameTile(this, entity)) { //La cible est dans la même case;
+        this.startFight(entity._id); //On commence à attaquer
+      } else if (entity.path) { //La cible n'est pas dans la même case et se déplace
+        this.await(entity._id); // On attend la cible
+      } else {  //La cible ne bouge pas mais s'est déplacée
+        this.updatePath(); //update de la destination
+      }
     }
   }
 
   setFightPosition(entity) {
-    const tileCenter = this.ground.getTileCenter(entity.ax, entity.az);
+    const tileCenter = this.ground.getTileCenter(this.ax, this.az);
     let angle = 0;
-    if (this.ax > entity.ax && this.az > entity.az) {// haut droite
-      angle = Math.PI / 4 + ((Math.random() * 2 - 1) * Math.PI) / 4;
-    } else if (this.ax > entity.ax && this.az < entity.az) {// bas droite
-      angle = (7 * Math.PI) / 4 + ((Math.random() * 2 - 1) * Math.PI) / 4;
-    } else if (this.ax < entity.ax && this.az > entity.az) {// haut gauche
-      angle = (3 * Math.PI) / 4 + ((Math.random() * 2 - 1) * Math.PI) / 4;
-    } else {// base gauche
-      angle = (5 * Math.PI) / 4 + ((Math.random() * 2 - 1) * Math.PI) / 4;
-    }
-    const x = (Math.cos(angle) * this.ground.tileSize) / 2 + tileCenter.x;
+    angle = Math.atan2(this.az - entity.az, this.ax - entity.ax);
+    angle += ((Math.random() * 2 - 1) * Math.PI) / 5;
+    const x = (Math.cos(angle) * this.ground.tileSize) / 5 + tileCenter.x;
     const y = tileCenter.y;
-    const z = (Math.sin(angle) * this.ground.tileSize) / 2 + tileCenter.z;
+    const z = (Math.sin(angle) * this.ground.tileSize) / 5 + tileCenter.z;
     this.move(x, y, z, angle + Math.PI);
   }
 
