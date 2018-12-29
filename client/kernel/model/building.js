@@ -21,9 +21,11 @@ class Building {
         this.selected = false;
         this.updated = true;
         this.stats = new Stats(config, true);
+        this.materials = new Stats(config);
         this.cycleDuration = 0;
         this.cycleProgress = 0;
         this.started = false;
+        this.level = 0;
         this.ground = ground;
         if (this.drafted) {
             this._moveDraft = this.moveDraft.bind(this);
@@ -38,10 +40,12 @@ class Building {
     }
 
     update(dt) {
-        this.cycleProgress += dt;
-        if (this.cycleProgress >= this.cycleDuration) {
-            this.cycleProgress = 0;
-            this.working();
+        if(this.level >= 0) {  // doit être construit pour fonctionner
+            this.cycleProgress += dt;
+            if (this.cycleProgress >= this.cycleDuration) {
+                this.cycleProgress = 0;
+                this.working();
+            }
         }
     }
 
@@ -51,11 +55,37 @@ class Building {
                 this.started = true;
             }
             this.onStart();
+            this.constructing();
         }
     }
 
     onStart() { // must be overwrite
 
+    }
+
+    constructing(type, value) { // must called by Builder
+        if(this.level === 0) {
+            this.updated = true;
+            let ready = true;  
+            if(type && value ) {
+                this.materials.pull(type, value);
+            }
+            for(let key in this.constructor.cost) {
+                if(this.materials[key] < this.constructor.cost[key]){
+                    ready = false;
+                }
+            }  
+            if(!ready) {
+                this.spawnCharacter('Provider');
+            } else {
+                this.spawnCharacter('Builder')
+            }
+        }
+    }
+
+    delivery() { // Le batiment est terminé
+        this.updated = true;
+        this.level = 1;
     }
 
     working() { // called cyclically or manualy, must be overwrite
@@ -87,7 +117,6 @@ class Building {
             child.onMount(this);
             child.move();
         }
-        ee.emit('addEntity', child);
     }
 
     getTiles() {
