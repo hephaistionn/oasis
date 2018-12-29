@@ -139,39 +139,60 @@ AStarFinder.prototype.findPath = function (startX, startY, endX, endY, grid, nod
     grid.clear();
     return [];
 };
-AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tileType) {
+AStarFinder.prototype.findPathBetweenArea = function (source, target, grid, tileType, busyTiles) {
     if (source[0] === target[0] && source[1] === target[1]) return [source[0], 0, source[1]];
 
-    let i, x, y = 0;
-    let l = source.length;
-    for (i = 0; i < l; i += 2) {
+    let i, q, xBef, zBef, xNext, zNext;
+    const ls = source.length;
+    for (i = 0; i < ls; i += 2) {
         this.sourceSave[i / 2] = grid.getWalkableAt(source[i], source[i + 1]);
         grid.setWalkableAt(source[i], source[i + 1], tileType);
     }
-    l = target.length;
-    for (i = 0; i < l; i += 2) {
+    const lt = target.length;
+    for (i = 0; i < lt; i += 2) {
         this.targetSave[i / 2] = grid.getWalkableAt(target[i], target[i + 1]);
         grid.setWalkableAt(target[i], target[i + 1], tileType);
     }
 
-    let path = this.findPath(source[0], source[1], target[0], target[1], grid, tileType); //tileType authorized tile for path
+    let path = this.findPath(source[0], source[1], target[0], target[1], grid, tileType); //TileType authorized tile for path
 
 
-    l = path.length / 2;
-    const result = new Uint16Array(l * 3);
+    const l = path.length / 2;
+    const result = [];
+    let toIgnore;
     for (i = 0; i < l; i += 1) {
-        x = path[i * 2];
-        y = path[i * 2 + 1];
-        result[i * 3] = x;
-        result[i * 3 + 1] = 0;
-        result[i * 3 + 2] = y;
+
+        xBef = path[i * 2 - 2];
+        zBef = path[i * 2 + 1 - 2];
+        xNext = path[i * 2 + 2];
+        zNext = path[i * 2 + 1 + 2];
+
+        toIgnore = false;
+
+        for (q = 0; q < ls; q += 2) {
+            if (source[q] === xNext && source[q + 1] === zNext) { //Si la case suivante est dans la sources, on ignore la case actuelle
+                toIgnore = true;
+                break;
+            }
+        }
+        for (q = 0; q < lt; q += 2) {
+            if (target[q] === xBef && target[q + 1] === zBef) { //Si la case precedente est dans la cible, on ignore la case actuelle
+                toIgnore = true;
+                break;
+            }
+        }
+        if (toIgnore === true) { //On est sur une case occupée par le batiment source ou cible.
+            continue;  //On efface cette case du chemin.
+        }
+        result.push(path[i * 2]); //x
+        result.push(0); //y
+        result.push(path[i * 2 + 1]); //z
     }
-    l = source.length;
-    for (i = 0; i < l; i += 2) {
+
+    for (i = 0; i < ls; i += 2) {
         grid.setWalkableAt(source[i], source[i + 1], this.sourceSave[i / 2]);
     }
-    l = target.length;
-    for (i = 0; i < l; i += 2) {
+    for (i = 0; i < lt; i += 2) {
         grid.setWalkableAt(target[i], target[i + 1], this.targetSave[i / 2]);
     }
 

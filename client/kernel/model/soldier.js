@@ -27,10 +27,15 @@ class Soldier {
     this.stats = new Stats(config, false);
     this.constructor.instances.push(this);
     this.ground = ground;
-    this.originTile = [
-      Math.floor(this.ax / this.ground.tileSize),
-      Math.floor(this.az / this.ground.tileSize)
-    ];
+    if(config.origin) {
+      this.originTiles = this.ground.getEntity(config.origin).getTiles();
+    } else {
+      this.originTiles = [
+        Math.floor(this.ax / this.ground.tileSize),
+        Math.floor(this.az / this.ground.tileSize)
+      ];
+    }
+    this.justStarted = true;
     this.enemy = config.enemy || false;
     this.targetId = null;
     this.halfPath = false;// target soldier
@@ -70,12 +75,19 @@ class Soldier {
   }
 
   buildPath(entities, dynamic) {
-    const currentTile = [Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize)];
+    let currentTile;
+    if(this.justStarted) {
+      this.justStarted = false;
+      currentTile = this.originTiles
+    } else {
+      currentTile = [Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize)];
+    }
+
     let instanceTargets, targetTiles;
     if (!entities) {
       // back
       instanceTargets = null;
-      targetTiles = [this.originTile];
+      targetTiles = [this.originTiles];
       this.mustBack = true;
     } else {
       instanceTargets = pathfinding.nearestInstances(entities, this.ax, this.az);

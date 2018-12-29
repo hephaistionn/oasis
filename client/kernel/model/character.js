@@ -59,7 +59,7 @@ class Character {
         this.paths = [];
         let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId;
 
-        const origin = [Math.floor(this.ax / ground.tileSize), Math.floor(this.az / ground.tileSize)];
+        const origin = this.ground.getEntity(this.origin).getTiles();
         for (let i = 0; i < this.targets.length; i++) {
             target = this.targets[i];
 
@@ -75,7 +75,7 @@ class Character {
                 originTile = origin;
                 originId = this.origin;
             } else {
-                originTile = [path[path.length - 3], path[path.length - 1]];
+                originTile = this.ground.getEntity(targetId).getTiles();
                 originId = targetId;
             }
 

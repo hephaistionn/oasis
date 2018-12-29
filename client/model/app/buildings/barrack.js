@@ -33,7 +33,7 @@ class Barrack extends Building {
     }
 
     spawn() {
-        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: 'Militiaman' });
+        this.spawnCharacter('Militiaman');
         this.count++
     }
 
