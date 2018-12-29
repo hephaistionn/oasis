@@ -1,5 +1,6 @@
 const ee = require('./eventemitter');
 const Stats = require('../model/stats');
+const repository = require('../model/repository');
 
 module.exports = class Store  {
 
@@ -22,6 +23,10 @@ module.exports = class Store  {
         let instances;
         let instance;
         let i, k;
+        this.stats[Stats.WOOD] += repository.stats[Stats.WOOD];
+        this.stats[Stats.STONE] += repository.stats[Stats.STONE];
+        this.stats[Stats.BERRY] += repository.stats[Stats.BERRY];
+            
         for(let i=0; i<this.instancesGroup.length; i++) {
             instances = this.instancesGroup[i];
             for(let k=0; k<instances.length; k++) {

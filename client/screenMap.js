@@ -12,6 +12,7 @@ const Road = require('./model/app/road');
 const Canal = require('./model/app/canal');
 const Remover = require('./model/app/remover');
 const Spawner = require('./model/app/spawner');
+const repository = require('./kernel/model/repository');
 
 const ENTITIES = {
     Berry: require('./model/app/resources/berry'),
@@ -54,6 +55,7 @@ module.exports = class ScreenMap extends Screen {
         this.stats = new Stats({}, this.store);
         this.remover = new Remover({}, this.ground);
         this.spawner = new Spawner({}, this.ground);
+        this.repository = repository.init(model);
 
         this.add(this.camera);
         this.add(this.light);
@@ -71,6 +73,8 @@ module.exports = class ScreenMap extends Screen {
         this.store.watch(ENTITIES.Attic.instances);
         this.store.watch(ENTITIES.ForestHut.instances);
         this.store.watch(ENTITIES.HunterHut.instances);
+
+        ee.emit('onUpdateStats')
     }
 
     populate(model, config) {
