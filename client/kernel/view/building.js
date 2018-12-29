@@ -32,7 +32,7 @@ class Entity {
                 this.addMesh(this.draft);
                 this.state = 1;
             }
-        } else if (model.builded) {
+        } else if (model.level > 0) {
             if (this.state !== 2) {
                 this.removeMesh(this.draft);
                 this.removeMesh(this.foundation);

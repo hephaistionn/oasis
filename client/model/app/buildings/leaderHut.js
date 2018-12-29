@@ -1,5 +1,6 @@
 const Building = require('../../../kernel/model/building');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class LeaderHut extends Building {
 
@@ -13,7 +14,7 @@ LeaderHut.description = 'This building increase the enable places for your popul
 LeaderHut.tileX = 1;
 LeaderHut.tileZ = 1;
 LeaderHut.walkable = 0;
-LeaderHut.cost = {wood: 5};
+LeaderHut.cost = {[Stats.WOOD]: 5, [Stats.STONE]: 5};
 LeaderHut.require = {inactive: 2};
 LeaderHut.enabled = { population: 6};
 LeaderHut.constuctDuration = 1000;

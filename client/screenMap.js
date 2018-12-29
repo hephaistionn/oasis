@@ -30,6 +30,8 @@ const ENTITIES = {
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
     Hunter: require('./model/app/characters/hunter'),
+    Carrier: require('./model/app/characters/carrier'),
+    Provider: require('./model/app/characters/provider'),
     Militiaman: require('./model/app/characters/militiaman'),
 };
 

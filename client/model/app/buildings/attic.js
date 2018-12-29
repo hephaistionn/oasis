@@ -1,5 +1,6 @@
 const Building = require('../../../kernel/model/building');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Attic extends Building {
 
@@ -13,7 +14,7 @@ Attic.description = 'This building increase the enable places for your populatio
 Attic.tileX = 1;
 Attic.tileZ = 1;
 Attic.walkable = 0;
-Attic.cost = { wood: 5 };
+Attic.cost = {[Stats.WOOD]: 5};
 Attic.require = { inactive: 2 };
 Attic.enabled = { population: 4 };
 Attic.waterLevelNeeded = 0;

@@ -1,5 +1,6 @@
 const Building = require('../../../kernel/model/building');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Market extends Building {
 
@@ -13,7 +14,7 @@ Market.removable = true;
 Market.description = 'This building increase the prosperity of your city';
 Market.tileX = 1;
 Market.tileZ = 1;
-Market.cost = {wood: 5, stone: 5};
+Market.cost = {[Stats.WOOD]: 5};
 Market.require = {inactive: 2};
 Market.enabled = {wood: 5, population: 4};
 Market.walkable = 0;

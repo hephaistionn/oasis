@@ -1,4 +1,5 @@
 const Building = require('../../../kernel/model/building');
+const Stats = require('../../../kernel/model/stats');
 const ee = require('../../../kernel/tools/eventemitter');
 
 class House extends Building {
@@ -19,7 +20,7 @@ House.description = 'This building increase the enable places for your populatio
 House.tileX = 1;
 House.tileZ = 1;
 House.walkable = 0;
-House.cost = {wood: 20, stone: 1};
+House.cost = {[Stats.WOOD]: 5};
 House.require = {};
 House.enabled = {};
 House.constuctDuration = 1000;

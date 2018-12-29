@@ -16,7 +16,6 @@ class Building {
         this.az = this.z;
         this.aroty = this.roty;
         this.drafted = config.drafted || false;
-        this.builded = config.builded || false;
         this.undroppable = false;
         this.selected = false;
         this.updated = true;
@@ -25,7 +24,7 @@ class Building {
         this.cycleDuration = 0;
         this.cycleProgress = 0;
         this.started = false;
-        this.level = 0;
+        this.level = config.level || 0;
         this.ground = ground;
         if (this.drafted) {
             this._moveDraft = this.moveDraft.bind(this);
@@ -40,7 +39,7 @@ class Building {
     }
 
     update(dt) {
-        if(this.level >= 0) {  // doit être construit pour fonctionner
+        if(this.level > 0) {  // doit être construit pour fonctionner
             this.cycleProgress += dt;
             if (this.cycleProgress >= this.cycleDuration) {
                 this.cycleProgress = 0;
@@ -68,13 +67,13 @@ class Building {
             this.updated = true;
             let ready = true;  
             if(type && value ) {
-                this.materials.pull(type, value);
+                this.materials.push(type, value);
             }
             for(let key in this.constructor.cost) {
                 if(this.materials[key] < this.constructor.cost[key]){
                     ready = false;
                 }
-            }  
+            }
             if(!ready) {
                 this.spawnCharacter('Provider');
             } else {
@@ -164,7 +163,7 @@ class Building {
         if (this.drafted && !this.undroppable) {
             ee.emit('addEntity', {
                 x: this.ax, y: this.ay, z: this.az,
-                type: this.constructor.name, builded: true
+                type: this.constructor.name
             });
             ee.emit('removeEntity', this._id);
         }

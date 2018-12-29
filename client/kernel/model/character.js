@@ -57,9 +57,13 @@ class Character {
     buildPaths() {
         const ground = this.ground;
         this.paths = [];
-        let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId;
+        let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId, origin;
+        if(this.origin) { // si l'unité vient d'un batiment
+            origin = this.ground.getEntity(this.origin).getTiles();
+        } else {
+            origin = [Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize)]
+        }
 
-        const origin = this.ground.getEntity(this.origin).getTiles();
         for (let i = 0; i < this.targets.length; i++) {
             target = this.targets[i];
 
@@ -86,7 +90,7 @@ class Character {
                 targetId = instanceTargets[solution.index]._id;
                 this.paths.push(new Path(path, ground.tileSize, ground.tileHeight, originId, targetId));
             } else {
-                ee.emit(removeEntityEvent, this._id);
+                this.autoRemove();
                 break;
             }
         }
@@ -108,17 +112,19 @@ class Character {
             if (this.workingProgress > this.workingDuration) {
                 this.working = false;
                 this.workingProgress = 0;
-                const entity = this.ground.getEntity( path.targetId);
-                this.onEndWorking(entity);
+                if(path) {
+                    const entity = this.ground.getEntity( path.targetId);
+                    this.onEndWorking(entity);
+                } else {
+                    this.onEndWorking();
+                }
             }
             return;
         }
 
         if (this.pathProgress === 0) {
             const entity = this.ground.getEntity(path.originId);
-            if (!entity) {
-                ee.emit(removeEntityEvent, this._id);
-            } else {
+            if (entity) {
                 this.onStartPath(entity);
             }
         }
@@ -129,7 +135,7 @@ class Character {
             this.move(pos[0], pos[1], pos[2], pos[3]);
             const entity = this.ground.getEntity(path.targetId);
             if (!entity) {
-                ee.emit(removeEntityEvent, this._id);
+                this.autoRemove();
             } else {
                 this.onEndPath(entity);
             }
@@ -137,7 +143,7 @@ class Character {
                 this.pathStep++
                 this.pathProgress = 0;
             } else {
-                ee.emit(removeEntityEvent, this._id);
+                this.autoRemove();
             }
         } else {
             const pos = path.getPoint(this.pathProgress);
@@ -159,6 +165,10 @@ class Character {
 
     onMove() {
 
+    }
+
+    autoRemove() {
+        ee.emit(removeEntityEvent, this._id);
     }
 
     onMount(parent) {

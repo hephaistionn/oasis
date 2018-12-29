@@ -1,5 +1,6 @@
 const Building = require('../../../kernel/model/building');
 const ee = require('../../../kernel/tools/eventemitter');
+const Stats = require('../../../kernel/model/stats');
 
 class Barrack extends Building {
 
@@ -49,7 +50,7 @@ Barrack.description = 'This building increase the enable places for your populat
 Barrack.tileX = 1;
 Barrack.tileZ = 1;
 Barrack.walkable = 0;
-Barrack.cost = { wood: 5, stone: 2 };
+Barrack.cost = {[Stats.WOOD]: 5};
 Barrack.require = { inactive: 2 };
 Barrack.enabled = { population: 6 };
 Barrack.constuctDuration = 1000;
