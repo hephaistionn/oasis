@@ -1,10 +1,10 @@
 const ee = require('../tools/eventemitter');
 const Stats = require('./stats');
 
-class Repository  {
+class Repository {
 
     constructor() {
-      this.stats = new Stats();
+        this.stats = new Stats(null, true);
     }
 
     init(config) {

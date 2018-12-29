@@ -54,7 +54,7 @@ module.exports = class ScreenMap extends Screen {
         this.store = new Store();
         this.stats = new Stats({}, this.store);
         this.remover = new Remover({}, this.ground);
-        this.spawner = new Spawner({}, this.ground);
+        //this.spawner = new Spawner({}, this.ground);
         this.repository = repository.init(model);
 
         this.add(this.camera);
@@ -71,10 +71,8 @@ module.exports = class ScreenMap extends Screen {
 
         this.store.watch(ENTITIES.Repository.instances);
         this.store.watch(ENTITIES.Attic.instances);
-        this.store.watch(ENTITIES.ForestHut.instances);
-        this.store.watch(ENTITIES.HunterHut.instances);
 
-        ee.emit('onUpdateStats')
+        ee.emit('onUpdateStats');
     }
 
     populate(model, config) {

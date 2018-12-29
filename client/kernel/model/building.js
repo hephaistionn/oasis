@@ -39,7 +39,7 @@ class Building {
     }
 
     update(dt) {
-        if(this.level > 0) {  // doit être construit pour fonctionner
+        if (this.level > 0) {  // doit être construit pour fonctionner
             this.cycleProgress += dt;
             if (this.cycleProgress >= this.cycleDuration) {
                 this.cycleProgress = 0;
@@ -53,7 +53,6 @@ class Building {
             if (this.cycleDuration) {
                 this.started = true;
             }
-            this.onStart();
             this.constructing();
         }
     }
@@ -63,18 +62,18 @@ class Building {
     }
 
     constructing(type, value) { // must called by Builder
-        if(this.level === 0) {
+        if (this.level === 0) {
             this.updated = true;
-            let ready = true;  
-            if(type && value ) {
+            let ready = true;
+            if (type && value) {
                 this.materials.push(type, value);
             }
-            for(let key in this.constructor.cost) {
-                if(this.materials[key] < this.constructor.cost[key]){
+            for (let key in this.constructor.cost) {
+                if (this.materials[key] < this.constructor.cost[key]) {
                     ready = false;
                 }
             }
-            if(!ready) {
+            if (!ready) {
                 this.spawnCharacter('Provider');
             } else {
                 this.spawnCharacter('Builder')
@@ -85,6 +84,7 @@ class Building {
     delivery() { // Le batiment est terminé
         this.updated = true;
         this.level = 1;
+        this.onStart();
     }
 
     working() { // called cyclically or manualy, must be overwrite
@@ -147,8 +147,10 @@ class Building {
         this.updated = true;
     }
 
-    spawnCharacter(typeCharacter) {
-        ee.emit('addEntity', { x: this.ax, y: this.ay, z: this.az, type: typeCharacter, origin: this._id });
+    spawnCharacter(typeCharacter, option) {
+        const config = { x: this.ax, y: this.ay, z: this.az, type: typeCharacter, origin: this._id };
+        Object.assign(config, option);
+        ee.emit('addEntity', config);
     }
 
     remove(child) {

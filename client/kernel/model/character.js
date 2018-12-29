@@ -1,5 +1,5 @@
 const ee = require('../tools/eventemitter');
-const pathfinding = require('../tools/pathfinding/index');
+const pathfinding = require('../tools/pathfinding');
 const Path = require('../tools/path');
 const Stats = require('./stats');
 const removeEntityEvent = 'removeEntity';
@@ -58,7 +58,7 @@ class Character {
         const ground = this.ground;
         this.paths = [];
         let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId, origin;
-        if(this.origin) { // si l'unité vient d'un batiment
+        if (this.origin) { // si l'unité vient d'un batiment
             origin = this.ground.getEntity(this.origin).getTiles();
         } else {
             origin = [Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize)]
@@ -112,8 +112,8 @@ class Character {
             if (this.workingProgress > this.workingDuration) {
                 this.working = false;
                 this.workingProgress = 0;
-                if(path) {
-                    const entity = this.ground.getEntity( path.targetId);
+                if (path) {
+                    const entity = this.ground.getEntity(path.targetId);
                     this.onEndWorking(entity);
                 } else {
                     this.onEndWorking();
@@ -121,6 +121,8 @@ class Character {
             }
             return;
         }
+
+        if (!path) this.autoRemove();
 
         if (this.pathProgress === 0) {
             const entity = this.ground.getEntity(path.originId);

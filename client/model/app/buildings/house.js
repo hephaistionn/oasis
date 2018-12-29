@@ -10,7 +10,7 @@ class House extends Building {
     }
 
     working() {
-        this.spawnCharacter('Carrier');
+        //this.spawnCharacter('Carrier');
     }
 
 }

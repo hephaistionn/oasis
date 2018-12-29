@@ -5,16 +5,26 @@ const Stats = require('../../../kernel/model/stats');
 class Carrier extends Character {
     constructor(params, ground) {
         super(params, ground);
-        this.targets.push({ entity: 'Tree', resource: Stats.WOOD });
+        this.capacity = 10;
+        this.currentResource = params.crop;
+        /*this.targets.push({ entity: 'Tree', resource: Stats.WOOD });
         this.targets.push({ id: this.origin });
         this.targets.push({ entity: 'Stone', resource: Stats.STONE });
         this.targets.push({ id: this.origin });
         this.targets.push({ entity: 'Berry', resource: Stats.BERRY });
-        this.targets.push({ id: this.origin });
+        this.targets.push({ id: this.origin });*/
+
+        const entity = this.ground.getEntity(this.origin);
+        const value = entity.stats.pull(this.currentResource, this.capacity);
+        this.stats.push(this.currentResource, value);
+        this.targets.push({ entity: 'Repository' });
+
     }
 
     onEndPath(entity) {
-
+        const value = this.stats.pull(this.currentResource, this.capacity);
+        entity.stats.push(this.currentResource, value);
+        this.autoRemove();
     }
 
     onStartPath(entity) {
