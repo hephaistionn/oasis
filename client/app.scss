@@ -28,6 +28,12 @@ body {
   left: 0;
 }
 
+@mixin icon {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 
 @mixin button {
   position: absolute;
@@ -39,6 +45,27 @@ body {
   line-height: 50px;
   cursor: pointer;
   pointer-events:auto;
+}
+
+
+.icon_0 {
+  background-image: url('/pic/ico_wood.png');
+  @include icon;
+}
+
+.icon_1 {
+  background-image: url('/pic/ico_stone.png');
+  @include icon;
+}
+
+.icon_2 {
+  background-image: url('/pic/ico_corn.png');
+  @include icon;
+}
+
+.icon_3 {
+  background-image: url('/pic/ico_peon.png');
+  @include icon;
 }
 
 @import "./view/ui/catalog.scss";

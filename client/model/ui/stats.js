@@ -6,10 +6,10 @@ class Stats {
     constructor(conf, store) {
         this._id = Math.floor((1 + Math.random()) * 0x10000000000);
         this.stats = {
-            pop: {label:'pop', value:0},
-            wood: {label:'wood', value:0},
-            stone: {label:'stone', value:0},
-            berry: {label:'berry', value:0}
+            pop: { label: 'pop', value: 0, code: Stat.POP },
+            wood: { label: 'wood', value: 0, code: Stat.WOOD },
+            stone: { label: 'stone', value: 0, code: Stat.STONE },
+            berry: { label: 'berry', value: 0, code: Stat.BERRY }
         }
         this.store = store;
         this._refresh = this.refresh.bind(this)
@@ -17,12 +17,10 @@ class Stats {
     }
 
     refresh() {
-        this.stats = {
-            pop: {label:'pop', value:this.store.stats[Stat.POP]},
-            wood: {label:'wood', value:this.store.stats[Stat.WOOD]},
-            stone: {label:'stone', value:this.store.stats[Stat.STONE]},
-            berry: {label:'berry', value:this.store.stats[Stat.BERRY]}
-        }
+        this.stats.pop.value = this.store.stats[Stat.POP];
+        this.stats.wood.value = this.store.stats[Stat.WOOD];
+        this.stats.stone.value = this.store.stats[Stat.STONE];
+        this.stats.berry.value = this.store.stats[Stat.BERRY];
         this.updated = true;
     }
 

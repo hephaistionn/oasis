@@ -12,9 +12,8 @@ module.exports = class State {
             const nodeItem = document.createElement('div');
             nodeItem.className = 'stats__item';
 
-            const nodelabel = document.createElement('span');
-            nodelabel.className = 'stats__item__label';
-            nodelabel.textContent = stat.label + ' : ';
+            const nodelabel = document.createElement('div');
+            nodelabel.className = `stats__item__icon icon_${stat.code}`;
             nodeItem.appendChild(nodelabel);
 
             const nodeValue = document.createElement('span');

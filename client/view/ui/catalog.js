@@ -9,7 +9,7 @@ module.exports = class Catalog {
         this.node.appendChild(this.nodeCategories);
 
         this.nodeList = [];
-        for(let i=0; i < model.categories.length; i++) {
+        for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
             const categoryNodes = this.makeCategory(category, i, model);
             this.nodeCategories.appendChild(categoryNodes.button);
@@ -41,8 +41,8 @@ module.exports = class Catalog {
             this.buttonOpen.style.display = 'none';
             this.buttonClose.style.display = '';
             this.nodeCategories.style.display = '';
-            for(let i=0; i < model.categories.length; i++) {
-                if(model.categories[i].displayed) {
+            for (let i = 0; i < model.categories.length; i++) {
+                if (model.categories[i].displayed) {
                     this.nodeList[i].style.display = '';
                     this.nodeCategories.style.display = 'none';
                 }
@@ -61,7 +61,7 @@ module.exports = class Catalog {
 
         const listNode = this.makeNode('catalog__list');
         category.list.forEach(item => {
-            const nodeItem  = this.makeItem(item, model);
+            const nodeItem = this.makeItem(item, model);
             listNode.appendChild(nodeItem);
         })
 
@@ -70,7 +70,7 @@ module.exports = class Catalog {
             listNode.scrollLeft -= (delta * 100); e.preventDefault();
         }
 
-        return {button: buttonNode, list: listNode};
+        return { button: buttonNode, list: listNode };
     }
 
     makeItem(item, model) {
@@ -78,16 +78,30 @@ module.exports = class Catalog {
         const nodeItemLabel = this.makeNode('catalog__list__item__label', item.label);
         const nodeItemPic = this.makeNode('catalog__list__item__pic');
         nodeItemPic.style.backgroundImage = `url(${item.pic})`;
+        const nodeCost = this.makeCost(item, model);
         nodeItem.appendChild(nodeItemLabel);
-        nodeItem.appendChild(nodeItemPic); 
+        nodeItem.appendChild(nodeItemPic);
+        nodeItem.appendChild(nodeCost);
         nodeItem.onclick = model.select.bind(model, item);
         return nodeItem;
+    }
+
+    makeCost(item, model) {
+        const nodeCost = this.makeNode('catalog__list__item__cost');
+        if (model.ENTITIES[item.class]) {
+            const cost = model.ENTITIES[item.class].cost;
+            for (let key in cost) {
+                nodeCost.appendChild(this.makeNode('catalog__list__item__cost__value', cost[key]));
+                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`, cost[key]));
+            }
+        }
+        return nodeCost;
     }
 
     makeNode(classname, text) {
         const node = document.createElement('div');
         node.className = classname;
-        if(text)
+        if (text)
             node.textContent = text;
         return node;
     }

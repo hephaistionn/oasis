@@ -54,18 +54,30 @@
 
             &__label {
                 position: relative;
-                margin: 30px;
+                margin: 15px;
                 font-size: 2rem;
             }
 
             &__pic {
                 position: relative;
-                margin: auto;
-                margin-top: 15px;
+                margin: 15px auto;
                 width: 200px;
                 height: 200px;
                 background-size: 100%;
                 background-color: red;
+            }
+
+            &__cost {
+                position: relative;
+                margin: 15px auto;
+                &__value {
+                    margin-right: 10px;
+                    display: inline-block;
+                }
+                &__icon {
+                    margin-right: 20px;
+                    display: inline-block;
+                }
             }
         }    
     }
