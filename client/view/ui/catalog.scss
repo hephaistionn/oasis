@@ -52,6 +52,12 @@
             color: gray;
             flex: 0 0 auto;
 
+            &.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+                cursor: not-allowed;
+            }
+
             &__label {
                 position: relative;
                 margin: 15px;
@@ -79,7 +85,31 @@
                     display: inline-block;
                 }
             }
-        }    
+        }
+        
+        .disabled0 {
+            .code_0{
+                color: red;  
+            }
+        }
+
+        .disabled1 {
+            .code_1{
+                color: red;  
+            }
+        }
+
+        .disabled2 {
+            .code_2{
+                color: red;  
+            }
+        }
+
+        .disabled3 {
+            .code_3{
+                color: red;  
+            }
+        }
     }
 
     &__opener {

@@ -2,8 +2,9 @@ const ee = require('../../kernel/tools/eventemitter');
 
 class Catalog {
 
-    constructor(config, ENTITIES) {
+    constructor(config, ENTITIES, store) {
         this.ENTITIES = ENTITIES;
+        this.store = store;
 
         this.categories = [
             {

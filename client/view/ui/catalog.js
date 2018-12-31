@@ -1,3 +1,8 @@
+const disabled = ' disabled';
+const none = 'none';
+const empty = '';
+const classItem = 'catalog__list__item';
+
 module.exports = class Catalog {
 
     constructor(model, parent) {
@@ -31,25 +36,44 @@ module.exports = class Catalog {
     }
 
     update(dt, model) {
-        this.nodeCategories.style.display = 'none';
-        this.nodeList[0].style.display = 'none';
-        this.nodeList[1].style.display = 'none';
-        this.nodeList[2].style.display = 'none';
-        this.nodeList[3].style.display = 'none';
+        this.nodeCategories.style.display = none;
+        this.nodeList[0].style.display = none;
+        this.nodeList[1].style.display = none;
+        this.nodeList[2].style.display = none;
+        this.nodeList[3].style.display = none;
 
         if (model.displayed) {
-            this.buttonOpen.style.display = 'none';
-            this.buttonClose.style.display = '';
-            this.nodeCategories.style.display = '';
+            this.buttonOpen.style.display = none;
+            this.buttonClose.style.display = empty;
+            this.nodeCategories.style.display = empty;
             for (let i = 0; i < model.categories.length; i++) {
                 if (model.categories[i].displayed) {
-                    this.nodeList[i].style.display = '';
-                    this.nodeCategories.style.display = 'none';
+                    this.nodeList[i].style.display = empty;
+                    this.nodeCategories.style.display = none;
+                    this.refreshItems(i, model)
                 }
             }
         } else {
-            this.buttonOpen.style.display = '';
-            this.buttonClose.style.display = 'none';
+            this.buttonOpen.style.display = empty;
+            this.buttonClose.style.display = none;
+        }
+    }
+
+    refreshItems(index, model) {
+        const nodeList = this.nodeList[index];
+        const category = model.categories[index];
+        let entity;
+        for (let i = 0; i < category.list.length; i++) {
+            entity = model.ENTITIES[category.list[i].class];
+            if (entity) {
+                for (let key in entity.cost) {
+                    nodeList.children[i].className = classItem;
+                    if (entity.cost[key] > model.store.stats[key]) {
+                        nodeList.children[i].className += disabled;
+                        nodeList.children[i].className += disabled + key;
+                    }
+                }
+            }
         }
     }
 
@@ -91,7 +115,7 @@ module.exports = class Catalog {
         if (model.ENTITIES[item.class]) {
             const cost = model.ENTITIES[item.class].cost;
             for (let key in cost) {
-                nodeCost.appendChild(this.makeNode('catalog__list__item__cost__value', cost[key]));
+                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__value  code_${key}`, cost[key]));
                 nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`, cost[key]));
             }
         }
