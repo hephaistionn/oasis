@@ -2,8 +2,48 @@ const ee = require('../../kernel/tools/eventemitter');
 
 class Catalog {
 
-    constructor(config) {
-        this.list = ['Remover', 'Canal', 'Road', 'House', 'Market', 'ForestHut', 'Attic', 'Barrack', 'HunterHut', 'LeaderHut', 'Repository', 'StoneMine', 'RoadDirty', 'RoadStone'];
+    constructor(config, ENTITIES) {
+        this.ENTITIES = ENTITIES;
+
+        this.categories = [
+            {
+                label: 'Civil',
+                displayed: false,
+                list: [
+                    { class: 'House', label: 'cabane', pic: '/pic/house.png' },
+                    { class: 'LeaderHut', label: 'cabane du chef', pic: '/pic/house.png' },
+                    { class: 'Market', label: 'marché', pic: '/pic/house.png' },
+                ]
+            },
+            {
+                label: 'Ressources',
+                displayed: false,
+                list: [
+                    { class: 'ForestHut', label: 'Bucheron', pic: '/pic/house.png' },
+                    { class: 'HunterHut', label: 'Chasseur', pic: '/pic/house.png' },
+                    { class: 'StoneMine', label: 'Mineur', pic: '/pic/house.png' },
+                ]
+            },
+            {
+                label: 'Infrastructure',
+                displayed: false,
+                list: [
+                    { class: 'Repository', label: 'Entrepot', pic: '/pic/house.png' },
+                    { class: 'Attic', label: 'Grenier', pic: '/pic/house.png' },
+                    { class: 'Road', label: 'Chemin', pic: '/pic/house.png' },
+                    { class: 'Canal', label: 'Canal', pic: '/pic/house.png' },
+                    { class: 'Remover', label: 'Effaceur', pic: '/pic/house.png' },
+                ]
+            },
+            {
+                label: 'Militaire',
+                displayed: false,
+                list: [
+                    { class: 'Barrack', label: 'Caserne', pic: '/pic/house.png' },
+                ]
+            }
+        ]
+
         this.displayed = false;
         this.updated = false;
         this._id = 4;
@@ -14,14 +54,23 @@ class Catalog {
         this.updated = true;
     }
 
-    close() {
-        this.displayed = false;
+    openCategory(index) {
+        this.categories[index].displayed = true;
         this.updated = true;
     }
 
-    select(entityClass) {
+    close() {
+        this.displayed = false;
+        this.categories[0].displayed = false;
+        this.categories[1].displayed = false;
+        this.categories[2].displayed = false;
+        this.categories[3].displayed = false;
+        this.updated = true;
+    }
+
+    select(item) {
         this.close();
-        switch (entityClass) {
+        switch (item.class) {
             case 'Canal':
                 ee.emit('draftCanal', { drafted: true });
                 break;
@@ -32,7 +81,7 @@ class Catalog {
                 ee.emit('remover');
                 break;
             default:
-                ee.emit('addEntity', { type: entityClass, drafted: true });
+                ee.emit('addEntity', { type: item.class, drafted: true });
         }
     }
 

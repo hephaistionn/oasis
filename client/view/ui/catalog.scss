@@ -4,18 +4,44 @@
     height: 100%;
     bottom: 0;
     pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &__panel {
-        position: absolute;
-        bottom: 0;
-        left: 0;
+    &__categories {
+        width: 800px;
+        height: 600px;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background: grey;
+        &__category {
+            width: 380px;
+            background: #2f2f2f;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events:auto;
+            cursor: pointer;
+            &__label {
+                color: gray;
+                font-size: 3rem;
+            }
+        }
+    }
+
+    &__list {
         height: 500px;
         background-color: #202020;
         display: flex;
         flex-direction: row;
         pointer-events:auto;
         width: 100%;
+        overflow-x: auto;
         &__item {
+            position: relative;
             margin: 25px;
             width: 425px;   
             height: 425px;
@@ -24,7 +50,24 @@
             text-align: center;
             line-height: 40px;
             color: gray;
-        }
+            flex: 0 0 auto;
+
+            &__label {
+                position: relative;
+                margin: 30px;
+                font-size: 2rem;
+            }
+
+            &__pic {
+                position: relative;
+                margin: auto;
+                margin-top: 15px;
+                width: 200px;
+                height: 200px;
+                background-size: 100%;
+                background-color: red;
+            }
+        }    
     }
 
     &__opener {
@@ -39,6 +82,5 @@
         left: 50px;
         top: 100px;
     }
-
   }
   
