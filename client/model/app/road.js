@@ -1,9 +1,10 @@
 const pathfinding = require('../../kernel/tools/pathfinding');
 const ee = require('../../kernel/tools/eventemitter');
+const Stats = require('../../kernel/model/stats');
 
 module.exports = class Road {
 
-    constructor(config, ground) {
+    constructor(config, ground, store) {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this.ground = ground;
         this.tileSize = ground.tileSize;
@@ -13,6 +14,9 @@ module.exports = class Road {
         this.startXi;
         this.startZi;
         this.roadType;
+        this.cost;
+        this.costByTile;
+        this.store = store;
 
         this.draftRoad = {
             tiles: new Uint16Array(2 * this.maxTileDraft),
@@ -39,11 +43,11 @@ module.exports = class Road {
     }
 
     removeRoad(tiles, l) {
-        let xi, zi,  i
+        let xi, zi, i
         for (i = 0; i < l; i++) {
             xi = tiles[i * 2];
             zi = tiles[i * 2 + 1];
-            if(this.ground.grid.isWalkableAt(xi, zi) === 2) {
+            if (this.ground.grid.isWalkableAt(xi, zi) === 2) {
                 this.ground.grid.setWalkableAt(xi, zi, 1);
             }
         }
@@ -53,13 +57,15 @@ module.exports = class Road {
     draft(config) {
         this.drafted = true;
         this.roadType = 2;
+        this.cost = 0;
+        this.costByTile = 2;
     }
 
     startConstruct() {
-        if(!this.drafted) return;
-        const l = this.draftRoad.tiles.length;
-        for (let i = 0; i < l; i += 2) {
-            this.ground.grid.setWalkableAt(this.draftRoad.tiles[i], this.draftRoad.tiles[i + 1], this.draftRoad.walkable[i / 2]);
+        if (!this.drafted) return;
+        const l = this.draftRoad.length + 1;
+        for (let i = 0; i < l; i++) {
+            this.ground.grid.setWalkableAt(this.draftRoad.tiles[i * 2], this.draftRoad.tiles[i * 2 + 1], this.draftRoad.walkable[i]);
         }
         this.drafted = false;
         this.draftRoad.length = 0;
@@ -73,7 +79,7 @@ module.exports = class Road {
     }
 
 
-    draftStart(xR, zR, x, z) { 
+    draftStart(xR, zR, x, z) {
         if (this.drafted) {
             this.startXi = Math.floor(x / this.tileSize);
             this.startZi = Math.floor(z / this.tileSize);
@@ -86,48 +92,68 @@ module.exports = class Road {
             const dzi = Math.floor(z / this.tileSize) - this.startZi;
             const nbX = Math.abs(dxi) + 1; //tile count
             const nbZ = Math.abs(dzi) + 1; //tile count
-            if (dxi === 0 && dzi === 0) return;
             const signX = Math.sign(dxi);
             const signZ = Math.sign(dzi);
             const tiles = this.draftRoad.tiles;
             let ctn = 0;
+
+            let xAbs, zAbs;
+            const xMax = this.ground.nbTileX;
+            const zMax = this.ground.nbTileZ;
             if (nbX >= nbZ) {
                 for (let i = 0; i < nbX; i++) {
-                    tiles[ctn++] = this.startXi + i * signX;
-                    tiles[ctn++] = this.startZi;
+                    xAbs = this.startXi + i * signX;
+                    if (xAbs >= 0 && xAbs < xMax) {
+                        tiles[ctn++] = xAbs;
+                        tiles[ctn++] = this.startZi;
+                    }
                 }
                 for (let i = 1; i < nbZ; i++) {
-                    tiles[ctn++] = this.startXi + (nbX - 1) * signX;
-                    tiles[ctn++] = this.startZi + i * signZ;
+                    xAbs = this.startXi + (nbX - 1) * signX;
+                    if (xAbs >= 0 && xAbs < xMax) {
+                        tiles[ctn++] = xAbs;
+                        tiles[ctn++] = this.startZi + i * signZ;
+                    }
                 }
             } else {
                 for (let i = 0; i < nbZ; i++) {
-                    tiles[ctn++] = this.startXi;
-                    tiles[ctn++] = this.startZi + i * signZ;
+                    zAbs = this.startZi + i * signZ;
+                    if (zAbs >= 0 && zAbs < zMax) {
+                        tiles[ctn++] = this.startXi;
+                        tiles[ctn++] = zAbs;
+                    }
                 }
                 for (let i = 1; i < nbX; i++) {
-                    tiles[ctn++] = this.startXi + i * signX;
-                    tiles[ctn++] = this.startZi + (nbZ - 1) * signZ;
+                    zAbs = this.startZi + (nbZ - 1) * signZ;
+                    if (zAbs >= 0 && zAbs < zMax) {
+                        tiles[ctn++] = this.startXi + i * signX;
+                        tiles[ctn++] = zAbs;
+                    }
                 }
             }
 
             const length = Math.min(ctn / 2, tiles.length);
+            this.draftRoad.length = length;
+            this.cost = length * this.costByTile;
+
+            const needResources = this.store.stats[Stats.WOOD] < this.cost;
+
             for (let i = 0; i < length; i++) {
-                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1])) {
+                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) || needResources) {
                     this.draftRoad.walkable[i] = 0;
                 } else {
                     this.draftRoad.walkable[i] = this.roadType;
                 }
             }
-            this.draftRoad.length = length;
+
             this.updated = true;
         }
     }
 
     draftMove(x, y, z) {
         if (this.drafted) {
-            const xi = Math.floor(x / this.tileSize);
-            const zi = Math.floor(z / this.tileSize);
+            const xi = Math.min(Math.max(Math.floor(x / this.tileSize), 0), this.ground.nbTileX - 1);
+            const zi = Math.min(Math.max(Math.floor(z / this.tileSize), 0), this.ground.nbTileZ - 1);
             this.draftRoad.tiles[0] = xi;
             this.draftRoad.tiles[1] = zi;
             if (!this.ground.grid.isWalkableAt(xi, zi)) {
