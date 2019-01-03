@@ -9,14 +9,18 @@ module.exports = class Road {
         this.ground = ground;
         this.tileSize = ground.tileSize;
         this.drafted = false;
+        this.todo = [];
         this.maxTileDraft = 30;
         this.maxTileRoad = 100;
         this.startXi;
         this.startZi;
         this.roadType;
         this.cost;
+        this.constuctDuration;
         this.costByTile;
+        this.haveNavvy = false;
         this.store = store;
+        this.started = false;
 
         this.draftRoad = {
             tiles: new Uint16Array(2 * this.maxTileDraft),
@@ -57,19 +61,36 @@ module.exports = class Road {
     draft(config) {
         this.drafted = true;
         this.roadType = 2;
-        this.cost = 0;
-        this.costByTile = 2;
+        this.cost = {[Stats.WOOD]: 0};
+        this.costByTile = {[Stats.WOOD]: 1};
+        this.constuctDuration = 1000;
     }
 
+    //l'ouvrier doit venir construit chaque case
     startConstruct() {
         if (!this.drafted) return;
-        const l = this.draftRoad.length + 1;
+        const l = this.draftRoad.length;
         for (let i = 0; i < l; i++) {
-            this.ground.grid.setWalkableAt(this.draftRoad.tiles[i * 2], this.draftRoad.tiles[i * 2 + 1], this.draftRoad.walkable[i]);
+            if(this.draftRoad.walkable[i]>0) {
+                this.todo.push(this.draftRoad.tiles[i*2]);
+                this.todo.push(this.draftRoad.tiles[i*2+1]);
+                this.todo.push(this.draftRoad.walkable[i]);
+            }
         }
+        this.started = true; // lance l'update cyclique
         this.drafted = false;
         this.draftRoad.length = 0;
+        this.updated = true; 
+    }
+
+    // un case est construite
+    constructProgress() {
+        const tile = this.todo.splice(0, 3);
+        this.ground.grid.setWalkableAt(tile[0], tile[1], tile[2]);
         this.updated = true;
+        if (!this.todo.length) {
+            this.started = false; 
+        }
     }
 
     cancelConstruct() {
@@ -78,6 +99,20 @@ module.exports = class Road {
         this.updated = true;
     }
 
+    navvyReturn() {
+        this.haveNavvy = false;
+    }
+
+    getFirstTodo() {
+        return [this.todo[0], this.todo[1]];
+    }
+
+    update(dt) {
+        if(this.todo.length && !this.haveNavvy) {
+            this.haveNavvy = true;
+            ee.emit('addEntity', {type: 'Navvy', origin: this._id });
+        }
+    }
 
     draftStart(xR, zR, x, z) {
         if (this.drafted) {
@@ -133,13 +168,12 @@ module.exports = class Road {
             }
 
             const length = Math.min(ctn / 2, tiles.length);
+            
+            const missing = this.missingResources(length);
+
             this.draftRoad.length = length;
-            this.cost = length * this.costByTile;
-
-            const needResources = this.store.stats[Stats.WOOD] < this.cost;
-
             for (let i = 0; i < length; i++) {
-                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) || needResources) {
+                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) || missing) {
                     this.draftRoad.walkable[i] = 0;
                 } else {
                     this.draftRoad.walkable[i] = this.roadType;
@@ -150,13 +184,24 @@ module.exports = class Road {
         }
     }
 
+    missingResources(length) {
+        for (let key in this.cost) {
+            this.cost[key] = length * this.costByTile[key];
+            if(this.store.stats[key] < this.cost[key]) { //si pas assez de ressources
+                return true;
+            }
+        }
+        return false;
+    }
+
     draftMove(x, y, z) {
         if (this.drafted) {
             const xi = Math.min(Math.max(Math.floor(x / this.tileSize), 0), this.ground.nbTileX - 1);
             const zi = Math.min(Math.max(Math.floor(z / this.tileSize), 0), this.ground.nbTileZ - 1);
             this.draftRoad.tiles[0] = xi;
             this.draftRoad.tiles[1] = zi;
-            if (!this.ground.grid.isWalkableAt(xi, zi)) {
+            const missing = this.missingResources(1); 
+            if (!this.ground.grid.isWalkableAt(xi, zi) || missing) {
                 this.draftRoad.walkable[0] = 0;
             } else {
                 this.draftRoad.walkable[0] = this.roadType;
@@ -164,6 +209,16 @@ module.exports = class Road {
             this.draftRoad.length = 1;
             this.updated = true;
         }
+    }
+
+    getCost() {
+        const length = this.todo.length/3;
+        const cost = {};
+        for (let key in this.cost) {
+            if(this.costByTile[key])
+                cost[key] = length * this.costByTile[key];
+        }
+        return cost;
     }
 
     onDismount() {

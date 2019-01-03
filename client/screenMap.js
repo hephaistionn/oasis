@@ -34,6 +34,7 @@ const ENTITIES = {
     Carrier: require('./model/app/characters/carrier'),
     Provider: require('./model/app/characters/provider'),
     Militiaman: require('./model/app/characters/militiaman'),
+    Navvy: require('./model/app/characters/navvy'),
 };
 
 module.exports = class ScreenMap extends Screen {

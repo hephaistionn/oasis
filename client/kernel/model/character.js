@@ -57,7 +57,7 @@ class Character {
     buildPaths() {
         const ground = this.ground;
         this.paths = [];
-        let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId, origin;
+        let target, instanceTargets, targetTiles, originTile, originId, path, solution, targetId, origin, entity;
         if (this.origin) { // si l'unité vient d'un batiment
             origin = this.ground.getEntity(this.origin).getTiles();
         } else {
@@ -68,8 +68,13 @@ class Character {
             target = this.targets[i];
 
             if (target.id) {
-                instanceTargets = [this.ground.getEntity(target.id)];
-                targetTiles = [instanceTargets[0].getTiles()];
+                entity = this.ground.getEntity(target.id)
+                instanceTargets = [entity];
+                if (entity.todo) { // c'est une route, un mur, un canal, 
+                    targetTiles = [entity.getFirstTodo()];
+                } else { // c'est un batiment
+                    targetTiles = [instanceTargets[0].getTiles()];
+                }
             } else if (target.entity) {
                 instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az);
                 targetTiles = instanceTargets.map(instance => instance.getTiles());
@@ -130,7 +135,7 @@ class Character {
                 this.onStartPath(entity);
             }
         }
-        this.pathProgress += dt * 0.005;
+        this.pathProgress += dt * 0.01;
         if (this.pathProgress >= path.length) {
             this.pathProgress = Math.min(this.pathProgress, path.length);
             const pos = path.getPoint(this.pathProgress);
@@ -141,10 +146,10 @@ class Character {
             } else {
                 this.onEndPath(entity);
             }
+            this.pathProgress = 0;
             if (this.pathStep < this.paths.length - 1) {
                 this.pathStep++
-                this.pathProgress = 0;
-            } else {
+            } else if(!this.working){ //si ne fait plus rien
                 this.autoRemove();
             }
         } else {

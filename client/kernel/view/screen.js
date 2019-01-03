@@ -27,6 +27,7 @@ const COMPONENTS = {
     Carrier: require('../../view/app/characters/carrier'),
     Hunter: require('../../view/app/characters/hunter'),
     Militiaman: require('../../view/app/characters/militiaman'),
+    Navvy: require('../../view/app/characters/navvy'),
     Road: require('../../view/app/road'),
     Canal: require('../../view/app/canal'),
     Remover: require('../../view/app/remover'),
