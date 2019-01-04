@@ -1,6 +1,7 @@
 const THREE = require('three');
 const materialDraft = require('./material/materialRoadSelected');
 const materialMap = require('./material/materialMap');
+const materialFoundation = require('./material/materialA');
 
 module.exports = class Canal {
 
@@ -17,8 +18,8 @@ module.exports = class Canal {
         this.meshDraft = null;
         this.meshCanal = null;
         this.initDraftMesh(model);
+        this.initFoundationMesh(model);
         this.inittMesh(model);
-
         this.add(parent);
     }
 
@@ -56,6 +57,11 @@ module.exports = class Canal {
         this.meshCanal.matrixWorldNeedsUpdate = false;
         this.meshCanal.receiveShadow = false;
         this.meshCanal.drawMode = THREE.TrianglesDrawMode;
+    }
+
+    initFoundationMesh(model) {
+        this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj', materialFoundation, model._id);
+        this.foundations = [];
     }
 
     updateCanal(model) {
@@ -230,9 +236,34 @@ module.exports = class Canal {
         geometry.attributes.walkable.needsUpdate = true;
     }
 
+    updateFoudation(model) {
+        let matrixWorld;
+        for (let i = 0, l = model.todo.length / 2; i < l; i++) {
+          if (!this.foundations[i]) {
+            this.foundations[i] = this.meshFoundation.clone();
+            this.parent.render.scene.add(this.foundations[i]);
+          }
+          matrixWorld = this.foundations[i].matrixWorld.elements;
+          matrixWorld[12] = (model.todo[i * 2] + 0.5) * model.ground.tileSize;
+          matrixWorld[14] = (model.todo[i * 2 + 1] + 0.5) * model.ground.tileSize;
+          matrixWorld[13] = model.ground.getHeightTile(model.todo[i * 2], model.todo[i * 2 + 1]);
+        }
+        let toRemove = 0;
+        for (let i = 0, l = this.foundations.length; i < l; i++) {
+          if (model.todo[i * 2] === undefined) {
+            this.parent.render.scene.remove(this.foundations[i]);
+            toRemove++;
+          }
+        }
+        if (toRemove) {
+          this.foundations.splice( this.foundations.length - toRemove, this.foundations.length);
+        }
+    }
+
     update(dt, model) {
         if (!model.drafted) {
             this.updateCanal(model);
+            this.updateFoudation(model);
         }
         this.updateDraft(model);
     }
@@ -240,10 +271,12 @@ module.exports = class Canal {
     remove(parent) {
         parent.render.scene.remove(this.meshCanal);
         parent.render.scene.remove(this.meshDraft);
+        this.parent = null;
     }
 
     add(parent) {
         parent.render.scene.add(this.meshCanal);
         parent.render.scene.add(this.meshDraft);
+        this.parent = parent;
     }
 };

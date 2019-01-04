@@ -20,7 +20,7 @@ module.exports = class Road {
         this.costByTile;
         this.haveNavvy = false;
         this.store = store;
-        this.started = false;
+        this.started = false; 
 
         this.draftRoad = {
             tiles: new Uint16Array(2 * this.maxTileDraft),
@@ -83,7 +83,7 @@ module.exports = class Road {
         this.updated = true; 
     }
 
-    // un case est construite
+    // une case est construite
     constructProgress() {
         const tile = this.todo.splice(0, 3);
         this.ground.grid.setWalkableAt(tile[0], tile[1], tile[2]);

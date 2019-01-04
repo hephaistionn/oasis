@@ -13,9 +13,12 @@ module.exports = class Canal {
         this.startXi;
         this.startZi;
         this.roadType;
+        this.todo = [];
         this.cost;
         this.costByTile;
         this.store = store;
+        this.haveNavvy = false;
+        this.started = false; 
 
         this.draftCanal = {
             tiles: new Uint16Array(2 * this.maxTileDraft),
@@ -59,31 +62,58 @@ module.exports = class Canal {
 
     draft() {
         this.drafted = true;
-        this.cost = 0;
-        this.costByTile = 2;
+        this.cost = {[Stats.WOOD]: 0};
+        this.costByTile = {[Stats.WOOD]: 1};
+        this.constuctDuration = 1000;
     }
 
     startConstruct() {
         if (!this.drafted) return;
-        const l = this.draftCanal.length * 2;
-        for (let i = 0; i < l; i += 2) {
-            if (this.draftCanal.valid[i / 2]) {
-                this.ground.grid.setWalkableAt(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1], 0);
-                this.ground.addCanal(this.draftCanal.tiles[i], this.draftCanal.tiles[i + 1]);
+        const l = this.draftCanal.length;
+        for (let i = 0; i < l; i++) {
+            if(this.draftCanal.valid[i]>0) {
+                this.todo.push(this.draftCanal.tiles[i*2]);
+                this.todo.push(this.draftCanal.tiles[i*2+1]);
             }
         }
-        this.ground.updateCanalType();// la forme d'un block de canal dépend de ses voisins
+        this.started = true; // lance l'update cyclique
         this.drafted = false;
         this.draftCanal.length = 0;
         this.updated = true;
     }
 
+    // un case est construite
+    constructProgress() {
+        const tile = this.todo.splice(0, 2);
+        this.ground.grid.setWalkableAt(tile[0], tile[1], 0);
+        this.ground.addCanal(tile[0], tile[1]);
+        this.ground.updateCanalType();// la forme d'un block de canal dépend de ses voisins
+        this.updated = true;
+        if (!this.todo.length) { // terminé
+            this.started = false; 
+        }
+    }
+    
     cancelConstruct() {
         this.drafted = false;
         this.draftCanal.length = 0;
         this.updated = true;
     }
 
+    navvyReturn() {
+        this.haveNavvy = false;
+    }
+
+    getFirstTodo() {
+        return [this.todo[0], this.todo[1]];
+    }
+
+    update(dt) {
+        if(this.todo.length && !this.haveNavvy) {
+            this.haveNavvy = true;
+            ee.emit('addEntity', {type: 'Navvy', origin: this._id });
+        }
+    }
 
     draftStart(xR, zR, x, z) {
         if (this.drafted) {
@@ -141,16 +171,14 @@ module.exports = class Canal {
 
             const length = Math.min(ctn / 2, tiles.length / 2);
 
-
-            this.cost = length * this.costByTile;
-            const needResources = this.store.stats[Stats.WOOD] < this.cost;
-
             for (i = 0; i < length; i++) {
                 this.draftCanal.valid[i] = 1;
             }
-
+            
+            const missing = this.missingResources(length);
+            
             for (i = 0; i < length; i++) {
-                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) && !this.ground.isWaterable(255, tiles[i * 2], tiles[i * 2 + 1]) || needResources) {
+                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) && !this.ground.isWaterable(255, tiles[i * 2], tiles[i * 2 + 1]) || missing) {
                     for (k = 0; k < length; k++) {
                         this.draftCanal.valid[k] = 0;
                     }
@@ -179,6 +207,26 @@ module.exports = class Canal {
             this.draftCanal.length = 1;
             this.updated = true;
         }
+    }
+
+    missingResources(length) {
+        for (let key in this.cost) {
+            this.cost[key] = length * this.costByTile[key];
+            if(this.store.stats[key] < this.cost[key]) { //si pas assez de ressources
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getCost() {
+        const length = this.todo.length/2;
+        const cost = {};
+        for (let key in this.cost) {
+            if(this.costByTile[key])
+                cost[key] = length * this.costByTile[key];
+        }
+        return cost;
     }
 
     onDismount() {

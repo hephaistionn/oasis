@@ -19,7 +19,6 @@ module.exports = class Road {
     this.initFoundationMesh(model);
     this.initroadMesh(model);
     this.add(parent);
-    this.parent = parent;
   }
 
   initroadMesh(model) {
@@ -61,7 +60,7 @@ module.exports = class Road {
   }
 
   initFoundationMesh(model) {
-    this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj',materialFoundation,model._id);
+    this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj', materialFoundation, model._id);
     this.foundations = [];
   }
 
@@ -278,10 +277,7 @@ module.exports = class Road {
       }
     }
     if (toRemove) {
-      this.foundations.splice(
-        this.foundations.length - toRemove,
-        this.foundations.length
-      );
+      this.foundations.splice(this.foundations.length - toRemove, this.foundations.length);
     }
   }
 
@@ -296,10 +292,12 @@ module.exports = class Road {
   remove(parent) {
     parent.render.scene.remove(this.meshRoad);
     parent.render.scene.remove(this.meshDraft);
+    this.parent = null;
   }
 
   add(parent) {
     parent.render.scene.add(this.meshRoad);
     parent.render.scene.add(this.meshDraft);
+    this.parent = parent;
   }
 };
