@@ -26,6 +26,7 @@ const ENTITIES = {
     LeaderHut: require('./model/app/buildings/leaderHut'),
     Market: require('./model/app/buildings/market'),
     Repository: require('./model/app/buildings/repository'),
+    Tower: require('./model/app/buildings/tower'),
     StoneMine: require('./model/app/buildings/stoneMine'),
     ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),

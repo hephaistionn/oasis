@@ -41,6 +41,7 @@ class Catalog {
                 displayed: false,
                 list: [
                     { class: 'Barrack', label: 'Caserne', pic: '/pic/house.png' },
+                    { class: 'Tower', label: 'Tour', pic: '/pic/house.png' },
                 ]
             }
         ]

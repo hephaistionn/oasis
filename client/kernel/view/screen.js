@@ -13,6 +13,7 @@ const COMPONENTS = {
     Info: require('../../view/ui/info'),
     Stats: require('../../view/ui/stats'),
     Attic: require('../../view/app/building/attic'),
+    Tower: require('../../view/app/building/tower'),
     Barrack: require('../../view/app/building/barrack'),
     House: require('../../view/app/building/house'),
     HunterHut: require('../../view/app/building/hunterHut'),
