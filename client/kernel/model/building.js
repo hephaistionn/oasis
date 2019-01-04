@@ -57,6 +57,12 @@ class Building {
         }
     }
 
+    reStart() {
+        if (this.cycleDuration) {
+            this.started = true;
+        }
+    }
+
     onStart() { // must be overwrite
 
     }

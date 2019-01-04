@@ -14,7 +14,8 @@ class Navvy extends Character {
     }
 
     getResource() {
-        let neededType, neededValue;
+		let neededType, neededValue;
+		this.targets = [];
         const entity = this.ground.getEntity(this.targetBuilding);
         if (!entity) {
             this.autoRemove();
@@ -55,7 +56,6 @@ class Navvy extends Character {
                 return;
             }
         }
-
         this.targets.push({ id: this.targetBuilding });
     }
 

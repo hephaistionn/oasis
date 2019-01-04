@@ -77,13 +77,18 @@ class Character {
                 }
             } else if (target.entity) {
                 instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az);
+                if(instanceTargets.length === 0) { //si pas de solution
+                    this.autoRemove();
+                    if(this.origin) this.ground.getEntity(this.origin).reStart();
+                    return;
+                }
                 targetTiles = instanceTargets.map(instance => instance.getTiles());
             }
 
             if (i === 0) {
                 originTile = origin;
                 originId = this.origin;
-            } else {
+            } else { // déjà passé dans la boucle
                 originTile = this.ground.getEntity(targetId).getTiles();
                 originId = targetId;
             }
@@ -108,7 +113,9 @@ class Character {
     update(dt) {
         this.updated = true;
 
-        if (this.stop) return;
+        if (this.stop) {
+            this.autoRemove();
+        };
 
         const path = this.paths[this.pathStep];
 
@@ -127,7 +134,10 @@ class Character {
             return;
         }
 
-        if (!path) this.autoRemove();
+        if (!path) { 
+            this.autoRemove();
+            return;
+        }
 
         if (this.pathProgress === 0) {
             const entity = this.ground.getEntity(path.originId);
@@ -147,8 +157,9 @@ class Character {
                 this.onEndPath(entity);
             }
             this.pathProgress = 0;
-            if (this.pathStep < this.paths.length - 1) {
-                this.pathStep++
+            if (this.pathStep < this.paths.length-1) {
+                this.pathStep++;
+                
             } else if(!this.working){ //si ne fait plus rien
                 this.autoRemove();
             }
@@ -175,6 +186,7 @@ class Character {
     }
 
     autoRemove() {
+        this.stop = true;
         ee.emit(removeEntityEvent, this._id);
     }
 

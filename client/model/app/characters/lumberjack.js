@@ -3,6 +3,7 @@ const ee = require('../../../kernel/tools/eventemitter');
 const Stats = require('../../../kernel/model/stats');
 const Tree = 'Tree';
 const ForestHut = 'ForestHut';
+const Repository = 'Repository';
 
 class Lumberjack extends Character {
     constructor(params, ground) {
@@ -10,18 +11,20 @@ class Lumberjack extends Character {
         this.capacity = 5;
         this.workingDuration = 4000; 
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
+        this.targets.push({ entity: Repository});
         this.targets.push({ id: this.origin });
     }
 
     onEndPath(entity) {
-        if (entity.constructor.name === ForestHut) {
+        if (entity.constructor.name === Repository) {
             const value = this.stats.pull(Stats.WOOD, this.capacity);
             entity.stats.push(Stats.WOOD, value);
-            entity.working();
         } else if (entity.constructor.name === Tree) {
             this.working = true;
             const place = entity.getWorkerSlot();
             this.move(place.x, place.y, place.z, place.rotY);
+        } else if (entity.constructor.name === ForestHut){
+            entity.working()
         }
     }
 
