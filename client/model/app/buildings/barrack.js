@@ -13,12 +13,18 @@ class Barrack extends Building {
         this.working = false;
         if (!this.drafted) {
             this._spawnStart = this.spawnStart.bind(this);
-            ee.on('alert', this._spawnStart);
+            ee.on('alert-on', this._spawnStart);
+            this._spawnStop = this.spawnStop.bind(this);
+            ee.on('alert-off', this._spawnStop);
         }
     }
 
     spawnStart() {
         this.working = true;
+    }
+
+    spawnStop() {
+        this.working = false;
     }
 
     update(dt) {
@@ -28,7 +34,7 @@ class Barrack extends Building {
             this.cycleProgress = 0;
             this.spawn();
             if (this.count >= this.quantity) {
-                this.working = false;
+                this.spawnStop();
             }
         }
     }
@@ -40,8 +46,10 @@ class Barrack extends Building {
 
     onDismount() {
         super.onDismount();
-        if (!this.drafted)
-            ee.off('alert', this._spawnStart);
+        if (!this.drafted) {
+            ee.off('alert-on', this._spawnStart);
+            ee.off('alert-off', this._spawnStop);
+        }    
     }
 }
 

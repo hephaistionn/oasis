@@ -3,7 +3,6 @@ const THREE = require('three');
 class Entity {
 
     constructor(model, parent) {
-        this.model = model;
         this.element = new THREE.Object3D();
         this.initMesh(model);
         this.element.matrixAutoUpdate = false;
@@ -16,11 +15,11 @@ class Entity {
     update(dt, model) {
         this.updateMesh(model);
         const matrixWorld = this.element.matrixWorld.elements;
-        matrixWorld[12] = this.model.ax;
-        matrixWorld[14] = this.model.az;
-        matrixWorld[13] = this.model.ay;
-        matrixWorld[0] = Math.cos(this.model.aroty);
-        matrixWorld[2] = Math.sin(this.model.aroty);
+        matrixWorld[12] = model.ax;
+        matrixWorld[14] = model.az;
+        matrixWorld[13] = model.ay;
+        matrixWorld[0] = Math.cos(model.aroty);
+        matrixWorld[2] = Math.sin(model.aroty);
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
     }

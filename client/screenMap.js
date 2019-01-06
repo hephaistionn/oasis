@@ -56,7 +56,7 @@ module.exports = class ScreenMap extends Screen {
         this.info = new Info({}, this._components);
         this.stats = new Stats({}, this.store);
         this.remover = new Remover({}, this.ground);
-        //this.spawner = new Spawner({}, this.ground);
+        this.spawner = new Spawner({}, this.ground);
         this.repository = repository.init(model);
 
         this.add(this.camera);

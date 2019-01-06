@@ -7,29 +7,85 @@ class Tower extends Building {
 
     constructor(config, ground) {
         super(config, ground);
-        this.scope = 40;
-        this.degat = 50;
+        this.cycleDuration = 0; // delay entre chaque tir
+        this.shootDuration = 300; // delay avant impact
+        this.scope = 12;
+        this.degat = 10;
+
         this.weaponDirectionY = 0;
-        this.weaponDirectionZ = 0;
         this.weaponHeight = this.ay + 4;
+        this.shooting = false; // true si vient de tirer
+        this.cycleProgress = 0;
+        this.shootProgress = 0;
+        this.targetId;
+        this.targetDx;
+        this.targetDz;
+        this.targetDy;
+        this.mustStop = false;
+
+        if (!this.drafted) {
+            this._wakeup = this.wakeup.bind(this);
+            ee.on('alert-on', this._wakeup);
+            this._sleep = this.sleep.bind(this);
+            ee.on('alert-off', this._sleep);
+        }
     }
 
     wakeup() {
-        this.cycleDuration = 2000;
+        this.started = true;
+        this.cycleDuration = 350;
+
     }
 
     sleep() {
-        this.cycleDuration = 0;
+        this.mustStop = true;
+    }
+
+    update(dt) {
+        if (this.level > 0) {  // doit être construit pour fonctionner
+            this.cycleProgress += dt;
+            if (this.cycleProgress >= this.cycleDuration) {
+                this.cycleProgress = 0;
+                this.working();
+            }
+
+            const target = this.ground.getEntity(this.targetId);
+
+            if (this.shooting) {
+                this.shootProgress += dt;
+                if (this.shootProgress >= this.shootDuration) {
+                    if (target) target.hit(this.degat);
+                    this.reload();
+                }
+            }
+
+            if (target) {
+                this.targetDx = target.ax - this.ax;
+                this.targetDz = target.az - this.az;
+                this.targetDy = target.ay - this.weaponHeight;
+                this.weaponDirectionY = this.targetY(this.targetDx, this.targetDz);
+            }
+        }
+    }
+
+    reload() {
+        this.shooting = false;
+        this.shootProgress = 0;
+        this.targetId = null;
     }
 
     working() {
         const target = this.foundTarget();
-        const dx = target.ax - this.ax;
-        const dz = target.az - this.az;
-        const dy = target.ay - this.weaponHeight;
-        this.weaponDirectionY = this.targetY(dx, dz);
-        this.weaponDirectionZ = this.targetZ(dx, dz, dy);
-        target.hit(this.degat);
+        if (target) {
+            this.targetId = target._id;
+            this.shooting = true;
+        } else {
+            this.reload();
+            if (this.mustStop && !this.ground.ENTITIES[MILITIAMAN].instances.length) {
+                this.started = false;
+                this.mustStop = false;
+            }
+        }
     };
 
     foundTarget() {
@@ -42,9 +98,12 @@ class Tower extends Building {
         return Math.atan2(dz, dx);
     }
 
-    targetZ(dx, dz, dy) {
-        const l = Math.hypot(dx, dz);
-        const angleZ = Math.atan2(dy, l);
+    onDismount() {
+        super.onDismount();
+        if (!this.drafted) {
+            ee.off('alert-on', this._wakeup);
+            ee.off('alert-off', this._sleep);
+        }
     }
 }
 
