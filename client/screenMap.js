@@ -10,6 +10,7 @@ const Stats = require('./model/ui/stats');
 const Store = require('./kernel/tools/store');
 const Road = require('./model/app/road');
 const Canal = require('./model/app/canal');
+const Wall = require('./model/app/wall');
 const Remover = require('./model/app/remover');
 const Spawner = require('./model/app/spawner');
 const repository = require('./kernel/model/repository');
@@ -52,6 +53,7 @@ module.exports = class ScreenMap extends Screen {
         this.store = new Store();
         this.road = new Road({}, this.ground, this.store);
         this.canal = new Canal({}, this.ground, this.store);
+        this.wall = new Wall({}, this.ground, this.store);
         this.catalog = new Catalog(mapConfig, ENTITIES, this.store);
         this.info = new Info({}, this._components);
         this.stats = new Stats({}, this.store);
@@ -67,6 +69,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.stats);
         this.add(this.road);
         this.add(this.canal);
+        this.add(this.wall);
         this.add(this.remover);
 
         this.populate(model, mapConfig);

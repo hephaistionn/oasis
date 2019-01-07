@@ -42,6 +42,8 @@ class Catalog {
                 list: [
                     { class: 'Barrack', label: 'Caserne', pic: '/pic/house.png' },
                     { class: 'Tower', label: 'Tour', pic: '/pic/house.png' },
+                    { class: 'Wall', label: 'Mur', pic: '/pic/house.png' },
+                    
                 ]
             }
         ]
@@ -78,6 +80,9 @@ class Catalog {
                 break;
             case 'Road':
                 ee.emit('draftRoad', { drafted: true });
+                break;
+            case 'Wall':
+                ee.emit('draftWall', { drafted: true });
                 break;
             case 'Remover':
                 ee.emit('remover');

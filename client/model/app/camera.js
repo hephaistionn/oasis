@@ -38,6 +38,7 @@ module.exports = class Camera extends Entity {
         ee.on('mouseWheel', this._scale);
         ee.on('draftRoad', this._disable);
         ee.on('draftCanal', this._disable);
+        ee.on('draftWall', this._disable);
         ee.on('remover', this._disable);
         ee.on('mouseClick', this._enable);
         ee.on('mouseDownRight', this._enable);
