@@ -27,6 +27,7 @@ module.exports = class Ground {
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.gridWater = new Uint16Array(this.nbTileX * this.nbTileZ);
         this.gridCanal = new Uint8Array(this.nbTileX * this.nbTileZ);
+        this.gridWall = new Uint8Array(this.nbTileX * this.nbTileZ);
         this.updated = false;
         this._id = 2;
         this.initGridByHeight(this.tilesTilt);
@@ -217,6 +218,16 @@ module.exports = class Ground {
             }
         }
         this.updated = true;
+    }
+
+    addWall(xi, zi) {
+        const i = zi * this.nbTileX + xi;
+        this.gridWall[i] = 1;
+    }
+
+    removeWall(xi, zi) {
+        const i = zi * this.nbTileX + xi;
+        this.gridWall[i] = 0;
     }
 
     getEntity(id) {

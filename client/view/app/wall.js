@@ -20,10 +20,11 @@ module.exports = class Wall {
         this.materialDraftKo = materialDraft.clone();
         this.materialDraftKo.color.setHex(0xff0000);
 
-        this.meshWallA = THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft);
-        this.meshWallB = THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft);
-        this.meshWallC = THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft);
-        this.meshWallD = THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft);
+        this.meshWall = [];
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft));
         this.drafts = [];
     }
 
@@ -36,11 +37,18 @@ module.exports = class Wall {
         const tiles = model.draftWall.tiles;
         const length = model.draftWall.length;
         const valid = model.draftWall.valid;
+        const shape = model.draftWall.shape;
 
+        for (let i = 0, l = this.drafts.length; i < l; i++) {
+            this.parent.render.scene.remove(this.drafts[i]);
+        }
+        this.drafts.splice(0, this.drafts.length);
+        
         let matrixWorld;
-        for (let i = 0, l = length; i < l; i++) {
+        let angle = 0;
+        for (let i = 0; i < length; i++) {
             if (!this.drafts[i]) {
-                this.drafts[i] = this.meshWallA.clone();
+                this.drafts[i] = this.meshWall[shape[i*2]].clone();
                 if (!valid[i]) {
                     this.drafts[i].material = this.materialDraftKo;
                 }
@@ -50,14 +58,11 @@ module.exports = class Wall {
             matrixWorld[12] = (tiles[i * 2] + 0.5) * model.ground.tileSize;
             matrixWorld[14] = (tiles[i * 2 + 1] + 0.5) * model.ground.tileSize;
             matrixWorld[13] = model.ground.getHeightTile(tiles[i * 2], tiles[i * 2 + 1]);
-        }
-        let toRemove = 0;
-        for (let i = length, l = this.drafts.length; i < l; i++) {
-            this.parent.render.scene.remove(this.drafts[i]);
-            toRemove++;
-        }
-        if (toRemove) {
-            this.drafts.splice(this.drafts.length - toRemove, this.drafts.length);
+            angle = shape[i*2+1]*Math.PI/2;
+            matrixWorld[0] = Math.cos(angle);
+            matrixWorld[2] = Math.sin(angle);
+            matrixWorld[8] = -matrixWorld[2];
+            matrixWorld[10] = matrixWorld[0];
         }
     }
 

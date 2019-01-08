@@ -1,6 +1,11 @@
 const ee = require('../../kernel/tools/eventemitter');
 const Stats = require('../../kernel/model/stats');
 
+const top = 10; // 10*1  haut
+const bottom = -10; //10*-1 bas
+const right = 1;  //1 droite
+const left = -1;  //-1 gauche
+
 module.exports = class Wall {
 
     constructor(config, ground, store) {
@@ -18,9 +23,11 @@ module.exports = class Wall {
         this.store = store;
         this.haveNavvy = false;
         this.started = false;
+        this.draftGrid = new Map();
 
         this.draftWall = {
             tiles: new Uint16Array(2 * this.maxTileDraft),
+            shape: new Uint8Array(2 * this.maxTileDraft),
             valid: new Uint8Array(this.maxTileDraft),
             length: 0
         };
@@ -164,7 +171,63 @@ module.exports = class Wall {
                 }
             }
             this.draftWall.length = length;
+            this.updateShape();
+
             this.updated = true;
+        }
+    }
+
+    updateShape() {
+        const tiles = this.draftWall.tiles;
+        const length = this.draftWall.length;
+        const shape = this.draftWall.shape;
+        let x, z;
+        for (let i = 0; i < length; i++) {
+            const currentX = tiles[i * 2];
+            const currentZ = tiles[i * 2 + 1];
+            this.draftGrid.set(top, 0);// haut
+            this.draftGrid.set(bottom, 0); // bas
+            this.draftGrid.set(right, 0);// droite
+            this.draftGrid.set(left, 0);// gauche
+            if (i > 0) {
+                x = tiles[(i - 1) * 2] - currentX;
+                z = tiles[(i - 1) * 2 + 1] - currentZ;
+                this.draftGrid.set(x + 10 * z, 1);
+            }
+            if (i < length - 1) {
+                x = tiles[(i + 1) * 2] - currentX;
+                z = tiles[(i + 1) * 2 + 1] - currentZ;
+                this.draftGrid.set(x + 10 * z, 1);
+            }
+
+            if (this.draftGrid.get(top) && this.draftGrid.get(bottom)) {
+                shape[i * 2] = 0; // Mesh wall numero
+                shape[i * 2 + 1] = 0;  // orientation
+            } else if (this.draftGrid.get(right) && this.draftGrid.get(left)) {
+                shape[i * 2] = 0;
+                shape[i * 2 + 1] = 1;
+            } else if (this.draftGrid.get(top) && this.draftGrid.get(left)) {
+                shape[i * 2] = 1;
+                shape[i * 2 + 1] = 2;
+            } else if (this.draftGrid.get(top) && this.draftGrid.get(right)) {
+                shape[i * 2] = 1;
+                shape[i * 2 + 1] = 1;
+            } else if (this.draftGrid.get(bottom) && this.draftGrid.get(left)) {
+                shape[i * 2] = 1;
+                shape[i * 2 + 1] = 3;
+            } else if (this.draftGrid.get(bottom) && this.draftGrid.get(right)) {
+                shape[i * 2] = 1;
+                shape[i * 2 + 1] = 0;
+            } else if (this.draftGrid.get(bottom) || this.draftGrid.get(top)) {
+                shape[i * 2] = 0;
+                shape[i * 2 + 1] = 0;
+            } else if (this.draftGrid.get(right) || this.draftGrid.get(left)) {
+                shape[i * 2] = 0;
+                shape[i * 2 + 1] = 1;
+            } else {
+                shape[i * 2] = 0;
+                shape[i * 2 + 1] = 0;
+            }
         }
     }
 
@@ -183,6 +246,7 @@ module.exports = class Wall {
                 this.draftWall.valid[0] = 1;
             }
             this.draftWall.length = 1;
+            this.updateShape();
             this.updated = true;
         }
     }
