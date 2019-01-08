@@ -12,6 +12,8 @@ module.exports = class Wall {
         this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
         this.ground = ground;
         this.tileSize = ground.tileSize;
+        this.nbTileX = ground.nbTileX;
+        this.nbTileZ = ground.nbTileZ;
         this.drafted = false;
         this.maxTileDraft = 8;
         this.heightMax = 6;
@@ -74,9 +76,35 @@ module.exports = class Wall {
     constructProgress() {
         const tile = this.todo.splice(0, 2);
         this.updated = true;
+        this.ground.setWall(tile[0], tile[1], 1);
+        this.updateWallShape(tile[0], tile[1]);
         if (!this.todo.length) { // terminé
             this.started = false;
         }
+    }
+
+    updateWallShape(xi, zi) {
+        const gridWall = this.ground.gridWall;
+
+        const wtop = this.ground.getWall(xi, zi-1);
+        const wbottom = this.ground.getWall(xi, zi+1);
+        const wright = this.ground.getWall(xi+1, zi);
+        const wleft = this.ground.getWall(xi-1, zi);
+
+        if(wtop && wbottom && wleft && wright) this.ground.setWall(xi, zi, 1)// D 0*Math.PI/2
+        else if(wtop && wbottom && wleft) this.ground.setWall(xi, zi, 2); // C 0*Math.PI/2
+        else if(wtop && wbottom && wright) this.ground.setWall(xi, zi, 3); // C 2*Math.PI/2
+        else if(wright && wleft && wbottom) this.ground.setWall(xi, zi, 4); // C 1*Math.PI/2
+        else if(wright && wleft && wtop) this.ground.setWall(xi, zi, 5); // C 3*Math.PI/2
+        else if(wtop && wbottom) this.ground.setWall(xi, zi, 6); // A 0*Math.PI/2
+        else if(wleft && wright) this.ground.setWall(xi, zi, 7); // A 1*Math.PI/2
+        else if(wtop && wleft) this.ground.setWall(xi, zi, 8); // B 2*Math.PI/4
+        else if(wtop && wright) this.ground.setWall(xi, zi, 9); // B 1*Math.PI/4
+        else if(wbottom && wleft) this.ground.setWall(xi, zi, 10); // B 3*Math.PI/2
+        else if(wbottom && wright) this.ground.setWall(xi, zi, 11); // B 0*Math.PI/2
+        else if(wbottom || wtop) this.ground.setWall(xi, zi, 12); // A 0*Math.PI/2
+        else if(wleft || wright) this.ground.setWall(xi, zi, 13); // A 1*Math.PI/2
+        else this.ground.setWall(xi, zi, 14); // D 1*Math.PI/2
     }
 
     cancelConstruct() {

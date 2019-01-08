@@ -220,14 +220,17 @@ module.exports = class Ground {
         this.updated = true;
     }
 
-    addWall(xi, zi) {
-        const i = zi * this.nbTileX + xi;
-        this.gridWall[i] = 1;
+    setWall(xi, zi, value) {
+        this.gridWall[zi * this.nbTileX + xi] = value;
     }
 
+    getWall(xi, zi) {
+        if(zi<0 || zi >= this.nbTileZ || xi < 0 || xi < this.nbTileX) return 0;
+        this.gridWall[zi * this.nbTileX + xi];
+    }
+    
     removeWall(xi, zi) {
-        const i = zi * this.nbTileX + xi;
-        this.gridWall[i] = 0;
+        this.gridWall[zi * this.nbTileX + xi] = 0;
     }
 
     getEntity(id) {

@@ -1,5 +1,5 @@
 const THREE = require('three');
-const materialFoundation = require('./material/materialA');
+const material = require('./material/materialA');
 const materialDraft = require('./material/materialSelect');
 
 module.exports = class Wall {
@@ -12,6 +12,7 @@ module.exports = class Wall {
         this.nbTileZ = this.nbPointZ - 1;
         this.initDraftMesh(model);
         this.initFoundationMesh(model);
+        this.initWallMesh(model);
         this.add(parent);
     }
 
@@ -19,17 +20,25 @@ module.exports = class Wall {
         this.materialDraftOk = materialDraft;
         this.materialDraftKo = materialDraft.clone();
         this.materialDraftKo.color.setHex(0xff0000);
+        this.meshWallDraft = [];
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft));
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft));
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft));
+        this.drafts = [];
+    }
 
+    initWallMesh(model) {
         this.meshWall = [];
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallA_00.obj', material));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallB_00.obj', material));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallC_00.obj', material));
+        this.meshWall.push(THREE.getMesh('obj/buildings/wallD_00.obj', material));
         this.drafts = [];
     }
 
     initFoundationMesh(model) {
-        this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj', materialFoundation, model._id);
+        this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj', material, model._id);
         this.foundations = [];
     }
 
@@ -48,7 +57,7 @@ module.exports = class Wall {
         let angle = 0;
         for (let i = 0; i < length; i++) {
             if (!this.drafts[i]) {
-                this.drafts[i] = this.meshWall[shape[i*2]].clone();
+                this.drafts[i] = this.meshWallDraft[shape[i*2]].clone();
                 if (!valid[i]) {
                     this.drafts[i].material = this.materialDraftKo;
                 }
@@ -90,9 +99,14 @@ module.exports = class Wall {
         }
     }
 
+    updateWall(model) {
+
+    }
+
     update(dt, model) {
         if (!model.drafted) {
             this.updateFoudation(model);
+            this.updateWall(model);
         }
         this.updateDraft(model);
     }
