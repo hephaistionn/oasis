@@ -28,6 +28,7 @@ const ENTITIES = {
     Market: require('./model/app/buildings/market'),
     Repository: require('./model/app/buildings/repository'),
     Tower: require('./model/app/buildings/tower'),
+    WallBlock: require('./model/app/buildings/wallBlock'),
     StoneMine: require('./model/app/buildings/stoneMine'),
     ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),

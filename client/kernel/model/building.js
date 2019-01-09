@@ -132,7 +132,7 @@ class Building {
             xNbTile = this.constructor.tileZ;
             zNbTile = this.constructor.tileX;
         }
-        const tileSize = 4;
+        const tileSize = this.ground.tileSize;
         const xFirstTile = this.ax / tileSize - xNbTile / 2;
         const zFirstTile = this.az / tileSize - zNbTile / 2;
         const xLastTile = xFirstTile + xNbTile;
@@ -220,6 +220,9 @@ class Building {
             ee.off('mouseDownRight', this._cancelConstruct);
         } else {
             this.ground.setWalkable(this, 1);
+            if (this.constructor.wall) {
+                this.ground.setWall(Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize), 0)
+            }
             const index = this.constructor.instances.indexOf(this);
             this.constructor.instances.splice(index, 1);
         }

@@ -1,10 +1,11 @@
 const ee = require('../../kernel/tools/eventemitter');
 const Stats = require('../../kernel/model/stats');
 
-const top = 10; // 10*1  haut
-const bottom = -10; //10*-1 bas
-const right = 1;  //1 droite
-const left = -1;  //-1 gauche
+const topD = -10; // 10*1  haut
+const bottomD = 10; //10*-1 bas
+const rightD = 1;  //1 droite
+const leftD = -1;  //-1 gauche
+const WallBlock = 'WallBlock';
 
 module.exports = class Wall {
 
@@ -60,12 +61,22 @@ module.exports = class Wall {
     startConstruct() {
         if (!this.drafted) return;
         const l = this.draftWall.length;
+        let xi, zi;
         for (let i = 0; i < l; i++) {
             if (this.draftWall.valid[i] > 0) {
-                this.todo.push(this.draftWall.tiles[i * 2]);
-                this.todo.push(this.draftWall.tiles[i * 2 + 1]);
+                xi = this.draftWall.tiles[i * 2];
+                zi = this.draftWall.tiles[i * 2 + 1];
+                this.todo.push(xi);
+                this.todo.push(zi);
+                this.ground.setWall(xi, zi, 1);
+                this.updateWallShape(xi, zi);
+                if (xi > 0) this.updateWallShape(xi - 1, zi);
+                if (xi < this.nbTileX - 2) this.updateWallShape(xi + 1, zi);
+                if (zi > 0) this.updateWallShape(xi, zi - 1);
+                if (zi < this.nbTileZ - 2) this.updateWallShape(xi, zi + 1);
             }
         }
+
         this.started = true; // lance l'update cyclique
         this.drafted = false;
         this.draftWall.length = 0;
@@ -75,36 +86,47 @@ module.exports = class Wall {
     // un case est construite
     constructProgress() {
         const tile = this.todo.splice(0, 2);
-        this.updated = true;
-        this.ground.setWall(tile[0], tile[1], 1);
-        this.updateWallShape(tile[0], tile[1]);
+        const xi = tile[0];
+        const zi = tile[1];
+        const wallShape = this.ground.getWall(xi, zi);
+        const shape = this.ground.wallShape[wallShape * 2];
+        const angle = this.ground.wallShape[wallShape * 2 + 1] * Math.PI / 2;
+
+        ee.emit('addEntity', {
+            x: (xi + 0.5) * this.tileSize,
+            y: this.ground.getHeightTile(xi, zi),
+            z: (zi + 0.5) * this.tileSize,
+            rot: angle,
+            shape: shape,
+            level: 1,
+            type: WallBlock
+        });
+
         if (!this.todo.length) { // terminé
             this.started = false;
         }
+        this.updated = true;
     }
 
     updateWallShape(xi, zi) {
-        const gridWall = this.ground.gridWall;
+        if (!this.ground.getWall(xi, zi)) return;
+        const top = this.ground.getWall(xi, zi - 1);
+        const bottom = this.ground.getWall(xi, zi + 1);
+        const right = this.ground.getWall(xi + 1, zi);
+        const left = this.ground.getWall(xi - 1, zi);
 
-        const wtop = this.ground.getWall(xi, zi-1);
-        const wbottom = this.ground.getWall(xi, zi+1);
-        const wright = this.ground.getWall(xi+1, zi);
-        const wleft = this.ground.getWall(xi-1, zi);
-
-        if(wtop && wbottom && wleft && wright) this.ground.setWall(xi, zi, 1)// D 0*Math.PI/2
-        else if(wtop && wbottom && wleft) this.ground.setWall(xi, zi, 2); // C 0*Math.PI/2
-        else if(wtop && wbottom && wright) this.ground.setWall(xi, zi, 3); // C 2*Math.PI/2
-        else if(wright && wleft && wbottom) this.ground.setWall(xi, zi, 4); // C 1*Math.PI/2
-        else if(wright && wleft && wtop) this.ground.setWall(xi, zi, 5); // C 3*Math.PI/2
-        else if(wtop && wbottom) this.ground.setWall(xi, zi, 6); // A 0*Math.PI/2
-        else if(wleft && wright) this.ground.setWall(xi, zi, 7); // A 1*Math.PI/2
-        else if(wtop && wleft) this.ground.setWall(xi, zi, 8); // B 2*Math.PI/4
-        else if(wtop && wright) this.ground.setWall(xi, zi, 9); // B 1*Math.PI/4
-        else if(wbottom && wleft) this.ground.setWall(xi, zi, 10); // B 3*Math.PI/2
-        else if(wbottom && wright) this.ground.setWall(xi, zi, 11); // B 0*Math.PI/2
-        else if(wbottom || wtop) this.ground.setWall(xi, zi, 12); // A 0*Math.PI/2
-        else if(wleft || wright) this.ground.setWall(xi, zi, 13); // A 1*Math.PI/2
-        else this.ground.setWall(xi, zi, 14); // D 1*Math.PI/2
+        if (top && bottom && left && right) this.ground.setWall(xi, zi, 2);
+        else if (top && bottom && left) this.ground.setWall(xi, zi, 3);
+        else if (top && bottom && right) this.ground.setWall(xi, zi, 4);
+        else if (right && left && bottom) this.ground.setWall(xi, zi, 5);
+        else if (right && left && top) this.ground.setWall(xi, zi, 6);
+        else if (top && left) this.ground.setWall(xi, zi, 7);
+        else if (top && right) this.ground.setWall(xi, zi, 8);
+        else if (bottom && left) this.ground.setWall(xi, zi, 9);
+        else if (bottom && right) this.ground.setWall(xi, zi, 10);
+        else if (bottom || top) this.ground.setWall(xi, zi, 11);
+        else if (left || right) this.ground.setWall(xi, zi, 12);
+        else this.ground.setWall(xi, zi, 2);
     }
 
     cancelConstruct() {
@@ -199,24 +221,26 @@ module.exports = class Wall {
                 }
             }
             this.draftWall.length = length;
-            this.updateShape();
+            this.updateDraftShape();
 
             this.updated = true;
         }
     }
 
-    updateShape() {
+    updateDraftShape() {
         const tiles = this.draftWall.tiles;
         const length = this.draftWall.length;
         const shape = this.draftWall.shape;
-        let x, z;
+        const wallShape = this.ground.wallShape;
+
+        let x, z, k;
         for (let i = 0; i < length; i++) {
             const currentX = tiles[i * 2];
             const currentZ = tiles[i * 2 + 1];
-            this.draftGrid.set(top, 0);// haut
-            this.draftGrid.set(bottom, 0); // bas
-            this.draftGrid.set(right, 0);// droite
-            this.draftGrid.set(left, 0);// gauche
+            this.draftGrid.set(topD, 0);// haut
+            this.draftGrid.set(bottomD, 0); // bas
+            this.draftGrid.set(rightD, 0);// droite
+            this.draftGrid.set(leftD, 0);// gauche
             if (i > 0) {
                 x = tiles[(i - 1) * 2] - currentX;
                 z = tiles[(i - 1) * 2 + 1] - currentZ;
@@ -228,34 +252,25 @@ module.exports = class Wall {
                 this.draftGrid.set(x + 10 * z, 1);
             }
 
-            if (this.draftGrid.get(top) && this.draftGrid.get(bottom)) {
-                shape[i * 2] = 0; // Mesh wall numero
-                shape[i * 2 + 1] = 0;  // orientation
-            } else if (this.draftGrid.get(right) && this.draftGrid.get(left)) {
-                shape[i * 2] = 0;
-                shape[i * 2 + 1] = 1;
-            } else if (this.draftGrid.get(top) && this.draftGrid.get(left)) {
-                shape[i * 2] = 1;
-                shape[i * 2 + 1] = 2;
-            } else if (this.draftGrid.get(top) && this.draftGrid.get(right)) {
-                shape[i * 2] = 1;
-                shape[i * 2 + 1] = 1;
-            } else if (this.draftGrid.get(bottom) && this.draftGrid.get(left)) {
-                shape[i * 2] = 1;
-                shape[i * 2 + 1] = 3;
-            } else if (this.draftGrid.get(bottom) && this.draftGrid.get(right)) {
-                shape[i * 2] = 1;
-                shape[i * 2 + 1] = 0;
-            } else if (this.draftGrid.get(bottom) || this.draftGrid.get(top)) {
-                shape[i * 2] = 0;
-                shape[i * 2 + 1] = 0;
-            } else if (this.draftGrid.get(right) || this.draftGrid.get(left)) {
-                shape[i * 2] = 0;
-                shape[i * 2 + 1] = 1;
-            } else {
-                shape[i * 2] = 0;
-                shape[i * 2 + 1] = 0;
-            }
+            const top = this.ground.getWall(currentX, currentZ - 1) || this.draftGrid.get(topD);
+            const bottom = this.ground.getWall(currentX, currentZ + 1) || this.draftGrid.get(bottomD);
+            const right = this.ground.getWall(currentX + 1, currentZ) || this.draftGrid.get(rightD);
+            const left = this.ground.getWall(currentX - 1, currentZ) || this.draftGrid.get(leftD);
+
+            if (top && bottom && left && right) k = 2;
+            else if (top && bottom && left) k = 3;
+            else if (top && bottom && right) k = 4;
+            else if (right && left && bottom) k = 5;
+            else if (right && left && top) k = 6;
+            else if (top && left) k = 7;
+            else if (top && right) k = 8;
+            else if (bottom && left) k = 9;
+            else if (bottom && right) k = 10;
+            else if (bottom || top) k = 11;
+            else if (left || right) k = 12;
+            else k = 2;
+            shape[i * 2] = wallShape[k * 2];
+            shape[i * 2 + 1] = wallShape[k * 2 + 1];
         }
     }
 
@@ -274,7 +289,7 @@ module.exports = class Wall {
                 this.draftWall.valid[0] = 1;
             }
             this.draftWall.length = 1;
-            this.updateShape();
+            this.updateDraftShape();
             this.updated = true;
         }
     }

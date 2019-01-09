@@ -10,9 +10,9 @@ module.exports = class Wall {
         this.nbPointZ = model.ground.nbPointZ;
         this.nbTileX = this.nbPointX - 1;
         this.nbTileZ = this.nbPointZ - 1;
+        this.tileHeight = model.ground.tileHeight;
         this.initDraftMesh(model);
         this.initFoundationMesh(model);
-        this.initWallMesh(model);
         this.add(parent);
     }
 
@@ -25,15 +25,6 @@ module.exports = class Wall {
         this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));
         this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft));
         this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft));
-        this.drafts = [];
-    }
-
-    initWallMesh(model) {
-        this.meshWall = [];
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallA_00.obj', material));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallB_00.obj', material));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallC_00.obj', material));
-        this.meshWall.push(THREE.getMesh('obj/buildings/wallD_00.obj', material));
         this.drafts = [];
     }
 
@@ -52,12 +43,12 @@ module.exports = class Wall {
             this.parent.render.scene.remove(this.drafts[i]);
         }
         this.drafts.splice(0, this.drafts.length);
-        
+
         let matrixWorld;
         let angle = 0;
         for (let i = 0; i < length; i++) {
             if (!this.drafts[i]) {
-                this.drafts[i] = this.meshWallDraft[shape[i*2]].clone();
+                this.drafts[i] = this.meshWallDraft[shape[i * 2]].clone();
                 if (!valid[i]) {
                     this.drafts[i].material = this.materialDraftKo;
                 }
@@ -67,7 +58,7 @@ module.exports = class Wall {
             matrixWorld[12] = (tiles[i * 2] + 0.5) * model.ground.tileSize;
             matrixWorld[14] = (tiles[i * 2 + 1] + 0.5) * model.ground.tileSize;
             matrixWorld[13] = model.ground.getHeightTile(tiles[i * 2], tiles[i * 2 + 1]);
-            angle = shape[i*2+1]*Math.PI/2;
+            angle = shape[i * 2 + 1] * Math.PI / 2;
             matrixWorld[0] = Math.cos(angle);
             matrixWorld[2] = Math.sin(angle);
             matrixWorld[8] = -matrixWorld[2];
@@ -99,14 +90,9 @@ module.exports = class Wall {
         }
     }
 
-    updateWall(model) {
-
-    }
-
     update(dt, model) {
         if (!model.drafted) {
             this.updateFoudation(model);
-            this.updateWall(model);
         }
         this.updateDraft(model);
     }

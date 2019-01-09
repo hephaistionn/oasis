@@ -1,4 +1,6 @@
 const pathfinding = require('../../kernel/tools/pathfinding');
+const ee = require('../../kernel/tools/eventemitter');
+const onWallTileUpdated = 'onWallTileUpdated';
 
 module.exports = class Ground {
 
@@ -32,6 +34,23 @@ module.exports = class Ground {
         this._id = 2;
         this.initGridByHeight(this.tilesTilt);
         this.initGridWater();
+        //mesh et direction
+        this.wallShape = [
+            0, 0,
+            0, 0,
+            3, 1, //2
+            2, 3, //3
+            2, 1, //4
+            2, 2, //5
+            2, 0, //6
+            1, 3, //7
+            1, 0, //8
+            1, 2, //9
+            1, 1, //10
+            0, 0, //11
+            0, 1, //12
+            3, 0 //13
+        ];
     }
 
     initGridWater() {
@@ -154,8 +173,8 @@ module.exports = class Ground {
         return xiA === xiB && ziB === ziB;
     }
 
-    getHeightTile(x, z) {
-        const index = Math.floor(z) * this.nbTileX + Math.floor(x);
+    getHeightTile(xi, zi) {
+        const index = zi * this.nbTileX + xi;
         return this.tilesHeight[index] * this.tileHeight;
     }
 
@@ -168,7 +187,6 @@ module.exports = class Ground {
         zi = Math.min(zi, this.nbTileZ - 1);
         const index = zi * this.nbTileX + xi;
         const y = this.tilesHeight[index] * this.tileHeight;
-        //console.log('i:', index, ' xi:', xi,' y:', y, ' zi:', zi)
         return {
             x: (xi + 0.5) * this.tileSize,
             y: y,
@@ -221,14 +239,21 @@ module.exports = class Ground {
     }
 
     setWall(xi, zi, value) {
-        this.gridWall[zi * this.nbTileX + xi] = value;
+        if (value > 1) {
+            if (this.gridWall[zi * this.nbTileX + xi] !== value) { // pour alerter un changement de forme
+                this.gridWall[zi * this.nbTileX + xi] = value;
+                ee.emit('onWallTileUpdated', (xi + 0.5) * this.tileSize, (zi + 0.5) * this.tileSize, value);
+            }
+        } else {
+            this.gridWall[zi * this.nbTileX + xi] = value;
+        }
     }
 
     getWall(xi, zi) {
-        if(zi<0 || zi >= this.nbTileZ || xi < 0 || xi < this.nbTileX) return 0;
-        this.gridWall[zi * this.nbTileX + xi];
+        if (zi < 0 || zi >= this.nbTileZ || xi < 0 || xi >= this.nbTileX) return 0;
+        return this.gridWall[zi * this.nbTileX + xi];
     }
-    
+
     removeWall(xi, zi) {
         this.gridWall[zi * this.nbTileX + xi] = 0;
     }
