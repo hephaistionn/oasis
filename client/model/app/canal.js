@@ -1,6 +1,8 @@
 const ee = require('../../kernel/tools/eventemitter');
 const Stats = require('../../kernel/model/stats');
 
+const Bridge  = 'Bridge';
+
 module.exports = class Canal {
 
     constructor(config, ground, store) {
@@ -45,19 +47,27 @@ module.exports = class Canal {
     }
 
     removeCanal(tiles, l) {
-        let x, z, i, o;
+        let xi, zi, i, o;
         for (i = 0; i < l; i++) {
-            x = tiles[i * 2];
-            z = tiles[i * 2 + 1];
-            o = z * this.ground.nbTileX + x;
+            xi = tiles[i * 2];
+            zi = tiles[i * 2 + 1];
+            o = zi * this.ground.nbTileX + xi;
+            // si il y a un pont
             if (this.ground.gridCanal[o] !== 0) {
-                this.ground.removeCanal(x, z);
-                this.ground.grid.setWalkableAt(x, z, 1);
-            }
+                if(this.ground.isWalkable(xi, zi)) {
+                    const ax = (xi+0.5) * this.ground.tileSize;
+                    const az = (zi+0.5) * this.ground.tileSize;
+                    const bridge = this.ground.ENTITIES[Bridge].instances.find(ins => ins.ax === ax && ins.az === az);
+                    if(bridge) bridge.autoRemove();
+                }
+                this.ground.removeCanal(xi, zi);
+                this.ground.grid.setWalkableAt(xi, zi, 1);
+            }    
         }
         this.ground.updateCanalType();
         this.ground.initGridWater();
         this.updated = true;
+        this.canalUpdated = true; //mauvaise pratique
     }
 
     draft() {
@@ -80,6 +90,7 @@ module.exports = class Canal {
         this.drafted = false;
         this.draftCanal.length = 0;
         this.updated = true;
+        this.canalUpdated = true; //mauvaise pratique
     }
 
     // un case est construite
@@ -89,6 +100,7 @@ module.exports = class Canal {
         this.ground.addCanal(tile[0], tile[1]);
         this.ground.updateCanalType();// la forme d'un block de canal dépend de ses voisins
         this.updated = true;
+        this.canalUpdated = true; //mauvaise pratique
         if (!this.todo.length) { // terminé
             this.started = false; 
         }
@@ -176,9 +188,16 @@ module.exports = class Canal {
             }
             
             const missing = this.missingResources(length);
+            let walkable, bank,  height, areaCanal, xi, zi;
             
             for (i = 0; i < length; i++) {
-                if (!this.ground.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1]) && !this.ground.isWaterable(255, tiles[i * 2], tiles[i * 2 + 1]) || missing) {
+                xi = tiles[i * 2];
+                zi = tiles[i * 2 + 1];
+                walkable = this.ground.grid.isWalkableAt(xi, zi);
+                bank = this.ground.isBank(xi, zi);
+                height = this.ground.getHeightTile(xi, zi);
+                areaCanal = this.ground.isAreaCanal(xi, zi);
+                if (!walkable && !bank || missing || height > this.heightMax || areaCanal) {
                     for (k = 0; k < length; k++) {
                         this.draftCanal.valid[k] = 0;
                     }
@@ -199,7 +218,9 @@ module.exports = class Canal {
             const walkable = this.ground.grid.isWalkableAt(xi, zi);
             const bank = this.ground.isBank(xi, zi);
             const height = this.ground.getHeightTile(xi, zi);
-            if ((!walkable && !bank) || height > this.heightMax) {
+            const areaCanal = this.ground.isAreaCanal(xi, zi);
+            const missing = this.missingResources(1);
+            if ((!walkable && !bank) || height > this.heightMax || areaCanal  || missing) {
                 this.draftCanal.valid[0] = 0;
             } else {
                 this.draftCanal.valid[0] = 1;

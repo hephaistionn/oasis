@@ -261,9 +261,10 @@ module.exports = class Canal {
     }
 
     update(dt, model) {
-        if (!model.drafted) {
+        if (model.canalUpdated) {
             this.updateCanal(model);
             this.updateFoudation(model);
+            model.canalUpdated = false;// mauvaise pratique
         }
         this.updateDraft(model);
     }

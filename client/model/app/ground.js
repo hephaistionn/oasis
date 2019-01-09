@@ -169,6 +169,22 @@ module.exports = class Ground {
         return count === 3;
     }
 
+    //si le canal est contre un autre canal diagonalement
+    isAreaCanal(xi, zi) {
+        return (this.gridCanal[(zi+1) * this.nbTileX + xi + 1] &&
+        this.gridCanal[(zi) * this.nbTileX + xi + 1] &&
+        this.gridCanal[(zi+1) * this.nbTileX + xi]) ||
+        (this.gridCanal[(zi+1) * this.nbTileX + xi - 1] &&
+        this.gridCanal[(zi) * this.nbTileX + xi - 1] &&
+        this.gridCanal[(zi+1) * this.nbTileX + xi]) ||
+        (this.gridCanal[(zi-1) * this.nbTileX + xi - 1] &&
+        this.gridCanal[(zi) * this.nbTileX + xi - 1] &&
+        this.gridCanal[(zi-1) * this.nbTileX + xi]) ||
+        (this.gridCanal[(zi-1) * this.nbTileX + xi + 1] &&
+        this.gridCanal[(zi) * this.nbTileX + xi + 1] &&
+        this.gridCanal[(zi-1) * this.nbTileX + xi]);
+    }
+
     // retourne la direction du canal, si pas de canal -1
     getCanalDirection(xi, zi) {
         if (this.gridWater[zi * this.nbTileX + xi] !== this.waterLevelMax) {

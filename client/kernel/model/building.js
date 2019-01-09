@@ -167,6 +167,10 @@ class Building {
         ee.emit('onRemoveEntity', child);
     }
 
+    autoRemove() {
+        ee.emit('onRemoveEntity', this);
+    }
+
     startConstruct() {
         if (this.drafted && !this.undroppable) {
             ee.emit('addEntity', {

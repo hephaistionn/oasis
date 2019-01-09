@@ -282,9 +282,10 @@ module.exports = class Road {
   }
 
   update(dt, model) {
-    if (!model.drafted) {
+    if (model.roadUpdated) {
       this.updateRoad(model);
       this.updateFoudation(model);
+      model.roadUpdated = false
     }
     this.updateDraft(model);
   }

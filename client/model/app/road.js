@@ -56,6 +56,7 @@ module.exports = class Road {
             }
         }
         this.updated = true;
+        this.roadUpdated = true;
     }
 
     draft(config) {
@@ -81,6 +82,7 @@ module.exports = class Road {
         this.drafted = false;
         this.draftRoad.length = 0;
         this.updated = true; 
+        this.roadUpdated = true;
     }
 
     // une case est construite
@@ -88,6 +90,7 @@ module.exports = class Road {
         const tile = this.todo.splice(0, 3);
         this.ground.grid.setWalkableAt(tile[0], tile[1], tile[2]);
         this.updated = true;
+        this.roadUpdated = true;
         if (!this.todo.length) {
             this.started = false; 
         }
