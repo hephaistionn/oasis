@@ -110,7 +110,11 @@ module.exports = class Ground {
     setWalkable(entity, walkableStatus) {
         const tiles = entity.getTiles();
         for (let i = 0; i < tiles.length; i += 2) {
-            this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkableStatus || entity.constructor.walkable);
+            if (walkableStatus === undefined) {
+                this.grid.setWalkableAt(tiles[i], tiles[i + 1], entity.constructor.walkable);
+            } else {
+                this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkableStatus);
+            }
         }
         this.updated = true;
     }
@@ -139,8 +143,8 @@ module.exports = class Ground {
             }
             return false;
         } else {
-            const xi = Math.floor(x);
-            const zi = Math.floor(z);
+            const xi = x;
+            const zi = z;
             return this.gridWater[zi * this.nbTileX + xi] >= levelNeeded
         }
     }
@@ -163,6 +167,20 @@ module.exports = class Ground {
             count++;
         }
         return count === 3;
+    }
+
+    // retourne la direction du canal, si pas de canal -1
+    getCanalDirection(xi, zi) {
+        if (this.gridWater[zi * this.nbTileX + xi] !== this.waterLevelMax) {
+            return -1;
+        }
+        if (this.gridWater[zi * this.nbTileX + xi + 1] !== this.waterLevelMax && this.gridWater[zi * this.nbTileX + xi - 1] !== this.waterLevelMax) {
+            return 0;
+        }
+        if (this.gridWater[(zi + 1) * this.nbTileX + xi] !== this.waterLevelMax && this.gridWater[(zi - 1) * this.nbTileX + xi] !== this.waterLevelMax) {
+            return Math.PI / 2;
+        }
+        return -1
     }
 
     isInSameTile(entityA, entityB) {

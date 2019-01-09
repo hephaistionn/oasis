@@ -170,7 +170,7 @@ class Building {
     startConstruct() {
         if (this.drafted && !this.undroppable) {
             ee.emit('addEntity', {
-                x: this.ax, y: this.ay, z: this.az,
+                x: this.ax, y: this.ay, z: this.az, rot:this.aroty,
                 type: this.constructor.name
             });
             ee.emit('removeEntity', this._id);
@@ -219,7 +219,7 @@ class Building {
             ee.off('mouseClick', this._startConstruct);
             ee.off('mouseDownRight', this._cancelConstruct);
         } else {
-            this.ground.setWalkable(this, 1);
+            this.ground.setWalkable(this, !this.constructor.walkable ? 1 : 0);
             if (this.constructor.wall) {
                 this.ground.setWall(Math.floor(this.ax / this.ground.tileSize), Math.floor(this.az / this.ground.tileSize), 0)
             }
