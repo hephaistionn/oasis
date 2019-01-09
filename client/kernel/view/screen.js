@@ -22,6 +22,7 @@ const COMPONENTS = {
     Market: require('../../view/app/building/market'),
     Repository: require('../../view/app/building/repository'),
     WallBlock: require('../../view/app/building/wallBlock'),
+    Bridge: require('../../view/app/building/bridge'),
     StoneMine: require('../../view/app/building/stoneMine'),
     ForestHut: require('../../view/app/building/forestHut'),
     Builder: require('../../view/app/characters/builder'),

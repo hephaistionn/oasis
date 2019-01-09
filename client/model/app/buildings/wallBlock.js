@@ -10,7 +10,6 @@ class WallBlock extends Building {
     }
 
     updateShape(value) {
-        console.log(value)
         const shape = this.ground.wallShape[value * 2];
         const angle = this.ground.wallShape[value * 2 + 1] * Math.PI/2;
         this.shape = shape;

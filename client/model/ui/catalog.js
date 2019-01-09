@@ -31,6 +31,7 @@ class Catalog {
                 list: [
                     { class: 'Repository', label: 'Entrepot', pic: '/pic/house.png' },
                     { class: 'Attic', label: 'Grenier', pic: '/pic/house.png' },
+                    { class: 'Bridge', label: 'Pont', pic: '/pic/house.png' },
                     { class: 'Road', label: 'Chemin', pic: '/pic/house.png' },
                     { class: 'Canal', label: 'Canal', pic: '/pic/house.png' },
                     { class: 'Remover', label: 'Effaceur', pic: '/pic/house.png' },

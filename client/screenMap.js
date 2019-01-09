@@ -30,6 +30,7 @@ const ENTITIES = {
     Tower: require('./model/app/buildings/tower'),
     WallBlock: require('./model/app/buildings/wallBlock'),
     StoneMine: require('./model/app/buildings/stoneMine'),
+    Bridge: require('./model/app/buildings/bridge'),
     ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
