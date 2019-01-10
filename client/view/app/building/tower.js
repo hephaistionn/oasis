@@ -6,14 +6,14 @@ const Building = require('../../../kernel/view/building');
 module.exports = class Tower extends Building {
 
 	initMesh(model) {
-		this.building = THREE.getMesh('obj/buildings/attic_00.obj', material, model._id);
-		this.foundation = THREE.getMesh('obj/buildings/repository_00.obj', material, model._id);
-		this.draft = THREE.getMesh('obj/buildings/attic_00.obj', materialSelect);
 		this.animatedMesh = THREE.getMesh('obj/buildings/bullet.obj', material, model._id);
+		this.meshLevel.push(THREE.getMesh('obj/buildings/repository_00.obj', material, model._id));
+		this.meshLevel.push(THREE.getMesh('obj/buildings/attic_00.obj', material, model._id));
+		this.meshLevel.push(THREE.getMesh('obj/buildings/stoneMine_00.obj', material, model._id));
+		this.draft = THREE.getMesh('obj/buildings/attic_00.obj', materialSelect);
 		this.element.add(this.animatedMesh);
 		this.animProgress = 0;
 		this.animDuration = model.shootDuration;
-		this.updateMesh(model);
 	}
 
 	playAnimation(dt, model) {

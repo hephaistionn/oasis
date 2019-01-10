@@ -6,36 +6,33 @@ const Building = require('../../../kernel/view/building');
 module.exports = class WallBlock extends Building {
 
 	initMesh(model) {
-		this.updateMesh(model);
+
+		this.wallLevel = {};
+
+		this.wallLevel[1] = [
+			THREE.getMesh('obj/buildings/wallA_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallB_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallC_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallD_00.obj', material, model._id)
+		];
+
+		this.wallLevel[2] = [
+			THREE.getMesh('obj/buildings/wallA_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallB_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallC_00.obj', material, model._id),
+			THREE.getMesh('obj/buildings/wallD_00.obj', material, model._id)
+		];
+
 	}
 
 	updateMesh(model) {
-		if (this.building) {
-			this.removeMesh(this.building);
+		if (this.level !== model.level) {
+			this.removeMesh(this.meshWall);
+			this.meshWall = this.wallLevel[model.level][model.shape];
+			this.addMesh(this.meshWall);
+			this.meshLevel[model.level] = this.meshWall; // obligation pour le bon fonctionnement de updateMeshSelector. Ce composant n'est pas un Building stantard
 		}
-		switch (model.shape) {
-			case 0:
-				this.building = THREE.getMesh('obj/buildings/wallA_00.obj', material, model._id);
-				break;
-			case 1:
-				this.building = THREE.getMesh('obj/buildings/wallB_00.obj', material, model._id);
-				break;
-			case 2:
-				this.building = THREE.getMesh('obj/buildings/wallC_00.obj', material, model._id);
-				break;
-			default:
-				this.building = THREE.getMesh('obj/buildings/wallD_00.obj', material, model._id);
-		}
-		this.addMesh(this.building);
-
-		if (model.selected && !this.boxSelector) {
-			this.boxSelector = new THREE.BoxHelper(this.building, 0xffff00);
-			this.boxSelector.matrixAutoUpdate = false;
-			this.element.add(this.boxSelector);
-		} else if (!model.selected && this.boxSelector) {
-			this.element.remove(this.boxSelector);
-			this.boxSelector = null;
-		}
+		this.updateMeshSelector(model);
 	}
 
 };

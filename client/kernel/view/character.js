@@ -5,7 +5,6 @@ module.exports = class Member {
     constructor(model, parent) {
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
-        this.boxSelector = null;
         this.animationsBody = [];
         this.animationsHead = [];
         this.currentAnimation = null;
@@ -19,24 +18,10 @@ module.exports = class Member {
     }
 
     updateMesh(model) {
-        
-    }
 
-    updateBox(model) {
-        if (model.selected && !this.boxSelector) {
-            this.boxSelector = new THREE.BoxHelper(this.element, 0xffff00);
-            this.boxSelector.geometry.center ();
-            this.boxSelector.matrixAutoUpdate = false;
-            this.element.add(this.boxSelector);
-            this.boxSelector.matrixWorld = this.element.matrixWorld;
-        } else if (!model.selected && this.boxSelector) {
-            this.element.remove(this.boxSelector);
-            this.boxSelector = null;
-        }
     }
 
     update(dt, model) {
-        this.updateBox(model);
         this.updateMesh(model);
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.ax;
@@ -65,7 +50,7 @@ module.exports = class Member {
         }
         const ia = steps[indexStep];
         const ib = steps[indexStep + 1];
-        if(ia !== ib) {
+        if (ia !== ib) {
             this.element.morphTargetInfluences[ib] = this.element.animProgress / (1 / nbSteps) - indexStep;
         }
         this.element.morphTargetInfluences[ia] = 1 - this.element.morphTargetInfluences[ib];
@@ -79,13 +64,13 @@ module.exports = class Member {
             const a = this.element.morphTargetInfluences[ia];
             const x = v1.x * a + v2.x * b;
             const y = v1.y * a + v2.y * b;
-            const z = v1.z * a + v2.z * b;            
-            const matrixWorld =this.head.matrixWorld.elements;
+            const z = v1.z * a + v2.z * b;
+            const matrixWorld = this.head.matrixWorld.elements;
             matrixWorld[12] = x + model.ax;
             matrixWorld[13] = y + model.ay;
             matrixWorld[14] = z + model.az;
             matrixWorld[0] = Math.cos(model.aroty);
-            matrixWorld[2] = Math.sin(model.aroty); 
+            matrixWorld[2] = Math.sin(model.aroty);
             matrixWorld[8] = -matrixWorld[2];
             matrixWorld[10] = matrixWorld[0];
         }

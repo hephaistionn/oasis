@@ -1,15 +1,21 @@
 const THREE = require('three');
 
-class Entity {
+const colorBlue = 0x0000ff;
+const colorRed = 0xff0000;
+const meshSelector = new THREE.BoxHelper(undefined, 0xffff00);
+meshSelector.matrixAutoUpdate = false;
+
+class Building {
 
     constructor(model, parent) {
         this.element = new THREE.Object3D();
-        this.initMesh(model);
         this.element.matrixAutoUpdate = false;
-        this.update(0, model);
-        this.add(parent);
         this.boxSelector = null;
-        this.state = 0;
+        this.meshLevel = [];
+        this.level = 99;
+        this.add(parent);
+        this.initMesh(model);
+        this.update(0, model);
     }
 
     update(dt, model) {
@@ -26,37 +32,26 @@ class Entity {
 
     updateMesh(model) {
         if (model.drafted) {
-            this.draft.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
-            if (this.state !== 1) {
+            this.draft.material.color.setHex(model.undroppable ? colorRed : colorBlue);
+            if (!this.draft.parent) {
                 this.addMesh(this.draft);
-                this.state = 1;
-            }
-        } else if (model.level === 1) {
-            if (this.state !== 2) {
-                this.removeMesh(this.draft);
-                this.removeMesh(this.foundation);
-                this.addMesh(this.building);
-                this.state = 2;
-            }
-            //TOUT REVOIR C'EST JUSTE DEGUEUX !!!!!
-        } else if (model.level === 2) { 
-            if (this.state !== 4) {
-                this.removeMesh(this.building);
-                this.addMesh(this.building2);
-                this.state = 4;
             }
         } else {
-            if (this.state !== 3) {
-                this.removeMesh(this.draft);
-                this.removeMesh(this.building);
-                this.addMesh(this.foundation);
-                this.state = 3;
+            if (this.level !== model.level) {
+                this.removeMesh(this.meshLevel[this.level])
+                this.addMesh(this.meshLevel[model.level]);
+                this.level = model.level;
+            }
+            if (model.selected || this.boxSelector) {
+                this.updateMeshSelector(model);
             }
         }
+    }
 
+    updateMeshSelector(model) {
         if (model.selected && !this.boxSelector) {
-            this.boxSelector = new THREE.BoxHelper(this.building, 0xffff00);
-            this.boxSelector.matrixAutoUpdate = false;
+            this.boxSelector = meshSelector;
+            this.boxSelector.setFromObject(this.meshLevel[model.level]);
             this.element.add(this.boxSelector);
         } else if (!model.selected && this.boxSelector) {
             this.element.remove(this.boxSelector);
@@ -71,7 +66,9 @@ class Entity {
 
     removeMesh(mesh) {
         this.element.remove(mesh);
-        mesh.geometry.dispose();
+        if (mesh) {
+            mesh.geometry.dispose();
+        }
     }
 
     remove(parent) {
@@ -85,4 +82,4 @@ class Entity {
 }
 
 
-module.exports = Entity;
+module.exports = Building;

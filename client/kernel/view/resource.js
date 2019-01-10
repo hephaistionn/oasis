@@ -1,4 +1,6 @@
 const THREE = require('three');
+const meshSelector = new THREE.BoxHelper(undefined, 0xffff00);
+meshSelector.matrixAutoUpdate = false;
 
 module.exports = class Resource {
 
@@ -9,7 +11,6 @@ module.exports = class Resource {
         this.update(0, model);
         this.add(parent);
         this.boxSelector = null;
-        this.state = 0;
     }
 
     update(dt, model) {
@@ -25,22 +26,22 @@ module.exports = class Resource {
     }
 
     updateMesh(model) {
-        if (model.soldout) {
-            if (this.state !== 1) {
-                this.removeMesh(this.meshFull);
-                this.addMesh(this.meshSoldout);
-                this.state = 1;
-            }
-        } else {
-            if (this.state !== 2) {
-                this.removeMesh(this.meshSoldout);
-                this.addMesh(this.meshFull);
-                this.state = 2;
-            }
+        if (model.soldout && !this.meshSoldout.parent) {
+            this.removeMesh(this.meshFull);
+            this.addMesh(this.meshSoldout);
+        } else if (!this.meshFull.parent) {
+            this.removeMesh(this.meshSoldout);
+            this.addMesh(this.meshFull);
         }
+        if (model.selected || this.boxSelector) {
+            this.updateMeshSelector(model);
+        }
+    }
+
+    updateMeshSelector(model) {
         if (model.selected && !this.boxSelector) {
-            this.boxSelector = new THREE.BoxHelper(this.meshFull, 0xffff00);
-            this.boxSelector.matrixAutoUpdate = false;
+            this.boxSelector = meshSelector;
+            this.boxSelector.setFromObject(this.meshFull)
             this.element.add(this.boxSelector);
         } else if (!model.selected && this.boxSelector) {
             this.element.remove(this.boxSelector);
