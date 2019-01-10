@@ -21,10 +21,12 @@ class ForestHut extends Building {
 }
 
 ForestHut.removable = true;
+ForestHut.levelMax = 2;
 ForestHut.description = 'This building increase the prosperity of your city';
 ForestHut.tileX = 1;
 ForestHut.tileZ = 1;
 ForestHut.cost = { [Stats.WOOD]: 5 };
+ForestHut.upgrade = [{},{[Stats.WOOD]: 5}];
 ForestHut.require = { inactive: 2 };
 ForestHut.enabled = { stone: 2 };
 ForestHut.walkable = 0;

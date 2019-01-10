@@ -61,9 +61,14 @@ module.exports = class Road {
 
     draft(config) {
         this.drafted = true;
-        this.roadType = 2;
-        this.cost = {[Stats.WOOD]: 0};
-        this.costByTile = {[Stats.WOOD]: 1};
+        this.roadType = config.type;
+        if(this.roadType === 2) {
+            this.cost = {[Stats.WOOD]: 0};
+            this.costByTile = {[Stats.WOOD]: 1};
+        } else {
+            this.cost = {[Stats.WOOD]: 0};
+            this.costByTile = {[Stats.WOOD]: 1}; 
+        }
         this.constuctDuration = 1000;
     }
 

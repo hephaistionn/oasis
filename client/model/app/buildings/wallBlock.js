@@ -20,6 +20,7 @@ class WallBlock extends Building {
 }
 
 WallBlock.removable = true;
+WallBlock.levelMax = 2;
 WallBlock.description = 'This building increase the enable places for your population';
 WallBlock.tileX = 1;
 WallBlock.tileZ = 1;
@@ -27,6 +28,7 @@ WallBlock.walkable = 0;
 WallBlock.constuctDuration = 1000;
 WallBlock.instances = [];
 WallBlock.wall = true;
+WallBlock.upgrade = [{},{[Stats.WOOD]: 5}];
 
 //optimization mémoire : evite d'ajouter n fonction en écoute de l'event onWallTileUpdated. les instances WallBlock peuvent être très nombreuses
 ee.on('onWallTileUpdated', function(ax, az, value) { 

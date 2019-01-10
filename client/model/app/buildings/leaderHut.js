@@ -10,6 +10,7 @@ class LeaderHut extends Building {
 }
 
 LeaderHut.removable = true;
+LeaderHut.levelMax = 1;
 LeaderHut.description = 'This building increase the enable places for your population';
 LeaderHut.tileX = 1;
 LeaderHut.tileZ = 1;

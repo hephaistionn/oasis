@@ -28,6 +28,7 @@ const COMPONENTS = {
     Builder: require('../../view/app/characters/builder'),
     Provider: require('../../view/app/characters/provider'),
     Lumberjack: require('../../view/app/characters/lumberjack'),
+    Craftsman: require('../../view/app/characters/craftsman'),
     Carrier: require('../../view/app/characters/carrier'),
     Hunter: require('../../view/app/characters/hunter'),
     Militiaman: require('../../view/app/characters/militiaman'),

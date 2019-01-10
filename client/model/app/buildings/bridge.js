@@ -34,11 +34,13 @@ class Bridge extends Building {
 }
 
 Bridge.removable = true;
+Bridge.levelMax = 2;
 Bridge.description = 'This building increase the enable places for your population';
 Bridge.tileX = 1;
 Bridge.tileZ = 1;
 Bridge.walkable = 1;
 Bridge.cost = { [Stats.WOOD]: 5 };
+Bridge.upgrade = [{},{[Stats.WOOD]: 5}];
 Bridge.waterLevelNeeded = 255;
 Bridge.constuctDuration = 1000;
 Bridge.instances = [];

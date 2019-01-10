@@ -11,6 +11,7 @@ class Market extends Building {
 }
 
 Market.removable = true;
+Market.levelMax = 1;
 Market.description = 'This building increase the prosperity of your city';
 Market.tileX = 1;
 Market.tileZ = 1;

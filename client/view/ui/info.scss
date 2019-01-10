@@ -7,7 +7,14 @@
     left: 0;
     &__remove {
         background: red;
-        position: relative;
         @include button;
+        position: relative;
+        margin: 20px;
+    }
+    &__upgrade {
+        background: red;
+        @include button;
+        position: relative;
+        margin: 20px;
     }
 }

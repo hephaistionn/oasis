@@ -16,6 +16,7 @@ class House extends Building {
 }
 
 House.removable = true;
+House.levelMax = 3;
 House.description = 'This building increase the enable places for your population';
 House.tileX = 1;
 House.tileZ = 1;
@@ -26,5 +27,6 @@ House.enabled = {};
 House.constuctDuration = 1000;
 House.waterLevelNeeded = 40;
 House.instances = [];
+House.upgrade = [{},{[Stats.WOOD]: 5}, {[Stats.WOOD]: 5}];
 
 module.exports = House;

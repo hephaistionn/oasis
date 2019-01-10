@@ -9,6 +9,12 @@ module.exports = class Info {
         this.buttonRemove.className = 'info__remove';
         this.buttonRemove.textContent = 'remove';
         this.buttonRemove.onclick = model.remove.bind(model);
+
+
+        this.buttonUpgrade = document.createElement('div');
+        this.buttonUpgrade.className = 'info__upgrade';
+        this.buttonUpgrade.textContent = 'upgrade';
+        this.buttonUpgrade.onclick = model.upgrade.bind(model);
         
         this.add(parent);
 
@@ -16,10 +22,17 @@ module.exports = class Info {
     }
 
     update(dt, model) {
-        if(model.entity && model.entity.constructor.removable) {
-            this.node.appendChild(this.buttonRemove);
-        } else if(this.buttonRemove.parentNode == this.node) {
-            this.node.removeChild(this.buttonRemove);
+        if(model.entity) {
+            if(model.entity.constructor.removable) {
+                this.node.appendChild(this.buttonRemove);
+            } else if(this.buttonRemove.parentNode) {
+                this.node.removeChild(this.buttonRemove);
+            }
+            if(model.entity.constructor.levelMax && model.entity.constructor.levelMax > model.entity.level) {
+                this.node.appendChild(this.buttonUpgrade);
+            } else if(this.buttonUpgrade.parentNode) {
+                this.node.removeChild(this.buttonUpgrade);
+            }
         }
 
         if (model.opened) {

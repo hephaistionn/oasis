@@ -16,6 +16,7 @@ class HunterHut extends Building {
 }
 
 HunterHut.removable = true;
+HunterHut.levelMax = 1;
 HunterHut.description = 'This building increase the enable places for your population';
 HunterHut.tileX = 1;
 HunterHut.tileZ = 1;

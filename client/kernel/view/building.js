@@ -31,12 +31,19 @@ class Entity {
                 this.addMesh(this.draft);
                 this.state = 1;
             }
-        } else if (model.level > 0) {
+        } else if (model.level === 1) {
             if (this.state !== 2) {
                 this.removeMesh(this.draft);
                 this.removeMesh(this.foundation);
                 this.addMesh(this.building);
                 this.state = 2;
+            }
+            //TOUT REVOIR C'EST JUSTE DEGUEUX !!!!!
+        } else if (model.level === 2) { 
+            if (this.state !== 4) {
+                this.removeMesh(this.building);
+                this.addMesh(this.building2);
+                this.state = 4;
             }
         } else {
             if (this.state !== 3) {

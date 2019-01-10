@@ -90,11 +90,33 @@ class Building {
     delivery() { // Le batiment est terminé
         this.updated = true;
         this.level = 1;
+        this.materials.clean();
         this.onStart();
     }
 
     working() { // called cyclically or manualy, must be overwrite
 
+    }
+
+    upgrade(type, value) {
+        if(this.level < this.constructor.levelMax) {
+            let ready = true;
+            if (type && value) {
+                this.materials.push(type, value);
+            }
+            for (let key in this.constructor.upgrade[this.level]) {
+                if (this.materials[key] < this.constructor.upgrade[this.level][key]) {
+                    ready = false;
+                }
+            }
+            if (!ready) {
+                this.spawnCharacter('Craftsman');
+            } else {
+                this.materials.clean();
+                this.level ++;
+            }
+            this.updated = true;
+        }
     }
 
     move(x, y, z, roty) {

@@ -4,7 +4,7 @@ const pathfinding = require('../../../kernel/tools/pathfinding')
 const Stats = require('../../../kernel/model/stats');
 const repository = require('../../../kernel/model/repository')
 
-class Provider extends Character {
+class Craftsman extends Character {
     constructor(params, ground) {
         super(params, ground);
         this.capacity = 5;
@@ -19,8 +19,9 @@ class Provider extends Character {
         if (!entity) {
             this.autoRemove();
         }
-        for (let key in entity.constructor.cost) {
-            const need = entity.constructor.cost[key] - entity.materials[key];
+
+        for (let key in entity.constructor.upgrade[entity.level]) {
+            const need = entity.constructor.upgrade[entity.level][key] - entity.materials[key];
             if (need > 0) {
                 neededType = key;
                 neededValue = need;
@@ -61,7 +62,7 @@ class Provider extends Character {
         for (let key in this.stats) {
             if (this.stats[key] > 0) {
                 const value = this.stats.pull(key, this.stats[key]);
-                entity.constructing(key, value);
+                entity.upgrade(key, value);
                 break;
             }
         }
@@ -74,4 +75,4 @@ class Provider extends Character {
     }
 }
 
-module.exports = Provider;
+module.exports = Craftsman;

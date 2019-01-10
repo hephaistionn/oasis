@@ -108,11 +108,13 @@ class Tower extends Building {
 }
 
 Tower.removable = true;
+Tower.levelMax = 2;
 Tower.description = 'This building increase the enable places for your population';
 Tower.tileX = 1;
 Tower.tileZ = 1;
 Tower.walkable = 0;
 Tower.cost = { [Stats.WOOD]: 5 };
+Tower.upgrade = [{},{[Stats.WOOD]: 5}];
 Tower.require = { inactive: 2 };
 Tower.enabled = { population: 4 };
 Tower.waterLevelNeeded = 0;

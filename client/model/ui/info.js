@@ -36,6 +36,11 @@ class Info {
         this.close();
     }
 
+    upgrade() {
+        this.entity.upgrade();  
+        this.updated = true;
+    }
+
     onDismount() {
         ee.off('select', this._open);
         ee.off('mouseClick', this._close);

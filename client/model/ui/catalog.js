@@ -33,6 +33,7 @@ class Catalog {
                     { class: 'Attic', label: 'Grenier', pic: '/pic/house.png' },
                     { class: 'Bridge', label: 'Pont', pic: '/pic/house.png' },
                     { class: 'Road', label: 'Chemin', pic: '/pic/house.png' },
+                    { class: 'Road2', label: 'Route', pic: '/pic/house.png' },
                     { class: 'Canal', label: 'Canal', pic: '/pic/house.png' },
                     { class: 'Remover', label: 'Effaceur', pic: '/pic/house.png' },
                 ]
@@ -43,8 +44,7 @@ class Catalog {
                 list: [
                     { class: 'Barrack', label: 'Caserne', pic: '/pic/house.png' },
                     { class: 'Tower', label: 'Tour', pic: '/pic/house.png' },
-                    { class: 'Wall', label: 'Mur', pic: '/pic/house.png' },
-                    
+                    { class: 'Wall', label: 'Mur', pic: '/pic/house.png' },                    
                 ]
             }
         ]
@@ -80,7 +80,10 @@ class Catalog {
                 ee.emit('draftCanal', { drafted: true });
                 break;
             case 'Road':
-                ee.emit('draftRoad', { drafted: true });
+                ee.emit('draftRoad', { drafted: true, type: 2 });
+                break;
+            case 'Road2':
+                ee.emit('draftRoad', { drafted: true, type: 3 });
                 break;
             case 'Wall':
                 ee.emit('draftWall', { drafted: true });

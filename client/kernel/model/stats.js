@@ -28,6 +28,13 @@ const Stats = class Stats {
     set(TYPE, value) {
         this[TYPE] = value;
     }
+
+    clean() {
+        this[this.constructor.WOOD] = 0;
+        this[this.constructor.STONE] = 0;
+        this[this.constructor.BERRY] = 0;
+        this[this.constructor.POP] = 0; 
+    }
 };
 
 Stats.WOOD = 0;
