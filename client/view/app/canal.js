@@ -60,7 +60,7 @@ module.exports = class Canal {
     }
 
     initFoundationMesh(model) {
-        this.meshFoundation = THREE.getMesh('obj/buildings/repository_00.obj', materialFoundation, model._id);
+        this.meshFoundation = THREE.getMesh('obj/buildings/foundation_00.obj', materialFoundation, model._id);
         this.foundations = [];
     }
 

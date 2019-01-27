@@ -17,7 +17,7 @@ module.exports = class Provider extends Character {
 
         this.element = THREE.getMesh('obj/characters/peon.obj', material, model._id);
 
-        this.wood =  THREE.getMesh('obj/objects/wood.obj', materialHead, model._id);
+        this.wood =  THREE.getMesh('obj/resources/wood_00.obj', materialHead, model._id);
         this.wood.matrixWorld = this.element.matrixWorld;
         this.element.add(this.wood);
 

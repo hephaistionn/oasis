@@ -7,6 +7,8 @@ class Tree extends Resource {
     constructor(config, ground) {
         super(config, ground);
         this.stats.set(Stats.WOOD, config.wood || 10000);
+        this.num = config.num || Math.floor(Math.random()*3.99);
+        this.aroty = config.a || Math.floor(Math.random() * 3.99) * Math.PI;
     }
     
 }

@@ -1,6 +1,6 @@
 const THREE = require('three');
 const material = new THREE.MeshPhongMaterial({
-    map:  new THREE.TextureLoader().load('pic/entity.png'),
+    map:  new THREE.TextureLoader().load('pic/texture_00.jpg'),
     //side: THREE.DoubleSide,
     //color: 0x666666,
     //flatShading: true,

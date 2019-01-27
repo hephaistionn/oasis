@@ -27,7 +27,7 @@ module.exports = class Lumberjack extends Character {
 
         this.element = THREE.getMesh('obj/characters/peon.obj', material, model._id);
         this.head = THREE.getMesh('obj/characters/head.obj', materialHead, model._id);
-        this.wood =  THREE.getMesh('obj/objects/wood.obj', materialHead, model._id);
+        this.wood =  THREE.getMesh('obj/resources/wood_00.obj', materialHead, model._id);
 
         this.element.add(this.head);
 

@@ -6,10 +6,10 @@ const Building = require('../../../kernel/view/building');
 module.exports = class House extends Building {
 
 	initMesh(model) {
-		this.meshLevel.push(THREE.getMesh('obj/buildings/repository_00.obj', material, model._id));
-		this.meshLevel.push(THREE.getMesh('obj/buildings/stoneMine_00.obj', material, model._id));
+		this.meshLevel.push(THREE.getMesh('obj/buildings/foundation_00.obj', material, model._id));
+		this.meshLevel.push(THREE.getMesh('obj/buildings/stoneHut_00.obj', material, model._id));
 		this.meshLevel.push(THREE.getMesh('obj/buildings/market_00.obj', material, model._id));
-		this.draft = THREE.getMesh('obj/buildings/stoneMine_00.obj', materialSelect);
+		this.draft = THREE.getMesh('obj/buildings/stoneHut_00.obj', materialSelect);
 	}
 
 };
