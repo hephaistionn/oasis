@@ -6,6 +6,16 @@ class StoneMine extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        this.cycleDuration = 5000;
+    }
+
+    working() {
+        this.started = false; // désactive le cycle update()=>working()
+        this.spawnCharacter('Stonecutter');
+    }
+
+    repoFilter(rep) {
+        return rep.level > 0;
     }
 }
 

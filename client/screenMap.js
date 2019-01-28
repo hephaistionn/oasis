@@ -34,6 +34,7 @@ const ENTITIES = {
     ForestHut: require('./model/app/buildings/forestHut'),
     Builder: require('./model/app/characters/builder'),
     Lumberjack: require('./model/app/characters/lumberjack'),
+    Stonecutter: require('./model/app/characters/stonecutter'),
     Craftsman: require('./model/app/characters/craftsman'),
     Hunter: require('./model/app/characters/hunter'),
     Carrier: require('./model/app/characters/carrier'),
