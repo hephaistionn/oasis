@@ -14,6 +14,7 @@ class Catalog {
                     { class: 'House', label: 'cabane', pic: '/pic/house.png' },
                     { class: 'LeaderHut', label: 'cabane du chef', pic: '/pic/house.png' },
                     { class: 'Market', label: 'marché', pic: '/pic/house.png' },
+                    { class: 'Well', label: 'puits', pic: '/pic/house.png' },
                 ]
             },
             {
