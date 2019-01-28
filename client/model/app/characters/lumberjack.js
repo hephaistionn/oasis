@@ -18,7 +18,7 @@ class Lumberjack extends Character {
     onEndPath(entity) {
         if (entity.constructor.name === Repository) {
             const value = this.stats.pull(Stats.WOOD, this.capacity);
-            entity.stats.push(Stats.WOOD, value);
+            entity.pushResource(Stats.WOOD, value);
         } else if (entity.constructor.name === Tree) {
             this.working = true;
             const place = entity.getWorkerSlot();

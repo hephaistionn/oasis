@@ -9,7 +9,7 @@ class Stats {
             pop: { label: 'pop', value: 0, code: Stat.POP },
             wood: { label: 'wood', value: 0, code: Stat.WOOD },
             stone: { label: 'stone', value: 0, code: Stat.STONE },
-            berry: { label: 'berry', value: 0, code: Stat.BERRY }
+            meat: { label: 'meat', value: 0, code: Stat.MEAT }
         }
         this.store = store;
         this._refresh = this.refresh.bind(this)
@@ -20,7 +20,7 @@ class Stats {
         this.stats.pop.value = this.store.stats[Stat.POP];
         this.stats.wood.value = this.store.stats[Stat.WOOD];
         this.stats.stone.value = this.store.stats[Stat.STONE];
-        this.stats.berry.value = this.store.stats[Stat.BERRY];
+        this.stats.meat.value = this.store.stats[Stat.MEAT];
         this.updated = true;
     }
 

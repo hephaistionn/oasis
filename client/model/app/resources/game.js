@@ -6,7 +6,7 @@ class Game extends Resource {
 
     constructor(config, ground) {
         super(config, ground);
-        this.stone = 100;
+        this.stats.set(Stats.MEAT, config.meat || 10000);
     }
 }
 Game.selectable = false;

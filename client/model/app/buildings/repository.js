@@ -6,8 +6,14 @@ class Repository extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        this.maxByBlock = 16;
+        this.maxBlock = 15
     }
 
+    pushResource(type , value) {
+        this.stats.push(type, value);
+        this.updated = true;
+    }
 }
 
 Repository.removable = true;

@@ -11,7 +11,7 @@ class Carrier extends Character {
         this.targets.push({ id: this.origin });
         this.targets.push({ entity: 'Stone', resource: Stats.STONE });
         this.targets.push({ id: this.origin });
-        this.targets.push({ entity: 'Berry', resource: Stats.BERRY });
+        this.targets.push({ entity: 'MEAT', resource: Stats.MEAT });
         this.targets.push({ id: this.origin });*/
 
         const entity = this.ground.getEntity(this.origin);

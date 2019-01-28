@@ -7,6 +7,7 @@ const materialHead = require('../material/materialA');
 const WALK = 0;
 const WORK = 1;
 const WOOD = 0;
+const MEAT = 2
 
 animationsBody = {};
 animationsHead = {};
@@ -27,11 +28,10 @@ module.exports = class Lumberjack extends Character {
 
         this.element = THREE.getMesh('obj/characters/peon.obj', material, model._id);
         this.head = THREE.getMesh('obj/characters/head.obj', materialHead, model._id);
-        this.wood =  THREE.getMesh('obj/resources/wood_00.obj', materialHead, model._id);
+        this.wood = null;
 
         this.element.add(this.head);
-
-        this.wood.matrixWorld = this.element.matrixWorld;
+       
     }
 
     updateMesh(model) {
@@ -39,8 +39,14 @@ module.exports = class Lumberjack extends Character {
             this.currentAnimation = WORK;
         }else if (model.stats[WOOD]) {
             this.currentAnimation = WALK;
-            this.element.add(this.wood);
+            if(!this.wood) {
+                this.wood =  THREE.getMesh('obj/resources/wood_00.obj', materialHead, model._id);
+                this.wood.matrixWorld = this.element.matrixWorld;
+                this.element.add(this.wood);
+            }
         } else  {
+            if(this.wood)
+                this.element.remove(this.wood);
             this.currentAnimation = WALK;
         }
     }

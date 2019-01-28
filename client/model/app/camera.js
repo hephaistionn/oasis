@@ -13,7 +13,7 @@ module.exports = class Camera extends Entity {
         this.targetZ = config.targetZ || 0;
         this.zoom = config.zoom || 1.3;
 
-        this.zoommax = 2;
+        this.zoommax = 3;
         this.zoommin = 0.1;
 
         this._ix = 0;

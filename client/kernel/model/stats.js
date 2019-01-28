@@ -6,7 +6,7 @@ const Stats = class Stats {
     constructor(config, watched) {
             this[this.constructor.WOOD] = 0;
             this[this.constructor.STONE] = 0;
-            this[this.constructor.BERRY] = 0;
+            this[this.constructor.MEAT] = 0;
             this[this.constructor.POP] = 0;
             this.watched = watched;
     }
@@ -32,14 +32,14 @@ const Stats = class Stats {
     clean() {
         this[this.constructor.WOOD] = 0;
         this[this.constructor.STONE] = 0;
-        this[this.constructor.BERRY] = 0;
+        this[this.constructor.MEAT] = 0;
         this[this.constructor.POP] = 0; 
     }
 };
 
 Stats.WOOD = 0;
 Stats.STONE = 1;
-Stats.BERRY = 2;
+Stats.MEAT = 2;
 Stats.POP = 3;
 
 module.exports = Stats;
