@@ -234,8 +234,35 @@ class Building {
 
     moveDraft(x, y, z) {
         if (this.drafted) {
-            const tile = this.ground.getTileCenter(x, z);
-            this.move(tile.x, tile.y, tile.z);
+            let ax, az, ay, xi, zi;
+            if(this.constructor.tileX%2) {
+                xi = Math.floor(x / this.ground.tileSize);
+                xi = Math.max(xi, 0);
+                xi = Math.min(xi, this.ground.nbTileX - 1);
+                ax =  (xi + 0.5) * this.ground.tileSize; 
+            } else {
+                xi = Math.round(x / this.ground.tileSize);
+                xi = Math.max(xi, 0);
+                xi = Math.min(xi, this.ground.nbTileX - 1);
+                ax =  xi * this.ground.tileSize;
+            }
+
+            if(this.constructor.tileZ%2) {
+                zi = Math.floor(z / this.ground.tileSize);
+                zi = Math.max(zi, 0);
+                zi = Math.min(zi, this.ground.nbTileZ - 1);
+                az =  (zi + 0.5) * this.ground.tileSize;
+            } else {
+                zi = Math.round(z / this.ground.tileSize);
+                zi = Math.max(zi, 0);
+                zi = Math.min(zi, this.ground.nbTileZ - 1);
+                az =  zi * this.ground.tileSize;
+            }
+
+            const index = zi * this.ground.nbTileX + xi;
+            ay = this.ground.tilesHeight[index] * this.ground.tileHeight;
+
+            this.move(ax, ay, az);
         }
     }
 

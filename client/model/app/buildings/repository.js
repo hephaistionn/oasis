@@ -19,8 +19,8 @@ class Repository extends Building {
 Repository.removable = true;
 Repository.levelMax = 1;
 Repository.description = 'This building increase the enable places for your population';
-Repository.tileX = 1;
-Repository.tileZ = 1;
+Repository.tileX = 2;
+Repository.tileZ = 2;
 Repository.walkable = 0;
 Repository.cost = {[Stats.WOOD]: 5};
 Repository.require = { inactive: 2 };
