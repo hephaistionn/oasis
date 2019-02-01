@@ -10,8 +10,8 @@ class Game extends Resource {
     }
 }
 Game.selectable = false;
-Game.tileX = 1;
-Game.tileZ = 1;
+Game.tileX = 2;
+Game.tileZ = 2;
 Game.walkable = 0;
 Game.code = 251;
 Game.resource = true;

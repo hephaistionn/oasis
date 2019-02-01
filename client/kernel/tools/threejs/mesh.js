@@ -6,6 +6,8 @@ THREE.Mesh.prototype.updateMorphTargets = function() {
         this.morphTargetInfluences = new Float32Array(this.geometry.morphAttributes.position.length);
         this.morphTargetInfluences[0] = 1;
         this.animProgress = 0;
+        if(this.currentAnimation === undefined)
+            this.currentAnimation = null;
     }
 
 };
