@@ -44,7 +44,6 @@ class Ground {
 
         this.initGridIndex = this.chunkMesh.geometry.index.array.slice(0);
 
-        this.refreshTexture(model);
     }
 
     drawClickableArea(model)  {
@@ -292,13 +291,6 @@ class Ground {
         mesh.matrixWorldNeedsUpdate = false;
 
         return mesh;
-    }
-
-    refreshTexture(model) {
-        this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        //this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-        this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        //this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
     }
 
     update(dt, model) {

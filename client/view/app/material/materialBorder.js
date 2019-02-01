@@ -1,26 +1,27 @@
 const THREE = require('three');
 
 const vertShader = "" +
+    "precision highp float; \n" +
+    "precision highp int; \n" +
+    "uniform mat4 modelMatrix; \n" +
+    "uniform mat4 viewMatrix;\n" +
+    "uniform mat4 projectionMatrix;\n" +
+    "attribute vec3 position; \n" +
     "attribute float color; \n" +
-    "varying vec2 vAbsolutePosition; \n" +
     "varying float vColor; \n" +
-    "void main() { \n" +
-    "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
-    "vAbsolutePosition = worldPosition.xz; \n" +
-    "vColor = color;" +
-    "gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
+    "void main() {" +
+    "   vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
+    "   vColor = color;" +
+    "   gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
     "} ";
 
 
 const fragShader = "" +
-    "varying vec2 vAbsolutePosition; \n" +
+    "precision highp float; \n" +
+    "precision highp int; \n" +
     "varying float vColor; \n" +
-    "" + 
-    "uniform sampler2D texture; \n" +
-    "uniform float textureSize; \n" +
     "void main(void) { \n" +
-    "   vec3 colorDust = vec3(0.42,0.42,0.48); \n" +
-    //"   vec3 colorDust = vec3(0.0,0.0,0.0); \n" +
+    "   vec3 colorDust = vec3(0.62,0.42,0.3); \n" +
     "   vec3 colorGreen = vec3(0.7764,0.6666,0.4235); \n" +
     "   if(vColor>0.0) {   \n" +
     "       if(vColor>0.99){ \n"+
@@ -38,13 +39,10 @@ const fragShader = "" +
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([]);
-uniforms.texture = {type: 't', value: null};
-uniforms.textureSize = {type: 'f', value: 16};
-
-const mat = new THREE.ShaderMaterial({
+const material = new THREE.RawShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,
     fragmentShader: fragShader
 });
 
-module.exports = mat;
+module.exports = material;
