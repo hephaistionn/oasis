@@ -19,7 +19,7 @@ module.exports = class Wall {
     initDraftMesh(model) {
         this.materialDraftOk = materialDraft;
         this.materialDraftKo = materialDraft.clone();
-        this.materialDraftKo.color.setHex(0xff0000);
+        this.materialDraftKo.uniforms.color.value.setHex(0xff0000);
         this.meshWallDraft = [];
         this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft));
         this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));

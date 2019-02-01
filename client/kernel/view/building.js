@@ -57,7 +57,7 @@ class Building {
 
     updateMesh(model) {
         if (model.drafted) {
-            this.draft.material.color.setHex(model.undroppable ? colorRed : colorBlue);
+            this.draft.material.uniforms.color.value.setHex(model.undroppable ? colorRed : colorBlue);
             if (!this.draft.parent) {
                 this.addMesh(this.draft);
             }
