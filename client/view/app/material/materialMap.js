@@ -121,8 +121,8 @@ const uniforms = THREE.UniformsUtils.merge([
 
 uniforms.texture = {type: 't', value: null};
 uniforms.textureSize = {type: 'f', value: 25.0};
-uniforms.textureGrass = {type: 't', value: THREE.loadTexture("pic/map8b.jpg")};
-uniforms.textureDust = {type: 't', value: THREE.loadTexture("pic/map7g.png")};
+uniforms.textureGrass = {type: 't', value: THREE.loadTexture("pic/map8b.jpg", true)};
+uniforms.textureDust = {type: 't', value: THREE.loadTexture("pic/map7g.png", true)};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

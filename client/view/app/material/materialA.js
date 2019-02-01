@@ -36,7 +36,7 @@ const fragShader = "" +
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([]);
-uniforms.map = {type: 't', value: new THREE.TextureLoader().load('pic/texture_00.jpg')};
+uniforms.map = {type: 't', value: THREE.loadTexture('pic/texture_00.jpg')};
 const material = new THREE.RawShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,
