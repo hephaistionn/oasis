@@ -1,6 +1,6 @@
 const Character = require('../../../kernel/view/character');
 const THREE = require('three');
-const material = require('../material/materialMorph');
+const material = require('../material/materialB');
 const materialHead = require('../material/materialA');
 
 const WALK = 0;
