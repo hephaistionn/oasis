@@ -109,7 +109,7 @@ THREE.AttributeLoader.prototype = {
             }
 
             l = normalsGroup.length;
-            normalIndex = normalIndex || vertexIndex;
+            normalIndex = normalIndex  ===  undefined ?  vertexIndex : normalIndex;
             for(i = 0; i < l; i++) {
                 normals1 = normalsGroup[i];
                 normals2 = normalsGroup2[i];

@@ -7,7 +7,7 @@ class Repository extends Building {
     constructor(config, ground) {
         super(config, ground);
         this.maxByBlock = 16;
-        this.maxBlock = 15
+        this.maxBlock = 15;
     }
 
     pushResource(type , value) {
