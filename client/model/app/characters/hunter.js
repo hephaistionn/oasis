@@ -11,7 +11,7 @@ class Hunter extends Character {
         super(params, ground);
         this.capacity = 5;
         this.workingDuration = 4000;
-        this.targets.push({ entity: Game, resource: Stats.MEAT, remote: 1 });
+        this.targets.push({ entity: Game, resource: Stats.MEAT, remote: 0 });
         this.targets.push({ entity: Repository});
         this.targets.push({ id: this.origin });
     }
