@@ -55,7 +55,7 @@ module.exports = class Road {
     this.meshDraft.matrixAutoUpdate = false;
     this.meshDraft.frustumCulled = false;
     this.meshDraft.matrixWorldNeedsUpdate = false;
-    this.meshDraft.receiveShadow = false;
+    this.meshDraft.receiveShadow = true;
     this.meshDraft.drawMode = THREE.TrianglesDrawMode;
   }
 

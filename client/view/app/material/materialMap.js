@@ -110,9 +110,9 @@ const fragShader = "" +
     "   }"+
     "   vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "   vec3 normal = normalize( vNormal );"+ 
-    "       sumLights += dot(directionalLights[ 0 ].direction, normal)* directionalLights[ 0 ].color; \n" +
-    "       float shadowFactor = getShadow( directionalShadowMap[ 0 ], directionalLights[ 0 ].shadowMapSize, directionalLights[ 0 ].shadowBias, directionalLights[ 0 ].shadowRadius, vDirectionalShadowCoord ); \n" +
-    "       sumLights *= shadowFactor; \n" +
+    "   sumLights += dot(directionalLights[ 0 ].direction, normal)* directionalLights[ 0 ].color; \n" +
+    "   float shadowFactor = getShadow( directionalShadowMap[ 0 ], directionalLights[ 0 ].shadowMapSize, directionalLights[ 0 ].shadowBias, directionalLights[ 0 ].shadowRadius, vDirectionalShadowCoord ); \n" +
+    "   sumLights *= (shadowFactor*0.2+0.8); \n" +
     "   sumLights = max(vec3(0.6,0.6,0.6),sumLights); \n" +
     "   colorFinal *= sumLights; \n" +
     "   if(vAbsolutePosition.y<4.0 && vAbsolutePosition.y>3.0){ \n" +
@@ -128,7 +128,6 @@ const fragShader = "" +
 
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
-    THREE.UniformsLib['common'],
     THREE.UniformsLib['shadowmap']
 ]);
 
