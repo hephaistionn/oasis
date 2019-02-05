@@ -117,32 +117,32 @@ module.exports = class Canal {
 
         function faceZ0() {
             position[cntP++] = x1; position[cntP++] = y1; position[cntP++] = z1;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
             position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z2;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
             position[cntP++] = x2; position[cntP++] = y2; position[cntP++] = z2;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
             position[cntP++] = x2; position[cntP++] = y2; position[cntP++] = z2;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
             position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
             position[cntP++] = x2; position[cntP++] = down; position[cntP++] = z2;
-            normal[cntN++] = 0; normal[cntN++] = 0; normal[cntN++] = 1;
+            normal[cntN++] = 0; normal[cntN++] = 1; normal[cntN++] = 1;
         }
 
         function faceX0() {
             position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
             position[cntP++] = x1; position[cntP++] = y1; position[cntP++] = z1;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
             position[cntP++] = x4; position[cntP++] = y4; position[cntP++] = z4;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
             position[cntP++] = x4; position[cntP++] = y4; position[cntP++] = z4;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
             position[cntP++] = x4; position[cntP++] = down; position[cntP++] = z4;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
             position[cntP++] = x1; position[cntP++] = down; position[cntP++] = z1;
-            normal[cntN++] = 1; normal[cntN++] = 0; normal[cntN++] = 0;
+            normal[cntN++] = 1; normal[cntN++] = 1; normal[cntN++] = 0;
         }
 
         function bottomX0() {

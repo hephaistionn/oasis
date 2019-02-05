@@ -113,7 +113,7 @@ const fragShader = "" +
     "   sumLights += dot(directionalLights[ 0 ].direction, normal)* directionalLights[ 0 ].color; \n" +
     "   float shadowFactor = getShadow( directionalShadowMap[ 0 ], directionalLights[ 0 ].shadowMapSize, directionalLights[ 0 ].shadowBias, directionalLights[ 0 ].shadowRadius, vDirectionalShadowCoord ); \n" +
     "   sumLights *= (shadowFactor*0.2+0.8); \n" +
-    "   sumLights = max(vec3(0.6,0.6,0.6),sumLights); \n" +
+    //"   sumLights = max(vec3(0.6,0.6,0.6),sumLights); \n" +
     "   colorFinal *= sumLights; \n" +
     "   if(vAbsolutePosition.y<4.0 && vAbsolutePosition.y>3.0){ \n" +
     "       float a = (vAbsolutePosition.y-3.0); \n" +
