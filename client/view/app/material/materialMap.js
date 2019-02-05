@@ -39,7 +39,9 @@ const fragShader = "" +
     "float texture2DCompare( sampler2D depths, vec2 uv, float compare ) { \n" +
     "    return step( compare, unpackDepth( texture2D( depths, uv ) ) ); \n" +
     "} \n" +
-    "float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowBias, float shadowRadius, vec4 shadowCoord ) { \n" +
+
+
+    /*  "float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowBias, float shadowRadius, vec4 shadowCoord ) { \n" +
     "    shadowCoord.xyz /= shadowCoord.w; \n" +
     "    shadowCoord.z += shadowBias; \n" +
     "    bvec4 inFrustumVec = bvec4 ( shadowCoord.x >= 0.0, shadowCoord.x <= 1.0, shadowCoord.y >= 0.0, shadowCoord.y <= 1.0 ); \n" +
@@ -48,7 +50,43 @@ const fragShader = "" +
     "        return max(texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ),0.5); \n" +
     "    } \n" +
     "    return 1.0; \n" +
-    "} \n" +
+    "} \n" + */
+
+    "float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowBias, float shadowRadius, vec4 shadowCoord ) { \n" +
+	"	float shadow = 1.0;\n" +
+	"	shadowCoord.xyz /= shadowCoord.w;\n" +
+	"	shadowCoord.z += shadowBias;\n" +
+	"	bvec4 inFrustumVec = bvec4 ( shadowCoord.x >= 0.0, shadowCoord.x <= 1.0, shadowCoord.y >= 0.0, shadowCoord.y <= 1.0 );\n" +
+	"	bool inFrustum = all( inFrustumVec );\n" +
+	"	bvec2 frustumTestVec = bvec2( inFrustum, shadowCoord.z <= 1.0 );\n" +
+	"	bool frustumTest = all( frustumTestVec );\n" +
+	"	if ( frustumTest ) {\n" +
+	"		vec2 texelSize = vec2( 1.0 ) / shadowMapSize;\n" +
+	"		float dx0 = - texelSize.x * shadowRadius;\n" +
+	"		float dy0 = - texelSize.y * shadowRadius;\n" +
+	"		float dx1 = + texelSize.x * shadowRadius;\n" +
+	"		float dy1 = + texelSize.y * shadowRadius;\n" +
+	"		shadow = (\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy0 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy0 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy0 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, 0.0 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, 0.0 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy1 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy1 ), shadowCoord.z ) +\n" +
+	"			texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy1 ), shadowCoord.z )\n" +
+	"		) * ( 1.0 / 9.0 );\n" +
+	"	}\n" +
+	"	return shadow;\n" +
+	"}\n" +
+
+
+
+
+
+
+
 
     "uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ]; \n" +
     "uniform sampler2D directionalShadowMap[ NUM_DIR_LIGHTS ]; \n" +
