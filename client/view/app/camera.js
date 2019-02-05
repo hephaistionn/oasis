@@ -26,7 +26,6 @@ module.exports = class Camera {
 
     resize(width, height) {
         //this.element.aspect = width / height;
-        const canvas = document.getElementById('D3');
         this.element.left = -width / 15;
         this.element.right = width / 15;
         this.element.top = height / 15;

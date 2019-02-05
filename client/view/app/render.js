@@ -8,6 +8,7 @@ module.exports = class Scene {
         this.renderer = renderer;
         this.renderer.setClearColor(0x000000);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+        this.renderer.shadowMap.enabled = true;
         this.scene = new THREE.Scene();
         this.scene.matrixAutoUpdate = false;
     }

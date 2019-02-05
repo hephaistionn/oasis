@@ -1,6 +1,8 @@
 const THREE = require('three');
-//const ENTITIES = require('./Entity/listEntity');
 const materialGround = require('./material/materialMap');
+//const materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
+//const materialGround = new THREE.MeshPhongMaterial( { color: 0xffffff,  });
+
 const materialWater = require('./material/materialWater');
 const materialBorder = require('./material/materialBorder');
 const materialA = require('./material/materialA');
@@ -31,10 +33,11 @@ class Ground {
         this.materialGround = materialGround;
         this.materialBorder = materialBorder;
         this.materialWater = materialWater;
-        ///this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         this.chunkMesh = this.drawGroundMesh(model.nbTileX, model.nbTileZ, model);
         this.waterMesh = this.drawWaterMesh(model);
         this.borderMesh = this.drawBorderMesh(model);
+
+        this.chunkMesh.receiveShadow = true;
 
         this.element.add(this.chunkMesh);
         this.element.add(this.waterMesh);

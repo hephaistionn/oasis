@@ -40,7 +40,8 @@ uniforms.map = {type: 't', value: THREE.loadTexture('pic/texture_00.jpg')};
 const material = new THREE.RawShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,
-    fragmentShader: fragShader
+    fragmentShader: fragShader,
+    shadowSide: THREE.FrontSide
 });
 
 module.exports = material;

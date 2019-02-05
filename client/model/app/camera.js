@@ -28,6 +28,10 @@ module.exports = class Camera extends Entity {
 
         this.disabled = false;
 
+        this.deltaCamX = 0;
+        this.deltaCamZ = 0;
+
+        this.light = null;
         this._draggStart = this.draggStart.bind(this);
         this._dragg = this.dragg.bind(this);
         this._scale = this.scale.bind(this);
@@ -63,6 +67,7 @@ module.exports = class Camera extends Entity {
             this.targetX = this.targetX + dx;
             this.targetY = this.targetY + dy;
             this.targetZ = this.targetZ + dz;
+            this.light.move(this.ax+this.deltaCamX, this.light.ay, this.az+this.deltaCamZ);
             this.updated = true;
         }
     }
@@ -93,6 +98,13 @@ module.exports = class Camera extends Entity {
 
     disable() {
         this.disabled = true;
+    }
+
+    setLight(light) {
+        this.light = light;
+        this.deltaCamX = light.ax - this.ax;
+        this.deltaCamZ = light.az - this.az;
+
     }
 
     onDismount() {

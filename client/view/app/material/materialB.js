@@ -47,7 +47,8 @@ const material = new THREE.RawShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,
     fragmentShader: fragShader,
-    morphTargets: true
+    morphTargets: true,
+    shadowSide: THREE.FrontSide
 });
 
 

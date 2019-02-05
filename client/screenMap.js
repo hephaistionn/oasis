@@ -53,7 +53,7 @@ module.exports = class ScreenMap extends Screen {
         const centerZ = mapConfig.nbTileZ * mapConfig.tileSize / 2;
 
         this.camera = new Camera({ x: centerX + 40, y: 60, z: centerZ + 40, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
-        this.light = new Light({ x: 50, y: 180, z: -50 });
+        this.light = new Light({ x: centerX + 25, y: 90, z:  centerZ - 25, targetX: centerX, targetZ: centerZ, rangeX: centerX, rangeZ: centerZ });
         this.ground = new Ground(mapConfig, ENTITIES, this._components);
         this.store = new Store();
         this.road = new Road({}, this.ground, this.store);
@@ -65,6 +65,7 @@ module.exports = class ScreenMap extends Screen {
         this.remover = new Remover({}, this.ground);
         this.spawner = new Spawner({}, this.ground);
         this.repository = repository.init(model);
+        this.camera.setLight(this.light);
 
         this.add(this.camera);
         this.add(this.light);

@@ -17,11 +17,11 @@ module.exports = class Light extends Entity {
     }
 
     move(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.targetX = this.offsetX + this.x;
-        this.targetZ = this.offsetZ + this.z;
+        this.ax = x;
+        this.ay = y;
+        this.az = z;
+        this.targetX = this.offsetX + this.ax;
+        this.targetZ = this.offsetZ + this.az;
         this.updated = true;
     }
 
@@ -34,9 +34,9 @@ module.exports = class Light extends Entity {
         this.targetX = x;
         this.targetY = y;
         this.targetZ = z;
-        this.x = this.targetX - this.offsetX;
-        this.y = this.targetY - this.offsetY;
-        this.z = this.targetZ - this.offsetZ;
+        this.ax = this.targetX - this.offsetX;
+        this.ay = this.targetY - this.offsetY;
+        this.az = this.targetZ - this.offsetZ;
         this.updated = true;
     }
 
