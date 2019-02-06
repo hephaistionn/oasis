@@ -13,6 +13,9 @@ module.exports = class Catalog {
         this.nodeCategories = this.makeNode('catalog__categories');
         this.node.appendChild(this.nodeCategories);
 
+        this.nodeListBackground = this.makeNode('catalog__listbackground');
+        this.node.appendChild(this.nodeListBackground);
+
         this.nodeList = [];
         for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
@@ -22,13 +25,13 @@ module.exports = class Catalog {
             this.nodeList.push(categoryNodes.list);
         }
 
-        this.buttonOpen = this.makeNode('catalog__opener', 'build');
+        this.buttonOpen = this.makeNode('catalog__opener');
         this.buttonOpen.onclick = model.open.bind(model);
         this.node.appendChild(this.buttonOpen);
 
-        this.buttonClose = this.makeNode('catalog__closer', 'close');
+        this.buttonClose = this.makeNode('catalog__closer');
         this.buttonClose.onclick = model.close.bind(model);
-        this.node.appendChild(this.buttonClose);
+        this.nodeListBackground.appendChild(this.buttonClose);
 
         this.add(parent);
 
@@ -37,6 +40,7 @@ module.exports = class Catalog {
 
     update(dt, model) {
         this.nodeCategories.style.display = none;
+        this.nodeListBackground.style.display = none;
         this.nodeList[0].style.display = none;
         this.nodeList[1].style.display = none;
         this.nodeList[2].style.display = none;
@@ -46,11 +50,12 @@ module.exports = class Catalog {
             this.buttonOpen.style.display = none;
             this.buttonClose.style.display = empty;
             this.nodeCategories.style.display = empty;
+            this.nodeListBackground.style.display = empty;
             for (let i = 0; i < model.categories.length; i++) {
                 if (model.categories[i].displayed) {
                     this.nodeList[i].style.display = empty;
                     this.nodeCategories.style.display = none;
-                    this.refreshItems(i, model)
+                    this.refreshItems(i, model);
                 }
             }
         } else {

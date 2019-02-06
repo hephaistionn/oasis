@@ -1,10 +1,24 @@
 .info {
     position: fixed;
-    background: rgb(204, 204, 204);
-    width: 100%;
-    height: 200px;
+    width: 800px;
+    height: 240px;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    &:before {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 800px;
+        z-index: -1;
+        background-image: url(pic/panel1x2.png);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        background-repeat: repeat;
+        transform-origin: 400px 400px;
+    }
+
     &__remove {
         background: red;
         @include button;

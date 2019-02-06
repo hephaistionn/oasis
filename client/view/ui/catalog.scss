@@ -6,33 +6,45 @@
     pointer-events: none;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 
     &__categories {
-        width: 800px;
-        height: 600px;
-        padding: 10px;
+        position: relative;
+        width: 400px;
+        height: 800px;
+        margin-right: 50px;
+        padding: 35px;
+        box-sizing: border-box;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        background: grey;
+        background-image: url(pic/panel1x2.png);
         &__category {
-            width: 380px;
-            background: #2f2f2f;
-            margin: 10px;
+            width: 332px;
+            background: #af9863;
+            box-sizing: border-box;
+            border: solid #a28c5a 12px;
+            margin: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events:auto;
+            pointer-events: auto;
             cursor: pointer;
             &__label {
-                color: gray;
+                color: #6f4b36;
                 font-size: 3rem;
             }
         }
     }
 
+    &__listbackground {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+    }
+
     &__list {
+        position: relative;
         height: 500px;
         background-color: #202020;
         display: flex;
@@ -113,16 +125,39 @@
     }
 
     &__opener {
-        @include button;
-        left: 50px;
-        top: 100px;
-        
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        pointer-events: auto;
+        right: 50px;
+        bottom: 50px;
+        background-image: url(pic/button_construct2.png);
+        background-size: 100%;
+        transform: rotate(-8deg);
+        &:hover {
+            transform: rotate(-0deg); 
+        }
     }
 
     &__closer {
-        @include button;
-        left: 50px;
-        top: 100px;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        pointer-events: auto;
+        right: 8px;
+        top: -59px;
+        background-image: url(pic/button_close.png);
+        background-size: 100%;
+        transform: rotate(-8deg);
+        &:hover {
+            transform: rotate(-0deg); 
+        }
     }
   }
   
