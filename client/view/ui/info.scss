@@ -2,23 +2,12 @@
     position: fixed;
     width: 800px;
     height: 240px;
-    bottom: 0;
+    bottom: 30px;
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
-    &:before {
-        content: "";
-        position: absolute;
-        width: 240px;
-        height: 800px;
-        z-index: -1;
-        background-image: url(pic/panel1x2.png);
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-        background-repeat: repeat;
-        transform-origin: 400px 400px;
-    }
-
+    background-image: url(pic/panel2x1.png);
+    box-shadow: 0 0 18px 3px #000000;
     &__remove {
         background: red;
         @include button;
