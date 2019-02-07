@@ -16,4 +16,7 @@ Berry.walkable = 0;
 Berry.code = 251;
 Berry.resource = true;
 Berry.instances = [];
+Berry.description = 'This building increase the enable places for your population';
+Berry.name = 'Baies';
+Berry.picture = '/pic/house.png';
 module.exports = Berry;

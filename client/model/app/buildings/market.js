@@ -12,7 +12,9 @@ class Market extends Building {
 
 Market.removable = true;
 Market.levelMax = 1;
-Market.description = 'This building increase the prosperity of your city';
+Market.description = 'This building increase the enable places for your population';
+Market.name = 'Marché';
+Market.picture = '/pic/house.png';
 Market.tileX = 1;
 Market.tileZ = 1;
 Market.cost = {[Stats.WOOD]: 5};

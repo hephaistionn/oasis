@@ -22,6 +22,8 @@ class WallBlock extends Building {
 WallBlock.removable = true;
 WallBlock.levelMax = 2;
 WallBlock.description = 'This building increase the enable places for your population';
+WallBlock.name = 'Mur';
+WallBlock.picture = '/pic/house.png';
 WallBlock.tileX = 1;
 WallBlock.tileZ = 1;
 WallBlock.walkable = 0;

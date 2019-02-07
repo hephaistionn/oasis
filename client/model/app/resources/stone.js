@@ -17,4 +17,7 @@ Stone.walkable = 0;
 Stone.code = 253;
 Stone.resource = true;
 Stone.instances = [];
+Stone.description = 'This building increase the enable places for your population';
+Stone.name = 'Pierre';
+Stone.picture = '/pic/house.png';
 module.exports = Stone;

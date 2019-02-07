@@ -11,41 +11,41 @@ class Catalog {
                 label: 'Civil',
                 displayed: false,
                 list: [
-                    { class: 'House', label: 'cabane', pic: '/pic/house.png' },
-                    { class: 'LeaderHut', label: 'cabane du chef', pic: '/pic/house.png' },
-                    { class: 'Market', label: 'marché', pic: '/pic/house.png' },
-                    { class: 'Well', label: 'puits', pic: '/pic/house.png' },
+                    ENTITIES['House'],
+                    ENTITIES['LeaderHut'],
+                    ENTITIES['Market'],
+                    ENTITIES['Well']
                 ]
             },
             {
                 label: 'Ressources',
                 displayed: false,
                 list: [
-                    { class: 'ForestHut', label: 'Bucheron', pic: '/pic/house.png' },
-                    { class: 'HunterHut', label: 'Chasseur', pic: '/pic/house.png' },
-                    { class: 'StoneMine', label: 'Mineur', pic: '/pic/house.png' },
+                    ENTITIES['ForestHut'],
+                    ENTITIES['HunterHut'],
+                    ENTITIES['StoneMine'],
                 ]
             },
             {
                 label: 'Infrastructure',
                 displayed: false,
                 list: [
-                    { class: 'Repository', label: 'Entrepot', pic: '/pic/house.png' },
-                    { class: 'Attic', label: 'Grenier', pic: '/pic/house.png' },
-                    { class: 'Bridge', label: 'Pont', pic: '/pic/house.png' },
-                    { class: 'Road', label: 'Chemin', pic: '/pic/house.png' },
-                    { class: 'Road2', label: 'Route', pic: '/pic/house.png' },
-                    { class: 'Canal', label: 'Canal', pic: '/pic/house.png' },
-                    { class: 'Remover', label: 'Effaceur', pic: '/pic/house.png' },
+                    ENTITIES['Repository'],
+                    ENTITIES['Attic'],
+                    ENTITIES['Bridge'],
+                  //  ENTITIES['Road'],
+                  //  ENTITIES['Road'],
+                   // ENTITIES['Canal'],
+                   // ENTITIES['Remover'],
                 ]
             },
             {
                 label: 'Militaire',
                 displayed: false,
                 list: [
-                    { class: 'Barrack', label: 'Caserne', pic: '/pic/house.png' },
-                    { class: 'Tower', label: 'Tour', pic: '/pic/house.png' },
-                    { class: 'Wall', label: 'Mur', pic: '/pic/house.png' },                    
+                    ENTITIES['Barrack'],
+                    ENTITIES['Tower'],
+                   // ENTITIES['Wall']
                 ]
             }
         ]
@@ -76,7 +76,7 @@ class Catalog {
 
     select(item) {
         this.close();
-        switch (item.class) {
+        switch (item.name) {
             case 'Canal':
                 ee.emit('draftCanal', { drafted: true });
                 break;
@@ -93,7 +93,7 @@ class Catalog {
                 ee.emit('remover');
                 break;
             default:
-                ee.emit('addEntity', { type: item.class, drafted: true });
+                ee.emit('addEntity', { type: item.name, drafted: true });
         }
     }
 

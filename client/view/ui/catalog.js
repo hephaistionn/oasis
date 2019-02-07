@@ -9,7 +9,6 @@ module.exports = class Catalog {
 
         this.node = this.makeNode('catalog');
 
-
         this.nodeCategories = this.makeNode('catalog__categories');
         this.node.appendChild(this.nodeCategories);
 
@@ -69,7 +68,7 @@ module.exports = class Catalog {
         const category = model.categories[index];
         let entity;
         for (let i = 0; i < category.list.length; i++) {
-            entity = model.ENTITIES[category.list[i].class];
+            entity = category.list[i];
             if (entity) {
                 for (let key in entity.cost) {
                     nodeList.children[i].className = classItem;
@@ -104,9 +103,9 @@ module.exports = class Catalog {
 
     makeItem(item, model) {
         const nodeItem = this.makeNode('catalog__list__item');
-        const nodeItemLabel = this.makeNode('catalog__list__item__label', item.label);
+        const nodeItemLabel = this.makeNode('catalog__list__item__label', item.name);
         const nodeItemPic = this.makeNode('catalog__list__item__pic');
-        nodeItemPic.style.backgroundImage = `url(${item.pic})`;
+        nodeItemPic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
         nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemPic);
@@ -117,8 +116,8 @@ module.exports = class Catalog {
 
     makeCost(item, model) {
         const nodeCost = this.makeNode('catalog__list__item__cost');
-        if (model.ENTITIES[item.class]) {
-            const cost = model.ENTITIES[item.class].cost;
+        if (item) {
+            const cost =  item.cost;
             for (let key in cost) {
                 nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__value  code_${key}`, cost[key]));
                 nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`, cost[key]));

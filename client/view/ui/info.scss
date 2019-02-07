@@ -8,16 +8,63 @@
     transform: translateX(-50%);
     background-image: url(pic/panel2x1.png);
     box-shadow: 0 0 18px 3px #000000;
+
+    &__title {
+        position: absolute;
+        top: -55px;
+        left: 0;
+        font-size: 2rem;
+        padding: 10px 36px;
+        background: #865b41;
+        border: outset 5px #65402b;
+        border-right-color: #8c6954;
+        border-bottom-color: #865b41;
+        color: #b89e64;
+        transform: rotate(-3deg);
+    }
+
+    &__description  {
+        position: absolute;
+        top: 40px;
+        left: 192px;
+        width: 299px;
+        color: #d0cbc2;
+        font-size: 1.2rem;
+    }
+
+    &__picture {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+    }
+
+
     &__remove {
-        background: red;
-        @include button;
-        position: relative;
-        margin: 20px;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        pointer-events: auto;
+        background-image: url(pic/button_remove.png);
+        background-size: 100%;
+        transform: rotate(-8deg);
+        top: 101px;
+        left: 191px;
     }
     &__upgrade {
-        background: red;
-        @include button;
-        position: relative;
-        margin: 20px;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        pointer-events: auto;
+        background-image: url(pic/button_upgrade.png);
+        background-size: 100%;
+        transform: rotate(-8deg);
+        top: 101px;
+        left: 307px;
     }
 }

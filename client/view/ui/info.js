@@ -5,17 +5,23 @@ module.exports = class Info {
         this.node = document.createElement('div');
         this.node.className = 'info';
 
-        this.buttonRemove = document.createElement('div');
-        this.buttonRemove.className = 'info__remove';
-        this.buttonRemove.textContent = 'remove';
+        this.buttonRemove = this.makeNode('info__remove');
         this.buttonRemove.onclick = model.remove.bind(model);
 
 
-        this.buttonUpgrade = document.createElement('div');
-        this.buttonUpgrade.className = 'info__upgrade';
-        this.buttonUpgrade.textContent = 'upgrade';
+        this.buttonUpgrade = this.makeNode('info__upgrade');
         this.buttonUpgrade.onclick = model.upgrade.bind(model);
-        
+
+        this.nodeTitle = this.makeNode('info__title');
+        this.node.appendChild(this.nodeTitle);
+
+        this.nodeDescription = this.makeNode('info__description');
+        this.node.appendChild(this.nodeDescription);
+
+        this.nodePicture = document.createElement('IMG');
+        this.nodePicture.className = 'info__picture';
+        this.node.appendChild(this.nodePicture);
+
         this.add(parent);
 
         this.update(0, model);
@@ -33,6 +39,11 @@ module.exports = class Info {
             } else if(this.buttonUpgrade.parentNode) {
                 this.node.removeChild(this.buttonUpgrade);
             }
+
+            this.nodeTitle.textContent = model.entity.constructor.name;
+            this.nodeDescription.textContent = model.entity.constructor.description;
+            this.nodePicture.src = model.entity.constructor.picture;
+
         }
 
         if (model.opened) {
@@ -40,6 +51,14 @@ module.exports = class Info {
         } else {
             this.node.style.display = 'none';
         }
+    }
+
+    makeNode(classname, text) {
+        const node = document.createElement('div');
+        node.className = classname;
+        if (text)
+            node.textContent = text;
+        return node;
     }
 
     add(parent) {

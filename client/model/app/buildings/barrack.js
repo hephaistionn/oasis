@@ -56,6 +56,8 @@ class Barrack extends Building {
 Barrack.removable = true;
 Barrack.levelMax = 1;
 Barrack.description = 'This building increase the enable places for your population';
+Barrack.name = 'Caserne';
+Barrack.picture = '/pic/house.png';
 Barrack.tileX = 1;
 Barrack.tileZ = 1;
 Barrack.walkable = 0;
