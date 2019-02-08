@@ -12,6 +12,7 @@ animationsGazelle[EAT] = { duration: 6000, steps: new Uint8Array([4, 5, 6, 5, 6,
 module.exports = class Game extends Resource {
 
     initMesh(model) {
+
         this.animations = animationsGazelle;
         this.meshGazelle1 = THREE.getMesh('obj/resources/gazelle_00.obj', material, model._id);
         this.meshGazelle2 = THREE.getMesh('obj/resources/gazelle_00.obj', material, model._id);
@@ -20,10 +21,16 @@ module.exports = class Game extends Resource {
         this.addMesh(this.meshGazelle2);
         this.addMesh(this.meshGazelle3);
         this.meshGazelle1.matrixWorld.elements[13] = model.ay;
-        this.meshGazelle2.matrixWorld.elements[13] = model.ay;;
-        this.meshGazelle3.matrixWorld.elements[13] = model.ay;;
-
-        this.updateMesh(model);
+        this.meshGazelle2.matrixWorld.elements[13] = model.ay;
+        this.meshGazelle3.matrixWorld.elements[13] = model.ay;
+        
+        this.currentMesh = new THREE.Object3D();
+        this.currentMesh.matrixAutoUpdate = false;
+        this.meshGazelle1.add(this.currentMesh);
+        const matrixWorld = this.currentMesh.matrixWorld.elements;
+        matrixWorld[12] = model.ax;
+        matrixWorld[13] = model.ay;
+        matrixWorld[14] = model.az;  
     }
 
 
@@ -86,6 +93,20 @@ module.exports = class Game extends Resource {
     }
 
     addMesh(mesh) {
-        this.element.add(mesh);
+        this.parent.add(mesh);  
     }
+
+    removeMesh(mesh) {
+        this.parent.remove(mesh);
+        mesh.geometry.dispose();
+    }
+
+    remove() {
+        this.removeMesh(this.meshGazelle1);
+        this.removeMesh(this.meshGazelle2);
+        this.removeMesh(this.meshGazelle3);
+        this.removeMesh(this.currentMesh);
+        this.parent = null;
+    }
+
 };

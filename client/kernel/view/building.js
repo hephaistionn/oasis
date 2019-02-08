@@ -3,8 +3,7 @@ const THREE = require('three');
 const colorBlue = 0x0000ff;
 const colorRed = 0xff0000;
 const materialA = require('../../view/app/material/materialA');
-const meshSelector = new THREE.BoxHelper(undefined, 0xffff00);
-meshSelector.matrixAutoUpdate = false;
+const meshSelector = require('./boxSelector').meshSelector;
 const Stats = require('../model/stats');
 const obj = {};
 obj[Stats.WOOD] =  [
@@ -31,9 +30,9 @@ const blockPos = [
 class Building {
 
     constructor(model, parent) {
-        this.element = new THREE.Object3D();
-        this.element.matrixAutoUpdate = false;
+        this.currentMesh = null;
         this.boxSelector = null;
+        this.matrixWorld = null;
         this.meshLevel = [];
         this.indexblock = 0;
         this.materials = [];
@@ -45,7 +44,7 @@ class Building {
 
     update(dt, model) {
         this.updateMesh(model);
-        const matrixWorld = this.element.matrixWorld.elements;
+        const matrixWorld = this.matrixWorld.elements;
         matrixWorld[12] = model.ax;
         matrixWorld[14] = model.az;
         matrixWorld[13] = model.ay;
@@ -60,11 +59,13 @@ class Building {
             this.draft.material.uniforms.color.value.setHex(model.undroppable ? colorRed : colorBlue);
             if (!this.draft.parent) {
                 this.addMesh(this.draft);
+                this.currentMesh = this.draft;
             }
         } else {
             if (this.level !== model.level) {
                 this.removeMesh(this.meshLevel[this.level])
                 this.addMesh(this.meshLevel[model.level]);
+                this.currentMesh = this.meshLevel[model.level];
                 this.level = model.level;
             }
             if (model.selected || this.boxSelector) {
@@ -85,7 +86,7 @@ class Building {
     removeMaterial() {
 		for(let i=0; i<this.materials.length;  i++) {
 			if(this.materials[i]) {
-				this.element.remove(this.materials[i]);
+				this.currentMesh.remove(this.materials[i]);
 				this.materials[i] = null;
 			}
 		}
@@ -124,33 +125,40 @@ class Building {
     updateMeshSelector(model) {
         if (model.selected && !this.boxSelector) {
             this.boxSelector = meshSelector;
-            this.boxSelector.setFromObject(this.meshLevel[model.level]);
-            this.element.add(this.boxSelector);
+            const Class = model.constructor;
+            const size = model.ground.tileSize / 2;
+            this.boxSelector.box.setFromArray([Class.tileX * size, size * 2, Class.tileZ * size, -Class.tileX * size, 0, -Class.tileZ * size]);
+            this.boxSelector.updateMatrixWorld();
+            this.currentMesh.add(this.boxSelector);
         } else if (!model.selected && this.boxSelector) {
-            this.element.remove(this.boxSelector);
+            this.currentMesh.remove(this.boxSelector);
             this.boxSelector = null;
         }
     }
 
     addMesh(mesh) {
-        this.element.add(mesh);
-        mesh.matrixWorld = this.element.matrixWorld;
+        this.parent.add(mesh);
+        if(!this.matrixWorld) {
+            this.matrixWorld = mesh.matrixWorld;
+        } else {
+            mesh.matrixWorld = this.matrixWorld;
+        }   
     }
 
     removeMesh(mesh) {
-        this.element.remove(mesh);
-        if (mesh) {
+        if(mesh) {
+            this.parent.remove(mesh);
             mesh.geometry.dispose();
         }
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
+    remove() {
+        this.removeMesh(this.currentMesh);
+        this.parent = null;
     }
 
     add(parent) {
-        if (parent)
-            parent.render.scene.add(this.element);
+        this.parent = parent;
     }
 }
 

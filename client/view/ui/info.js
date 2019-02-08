@@ -40,7 +40,7 @@ module.exports = class Info {
                 this.node.removeChild(this.buttonUpgrade);
             }
 
-            this.nodeTitle.textContent = model.entity.constructor.name;
+            this.nodeTitle.textContent = model.entity.constructor.label;
             this.nodeDescription.textContent = model.entity.constructor.description;
             this.nodePicture.src = model.entity.constructor.picture;
 
@@ -62,10 +62,10 @@ module.exports = class Info {
     }
 
     add(parent) {
-        parent.dom.appendChild(this.node);
+        parent.appendChild(this.node);
     }
 
-    remove(parent) {
-        parent.dom.removeChild(this.node);
+    remove() {
+        this.node.parentNode.removeChild(this.node);
     }
 };

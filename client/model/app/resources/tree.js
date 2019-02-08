@@ -12,7 +12,7 @@ class Tree extends Resource {
     }
     
 }
-Tree.selectable = false;
+Tree.selectable = true;
 Tree.tileX = 1;
 Tree.tileZ = 1;
 Tree.walkable = 0;
@@ -20,6 +20,6 @@ Tree.code = 255; //value in alpha blue
 Tree.resource = true;
 Tree.instances = [];
 Tree.description = 'This building increase the enable places for your population';
-Tree.name = 'Arbre';
-Tree.picture = '/pic/house.png';
+Tree.label = 'Arbre';
+Tree.picture = '/pic/tree.png';
 module.exports = Tree;

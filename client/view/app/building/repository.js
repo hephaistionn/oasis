@@ -48,7 +48,7 @@ module.exports = class Repository extends Building {
 		this.updateMesh(model);
 		if(!model.drafted)
 			this.updateResources(model);
-        const matrixWorld = this.element.matrixWorld.elements;
+        const matrixWorld = this.matrixWorld.elements;
         matrixWorld[12] = model.ax;
         matrixWorld[14] = model.az;
         matrixWorld[13] = model.ay;
@@ -61,7 +61,7 @@ module.exports = class Repository extends Building {
 	updateResources(model)  {
 		for(let i=0; i<this.resources.length;  i++) {
 			if(this.resources[i]) {
-				this.element.remove(this.resources[i]);
+				this.currentMesh.remove(this.resources[i]);
 				this.resources[i] = null;
 			}
 		}
@@ -86,7 +86,7 @@ module.exports = class Repository extends Building {
 			matrixWorld[12] = blockPos[this.indexblock*2] + model.ax;
 			matrixWorld[14] = blockPos[this.indexblock*2+1] + model.az;
 			matrixWorld[13] = 0.5 + model.ay;
-			this.element.add(this.resources[this.indexblock]);
+			this.currentMesh.add(this.resources[this.indexblock]);
 			this.indexblock++;
 		}
 
@@ -102,7 +102,7 @@ module.exports = class Repository extends Building {
 		matrixWorld[12] = blockPos[this.indexblock*2] + model.ax;
 		matrixWorld[14] = blockPos[this.indexblock*2+1] + model.az;
 		matrixWorld[13] = 0.5 + model.ay;
-		this.element.add(this.resources[this.indexblock]);
+		this.currentMesh.add(this.resources[this.indexblock]);
 		this.indexblock++;
 	}
 

@@ -14,10 +14,13 @@ function computeGeo(buffers, indexUV) {
         for(let i = 0; i < verticesGroup.length; i++) {
             geometry.morphAttributes.position.push(verticesGroup[i]);
         }
-    } else {
-        const positionBuffer = verticesGroup[0];
-        geometry.addAttribute('position', positionBuffer);
+        // les elements animés sont trop petits;
+        geometry.boundingSphere = new THREE.Sphere();
+        geometry.boundingSphere.radius = 2;
     }
+    const positionBuffer = verticesGroup[0];
+    geometry.addAttribute('position', positionBuffer);
+    geometry.computeBoundingBox();
 
     if(indexUV !== 0) {
         const uvBuffer = buffers.uvsGroup[indexUV];

@@ -135,10 +135,10 @@ module.exports = class Catalog {
     }
 
     add(parent) {
-        parent.dom.appendChild(this.node);
+        parent.appendChild(this.node);
     }
 
-    remove(parent) {
-        parent.dom.removeChild(this.node);
+    remove() {
+        this.node.parentNode.removeChild(this.node);
     }
 };

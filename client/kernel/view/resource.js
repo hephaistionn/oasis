@@ -1,21 +1,20 @@
 const THREE = require('three');
-const meshSelector = new THREE.BoxHelper(undefined, 0xffff00);
-meshSelector.matrixAutoUpdate = false;
+const meshSelector = require('./boxSelector').meshSelector;
 
 module.exports = class Resource {
 
     constructor(model, parent) {
-        this.element = new THREE.Object3D();
-        this.element.matrixAutoUpdate = false;
+        this.matrixWorld = null;
+        this.boxSelector = null;
+        this.currentMesh = null;
+        this.add(parent);
         this.initMesh(model);
         this.update(0, model);
-        this.add(parent);
-        this.boxSelector = null;
     }
 
     update(dt, model) {
         this.updateMesh(model);
-        const matrixWorld = this.element.matrixWorld.elements;
+        const matrixWorld = this.matrixWorld.elements;
         matrixWorld[12] = model.ax;
         matrixWorld[13] = model.ay;
         matrixWorld[14] = model.az;
@@ -29,9 +28,11 @@ module.exports = class Resource {
         if (model.soldout && !this.meshSoldout.parent) {
             this.removeMesh(this.meshFull);
             this.addMesh(this.meshSoldout);
+            this.currentMesh = this.meshSoldout;
         } else if (!this.meshFull.parent) {
             this.removeMesh(this.meshSoldout);
             this.addMesh(this.meshFull);
+            this.currentMesh = this.meshFull;
         }
         if (model.selected || this.boxSelector) {
             this.updateMeshSelector(model);
@@ -41,30 +42,38 @@ module.exports = class Resource {
     updateMeshSelector(model) {
         if (model.selected && !this.boxSelector) {
             this.boxSelector = meshSelector;
-            this.boxSelector.setFromObject(this.meshFull)
-            this.element.add(this.boxSelector);
+            const Class = model.constructor;
+            const size = model.ground.tileSize / 2;
+            this.boxSelector.box.setFromArray([Class.tileX * size, size * 2, Class.tileZ * size, -Class.tileX * size, 0, -Class.tileZ * size]);
+            this.currentMesh.add(this.boxSelector);
+            this.boxSelector.updateMatrixWorld();
         } else if (!model.selected && this.boxSelector) {
-            this.element.remove(this.boxSelector);
+            this.currentMesh.remove(this.boxSelector);
             this.boxSelector = null;
         }
     }
 
     addMesh(mesh) {
-        this.element.add(mesh);
-        mesh.matrixWorld = this.element.matrixWorld;
+        this.parent.add(mesh);
+        if(!this.matrixWorld) {
+            this.matrixWorld = mesh.matrixWorld;
+        } else {
+            mesh.matrixWorld = this.matrixWorld;
+        }   
     }
 
     removeMesh(mesh) {
-        this.element.remove(mesh);
+        this.parent.remove(mesh);
         mesh.geometry.dispose();
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
+    remove() {
+        this.removeMesh(this.meshSoldout);
+        this.removeMesh(this.meshFull);
+        this.parent = null;
     }
 
     add(parent) {
-        if (parent)
-            parent.render.scene.add(this.element);
+        this.parent = parent;
     }
 }

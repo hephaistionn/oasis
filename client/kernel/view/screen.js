@@ -109,7 +109,14 @@ class Screen {
 
         for (let id of models.keys()) {
             if (!views.has(id)) {
-                views.set(id, new COMPONENTS[models.get(id).constructor.name](models.get(id), this));
+                if (models.get(id).constructor.ui) {
+                    views.set(id, new COMPONENTS[models.get(id).constructor.name](models.get(id), this.dom));
+                } else if (models.get(id).constructor.selectable) {
+                    views.set(id, new COMPONENTS[models.get(id).constructor.name](models.get(id), this.render.clicableMeshes));
+                } else {
+                    views.set(id, new COMPONENTS[models.get(id).constructor.name](models.get(id), this.render.scene));
+                }
+                
             } else {
                 if (models.get(id).updated) {
                     views.get(id).update(dt, models.get(id));
@@ -123,7 +130,7 @@ class Screen {
 
         for (let id of views.keys()) {
             if (!models.has(id)) {
-                views.get(id).remove(this);
+                views.get(id).remove();
                 views.delete(id);
             }
         }
@@ -147,10 +154,10 @@ class Screen {
         this.mouse.x = (x / this.canvas.width) * 2 - 1;
         this.mouse.y = -(y / this.canvas.height) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this._components.get(CAMERA).element);
-        const intersects = this.raycaster.intersectObjects(this.render.scene.children, true);
+        const intersects = this.raycaster.intersectObjects(this.render.clicableMeshes.children);
         if (intersects.length) {
             const point = intersects[0].point;
-            const mesh = intersects[0].object;
+            const mesh = intersects[0].object; 
             const id = mesh.name;
             if (id) {
                 const event = {
@@ -253,12 +260,12 @@ class Screen {
         }
     }
 
-    getPointOnMap(screenX, screenY, recursive) {
+    getPointOnMap(screenX, screenY) {
         if (!this._components.has(CAMERA)) return;
         this.mouse.x = (screenX / this.canvas.width) * 2 - 1;
         this.mouse.y = -(screenY / this.canvas.height) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this._components.get(CAMERA).element);
-        let intersects = this.raycaster.intersectObjects(this._components.get(GROUND).clickableArea, recursive);
+        let intersects = this.raycaster.intersectObjects(this._components.get(GROUND).clickableArea);
         if (intersects.length) {
             const point = intersects[0].point;
             const mesh = intersects[0].object;

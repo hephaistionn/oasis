@@ -99,4 +99,8 @@ class Navvy extends Character {
     }
 }
 
+Navvy.selectable = true;
+Navvy.description = 'This building increase the enable places for your population';
+Navvy.label = 'Constructeur';
+Navvy.picture = '/pic/peon.png';
 module.exports = Navvy;

@@ -21,10 +21,10 @@ module.exports = class Wall {
         this.materialDraftKo = materialDraft.clone();
         this.materialDraftKo.uniforms.color.value.setHex(0xff0000);
         this.meshWallDraft = [];
-        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft));
-        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft));
-        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft));
-        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft));
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallA_00.obj', materialDraft), model._id);
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallB_00.obj', materialDraft), model._id);
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallC_00.obj', materialDraft), model._id);
+        this.meshWallDraft.push(THREE.getMesh('obj/buildings/wallD_00.obj', materialDraft), model._id);
         this.drafts = [];
     }
 
@@ -40,7 +40,7 @@ module.exports = class Wall {
         const shape = model.draftWall.shape;
 
         for (let i = 0, l = this.drafts.length; i < l; i++) {
-            this.parent.render.scene.remove(this.drafts[i]);
+            this.parent.remove(this.drafts[i]);
         }
         this.drafts.splice(0, this.drafts.length);
 
@@ -52,7 +52,7 @@ module.exports = class Wall {
                 if (!valid[i]) {
                     this.drafts[i].material = this.materialDraftKo;
                 }
-                this.parent.render.scene.add(this.drafts[i]);
+                this.parent.add(this.drafts[i]);
             }
             matrixWorld = this.drafts[i].matrixWorld.elements;
             matrixWorld[12] = (tiles[i * 2] + 0.5) * model.ground.tileSize;
@@ -71,7 +71,7 @@ module.exports = class Wall {
         for (let i = 0, l = model.todo.length / 2; i < l; i++) {
             if (!this.foundations[i]) {
                 this.foundations[i] = this.meshFoundation.clone();
-                this.parent.render.scene.add(this.foundations[i]);
+                this.parent.add(this.foundations[i]);
             }
             matrixWorld = this.foundations[i].matrixWorld.elements;
             matrixWorld[12] = (model.todo[i * 2] + 0.5) * model.ground.tileSize;
@@ -81,7 +81,7 @@ module.exports = class Wall {
         let toRemove = 0;
         for (let i = 0, l = this.foundations.length; i < l; i++) {
             if (model.todo[i * 2] === undefined) {
-                this.parent.render.scene.remove(this.foundations[i]);
+                this.parent.remove(this.foundations[i]);
                 toRemove++;
             }
         }
@@ -97,7 +97,7 @@ module.exports = class Wall {
         this.updateDraft(model);
     }
 
-    remove(parent) {
+    remove() {
         this.parent = null;
     }
 

@@ -4,17 +4,20 @@ module.exports = class Scene {
 
     constructor(canvas) {
         this.canvas = canvas;
-        this.camera = null;
         this.renderer = renderer;
         this.renderer.setClearColor(0x000000);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
         this.renderer.shadowMap.enabled = true;
         this.scene = new THREE.Scene();
+        this.clicableMeshes = new THREE.Object3D();
+        this.clicableMeshes.name = 'clicableMeshes';
+        this.clicableMeshes.matrixAutoUpdate = false;
+        this.scene.add(this.clicableMeshes);
         this.scene.matrixAutoUpdate = false;
     }
 
     update() {
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.scene.camera);
     }
 
     resize(width, height) {

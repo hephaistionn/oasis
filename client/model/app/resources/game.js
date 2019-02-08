@@ -86,7 +86,7 @@ class Game extends Resource {
     }
 
 }
-Game.selectable = false;
+Game.selectable = true;
 Game.tileX = 2;
 Game.tileZ = 2;
 Game.walkable = 0;
@@ -94,6 +94,6 @@ Game.code = 251;
 Game.resource = true;
 Game.instances = [];
 Game.description = 'This building increase the enable places for your population';
-Game.name = 'Gibier';
-Game.picture = '/pic/house.png';
+Game.label = 'Gibier';
+Game.picture = '/pic/game.png';
 module.exports = Game;

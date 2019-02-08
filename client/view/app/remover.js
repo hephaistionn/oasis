@@ -32,6 +32,7 @@ module.exports = class Remover {
         this.meshArea.matrixWorldNeedsUpdate = false;
         this.meshArea.receiveShadow = false;
         this.meshArea.drawMode = THREE.TrianglesDrawMode;
+        this.meshArea.name = 'removerArea';
     }
 
     updateAera(model) {
@@ -115,11 +116,11 @@ module.exports = class Remover {
         }
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.meshArea);
+    remove() {
+        this.meshArea.parent.remove(this.meshArea);
     }
 
     add(parent) {
-        parent.render.scene.add(this.meshArea);
+        parent.add(this.meshArea);
     }
 };

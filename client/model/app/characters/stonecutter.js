@@ -36,4 +36,8 @@ class Stonecutter extends Character {
     }
 }
 
+Stonecutter.description = 'This building increase the enable places for your population';
+Stonecutter.label = 'Mineur';
+Stonecutter.selectable = true;
+Stonecutter.picture = '/pic/peon.png';
 module.exports = Stonecutter;

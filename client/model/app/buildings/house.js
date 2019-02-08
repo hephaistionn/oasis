@@ -15,10 +15,11 @@ class House extends Building {
 
 }
 
+House.selectable = true;
 House.removable = true;
 House.levelMax = 3;
 House.description = 'This building increase the enable places for your population';
-House.name = 'Hutte Basique';
+House.label = 'Hutte Basique';
 House.picture = '/pic/house.png';
 House.tileX = 1;
 House.tileZ = 1;

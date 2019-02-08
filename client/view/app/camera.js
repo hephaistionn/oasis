@@ -33,12 +33,13 @@ module.exports = class Camera {
         this.element.updateProjectionMatrix();
     }
 
-    remove(parent) {
-        parent.render.camera = null;
+    remove() {
+        this.parent.camera = null;
+        this.parent = null;
     }
 
     add(parent) {
-        parent.render.camera = this.element;
-        parent.render.scene.camera = this.element;
+        parent.camera = this.element;
+        this.parent = parent;
     }
 };

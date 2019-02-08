@@ -10,7 +10,7 @@ class Stone extends Resource {
         this.stats.set(Stats.STONE, config.stone || 10000);
     }
 }
-Stone.selectable = false;
+Stone.selectable = true;
 Stone.tileX = 1;
 Stone.tileZ = 1;
 Stone.walkable = 0;
@@ -18,6 +18,6 @@ Stone.code = 253;
 Stone.resource = true;
 Stone.instances = [];
 Stone.description = 'This building increase the enable places for your population';
-Stone.name = 'Pierre';
-Stone.picture = '/pic/house.png';
+Stone.label = 'Pierre';
+Stone.picture = '/pic/stone.png';
 module.exports = Stone;

@@ -1,16 +1,19 @@
 const THREE = require('../tools/threejs');
+const meshSelector = require('./boxSelector').meshSelector;
 
 module.exports = class Member {
 
     constructor(model, parent) {
-        this.element = new THREE.Object3D();
-        this.element.matrixAutoUpdate = false;
+        this.currentMesh = null;
+        this.boxSelector = null;
+        this.matrixWorld = null;
+        this.add(parent);
         this.animationsBody = [];
         this.animationsHead = [];
         this.currentAnimation = null;
         this.initMesh(model);
+        this.parent.add(this.element);
         this.update(0, model);
-        this.add(parent);
     }
 
     initMesh(model) {
@@ -18,7 +21,9 @@ module.exports = class Member {
     }
 
     updateMesh(model) {
-
+        if (model.selected || this.boxSelector) {
+            this.updateMeshSelector(model);
+        }
     }
 
     update(dt, model) {
@@ -76,12 +81,26 @@ module.exports = class Member {
         }
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
+    updateMeshSelector(model) {
+        if (model.selected && !this.boxSelector) {
+            this.boxSelector = meshSelector;
+            const Class = model.constructor;
+            const size = model.ground.tileSize / 2;
+            this.boxSelector.box.setFromArray([ size/2, size, size/2, -size/2, 0, -size/2]);
+            this.boxSelector.updateMatrixWorld();
+            this.element.add(this.boxSelector);
+        } else if (!model.selected && this.boxSelector) {
+            this.element.remove(this.boxSelector);
+            this.boxSelector = null;
+        }
+    }
+
+    remove() {
+        this.parent.remove(this.element);
+        this.parent = null;
     }
 
     add(parent) {
-        parent.render.scene.add(this.element);
+        this.parent = parent;
     }
-
 };

@@ -75,4 +75,8 @@ class Craftsman extends Character {
     }
 }
 
+Craftsman.selectable = true;
+Craftsman.description = 'This building increase the enable places for your population';
+Craftsman.label = 'Constructeur';
+Craftsman.picture = '/pic/peon.png';
 module.exports = Craftsman;

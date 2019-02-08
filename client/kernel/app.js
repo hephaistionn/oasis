@@ -254,9 +254,9 @@ class App {
 
     onSelect(id) {
         const entity = this.model.get(id);
+        if(this.selected)
+            this.selected.select(false);
         if(entity && !entity.drafted) {
-            if(this.selected)
-                this.selected.select(false);
             this.selected = entity;
             this.selected.select(true);
         }

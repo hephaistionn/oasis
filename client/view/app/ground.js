@@ -54,11 +54,12 @@ class Ground {
         const zSize = this.tileSize * (model.nbTileZ+100);
         const geometry = new THREE.PlaneBufferGeometry(xSize, zSize);
         const mesh = new THREE.Mesh(geometry);
-        mesh.position.set(-40,6,-40);
-        mesh.updateMatrixWorld();
+        geometry.translate(-40,6,-40);
+        geometry.computeBoundingBox();
         mesh.matrixAutoUpdate = false;
         mesh.matrixWorldNeedsUpdate = false;
         mesh.receiveShadow = true;
+        mesh.name = 'clickableArea';
         return [mesh];
     }
 
@@ -154,6 +155,7 @@ class Ground {
         chunkMesh.matrixAutoUpdate = false;
         chunkMesh.matrixWorldNeedsUpdate = false;
         chunkMesh.receiveShadow = true;
+        chunkMesh.name = 'ground';
         return chunkMesh;
     }
 
@@ -292,6 +294,7 @@ class Ground {
         mesh.matrixAutoUpdate = false;
         mesh.frustumCulled = false;
         mesh.matrixWorldNeedsUpdate = false;
+        mesh.name = 'border';
 
         return mesh;
     }
@@ -327,12 +330,12 @@ class Ground {
 
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
+    remove() {
+        this.element.parent.remove(this.element);
     }
 
     add(parent) {
-        parent.render.scene.add(this.element);
+        parent.add(this.element);
     }
 }
 

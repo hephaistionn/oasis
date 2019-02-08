@@ -19,11 +19,12 @@ class StoneMine extends Building {
     }
 }
 
+StoneMine.selectable = true;
 StoneMine.removable = true;
 StoneMine.levelMax = 2;
 StoneMine.description = 'This building increase the enable places for your population';
-StoneMine.name = 'Mineur';
-StoneMine.picture = '/pic/house.png';
+StoneMine.label = 'Mineur';
+StoneMine.picture = '/pic/stoneHut.png';
 StoneMine.tileX = 1;
 StoneMine.tileZ = 1;
 StoneMine.walkable = 0;

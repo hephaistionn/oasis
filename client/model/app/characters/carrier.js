@@ -32,4 +32,8 @@ class Carrier extends Character {
     }
 }
 
+Carrier.selectable = true;
+Carrier.description = 'This building increase the enable places for your population';
+Carrier.label = 'Porteur';
+Carrier.picture = '/pic/peon.png';
 module.exports = Carrier;

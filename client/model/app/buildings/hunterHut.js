@@ -15,11 +15,12 @@ class HunterHut extends Building {
     }
 }
 
+HunterHut.selectable = true;
 HunterHut.removable = true;
 HunterHut.levelMax = 1;
 HunterHut.description = 'This building increase the enable places for your population';
-HunterHut.name = 'Chasseur';
-HunterHut.picture = '/pic/house.png';
+HunterHut.label = 'Chasseur';
+HunterHut.picture = '/pic/hunterHut.png';
 HunterHut.tileX = 1;
 HunterHut.tileZ = 1;
 HunterHut.walkable = 0;

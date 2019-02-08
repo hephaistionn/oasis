@@ -21,4 +21,8 @@ class Militiaman extends Soldier {
     }
 }
 
+Militiaman.selectable = true;
+Militiaman.description = 'This building increase the enable places for your population';
+Militiaman.label = 'Soldat';
+Militiaman.picture = '/pic/peon.png';
 module.exports = Militiaman;

@@ -18,4 +18,8 @@ class Builder extends Character {
     }
 }
 
+Builder.selectable = true;
+Builder.description = 'This building increase the enable places for your population';
+Builder.label = 'Constructeur';
+Builder.picture = '/pic/peon.png';
 module.exports = Builder;

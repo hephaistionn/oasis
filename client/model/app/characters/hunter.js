@@ -37,4 +37,8 @@ class Hunter extends Character {
     }
 }
 
+Hunter.selectable = true;
+Hunter.description = 'This building increase the enable places for your population';
+Hunter.label = 'Chasseur';
+Hunter.picture = '/pic/peon.png';
 module.exports = Hunter;

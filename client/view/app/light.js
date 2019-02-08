@@ -39,12 +39,12 @@ module.exports = class Light {
         this.directionalLight.target.matrixWorld.elements[14] = model.az - model.offsetZ;
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
+    remove() {
+        his.element.parent.remove(this.element);
     }
 
     add(parent) {
-        parent.render.scene.add(this.element);
+        parent.add(this.element);
     }
 
 };

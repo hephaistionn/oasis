@@ -38,6 +38,7 @@ module.exports = class Canal {
         this.meshDraft.matrixWorldNeedsUpdate = false;
         this.meshDraft.receiveShadow = false;
         this.meshDraft.drawMode = THREE.TrianglesDrawMode;
+        this.meshDraft.name = model._id + 'Draft';
     }
 
     inittMesh(model) {
@@ -57,6 +58,7 @@ module.exports = class Canal {
         this.meshCanal.matrixWorldNeedsUpdate = false;
         this.meshCanal.receiveShadow = false;
         this.meshCanal.drawMode = THREE.TrianglesDrawMode;
+        this.meshCanal.name = model._id;
     }
 
     initFoundationMesh(model) {
@@ -241,7 +243,7 @@ module.exports = class Canal {
         for (let i = 0, l = model.todo.length / 2; i < l; i++) {
           if (!this.foundations[i]) {
             this.foundations[i] = this.meshFoundation.clone();
-            this.parent.render.scene.add(this.foundations[i]);
+            this.parent.add(this.foundations[i]);
           }
           matrixWorld = this.foundations[i].matrixWorld.elements;
           matrixWorld[12] = (model.todo[i * 2] + 0.5) * model.ground.tileSize;
@@ -251,7 +253,7 @@ module.exports = class Canal {
         let toRemove = 0;
         for (let i = 0, l = this.foundations.length; i < l; i++) {
           if (model.todo[i * 2] === undefined) {
-            this.parent.render.scene.remove(this.foundations[i]);
+            this.parent.remove(this.foundations[i]);
             toRemove++;
           }
         }
@@ -270,14 +272,14 @@ module.exports = class Canal {
     }
 
     remove(parent) {
-        parent.render.scene.remove(this.meshCanal);
-        parent.render.scene.remove(this.meshDraft);
+        parent.remove(this.meshCanal);
+        parent.remove(this.meshDraft);
         this.parent = null;
     }
 
     add(parent) {
-        parent.render.scene.add(this.meshCanal);
-        parent.render.scene.add(this.meshDraft);
+        parent.add(this.meshCanal);
+        parent.add(this.meshDraft);
         this.parent = parent;
     }
 };

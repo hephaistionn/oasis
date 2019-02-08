@@ -74,4 +74,9 @@ class Provider extends Character {
     }
 }
 
+
+Provider.description = 'This building increase the enable places for your population';
+Provider.label = 'Constructeur';
+Provider.selectable = true;
+Provider.picture = '/pic/peon.png';
 module.exports = Provider;

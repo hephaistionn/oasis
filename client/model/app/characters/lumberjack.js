@@ -36,4 +36,8 @@ class Lumberjack extends Character {
     }
 }
 
+Lumberjack.selectable = true;
+Lumberjack.description = 'This building increase the enable places for your population';
+Lumberjack.label = 'Bucheron';
+Lumberjack.picture = '/pic/peon.png';
 module.exports = Lumberjack;

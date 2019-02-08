@@ -15,12 +15,12 @@ class Repository extends Building {
         this.updated = true;
     }
 }
-
+Repository.selectable = true;
 Repository.removable = true;
 Repository.levelMax = 1;
 Repository.description = 'This building increase the enable places for your population';
-Repository.name = 'Entrepot';
-Repository.picture = '/pic/house.png';
+Repository.label = 'Entrepot';
+Repository.picture = '/pic/repository.png';
 Repository.tileX = 2;
 Repository.tileZ = 2;
 Repository.walkable = 0;

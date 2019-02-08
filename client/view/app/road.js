@@ -40,6 +40,7 @@ module.exports = class Road {
     this.meshRoad.matrixWorldNeedsUpdate = false;
     this.meshRoad.receiveShadow = false;
     this.meshRoad.drawMode = THREE.TrianglesDrawMode;
+    this.meshRoad.name = model._id;
   }
 
   initDraftMesh(model) {
@@ -57,6 +58,7 @@ module.exports = class Road {
     this.meshDraft.matrixWorldNeedsUpdate = false;
     this.meshDraft.receiveShadow = true;
     this.meshDraft.drawMode = THREE.TrianglesDrawMode;
+    this.meshDraft.name = model._id + 'Draft';
   }
 
   initFoundationMesh(model) {
@@ -262,7 +264,7 @@ module.exports = class Road {
     for (let i = 0, l = model.todo.length / 3; i < l; i++) {
       if (!this.foundations[i]) {
         this.foundations[i] = this.meshFoundation.clone();
-        this.parent.render.scene.add(this.foundations[i]);
+        this.parent.add(this.foundations[i]);
       }
       matrixWorld = this.foundations[i].matrixWorld.elements;
       matrixWorld[12] = (model.todo[i * 3] + 0.5) * model.ground.tileSize;
@@ -272,7 +274,7 @@ module.exports = class Road {
     let toRemove = 0;
     for (let i = 0, l = this.foundations.length; i < l; i++) {
       if (model.todo[i * 3] === undefined) {
-        this.parent.render.scene.remove(this.foundations[i]);
+        this.parent.remove(this.foundations[i]);
         toRemove++;
       }
     }
@@ -290,15 +292,15 @@ module.exports = class Road {
     this.updateDraft(model);
   }
 
-  remove(parent) {
-    parent.render.scene.remove(this.meshRoad);
-    parent.render.scene.remove(this.meshDraft);
+  remove() {
+    this.parent.remove(this.meshRoad);
+    this.parent.remove(this.meshDraft);
     this.parent = null;
   }
 
   add(parent) {
-    parent.render.scene.add(this.meshRoad);
-    parent.render.scene.add(this.meshDraft);
+    parent.add(this.meshRoad);
+    parent.add(this.meshDraft);
     this.parent = parent;
   }
 };

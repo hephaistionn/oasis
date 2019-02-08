@@ -6,7 +6,7 @@ const Bridge  = 'Bridge';
 module.exports = class Canal {
 
     constructor(config, ground, store) {
-        this._id = config._id ? parseInt(config._id, 10) : Math.floor((1 + Math.random()) * 0x10000000000);
+        this._id = 'canal';
         this.ground = ground;
         this.tileSize = ground.tileSize;
         this.drafted = false;
