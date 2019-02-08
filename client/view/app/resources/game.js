@@ -28,9 +28,9 @@ module.exports = class Game extends Resource {
         this.currentMesh.matrixAutoUpdate = false;
         this.meshGazelle1.add(this.currentMesh);
         const matrixWorld = this.currentMesh.matrixWorld.elements;
-        matrixWorld[12] = model.ax;
+        matrixWorld[12] = model.ax+model.ground.tileSize/2;
         matrixWorld[13] = model.ay;
-        matrixWorld[14] = model.az;  
+        matrixWorld[14] = model.az+model.ground.tileSize/2;  
     }
 
 

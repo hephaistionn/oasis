@@ -31,8 +31,24 @@ class Resource {
     }
 
     getTiles() {
+        let xNbTile = this.constructor.tileX;
+        let zNbTile = this.constructor.tileZ;
+
         const tileSize = this.ground.tileSize;
-        return [this.ax / tileSize - 0.5, this.az / tileSize - 0.5];
+        const xFirstTile = Math.floor(this.ax / tileSize);
+        const zFirstTile = Math.floor(this.az / tileSize);
+        const xLastTile = xFirstTile + xNbTile;
+        const zLastTile = zFirstTile + zNbTile;
+
+        const tiles = [];
+
+        for (let xi = xFirstTile; xi < xLastTile; xi++) {
+            for (let zi = zFirstTile; zi < zLastTile; zi++) {
+                tiles.push(xi);
+                tiles.push(zi);
+            }
+        }
+        return tiles;
     }
 
     getDirection(ax, az) {

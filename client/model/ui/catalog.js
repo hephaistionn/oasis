@@ -33,10 +33,10 @@ class Catalog {
                     ENTITIES['Repository'],
                     ENTITIES['Attic'],
                     ENTITIES['Bridge'],
-                  //  ENTITIES['Road'],
-                  //  ENTITIES['Road'],
-                   // ENTITIES['Canal'],
-                   // ENTITIES['Remover'],
+                    {name: 'Road1', label: 'chemin'},
+                    {name: 'Road2', label: 'route'},
+                    {name: 'Canal', label: 'canal'},
+                    {name: 'Remover', label: 'effaceur'},
                 ]
             },
             {
@@ -45,7 +45,7 @@ class Catalog {
                 list: [
                     ENTITIES['Barrack'],
                     ENTITIES['Tower'],
-                   // ENTITIES['Wall']
+                    {name: 'Wall', level:0, label: 'mur de bois'}
                 ]
             }
         ]
@@ -80,7 +80,7 @@ class Catalog {
             case 'Canal':
                 ee.emit('draftCanal', { drafted: true });
                 break;
-            case 'Road':
+            case 'Road1':
                 ee.emit('draftRoad', { drafted: true, type: 2 });
                 break;
             case 'Road2':

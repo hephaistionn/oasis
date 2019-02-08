@@ -13,10 +13,11 @@ class Game extends Resource {
         this.walking1 = true;
         this.walking2 = true;
         this.walking3 = true;
-        this.xmin = this.ax - this.constructor.tileX * this.ground.tileSize / 2;
-        this.xmax = this.ax + this.constructor.tileX * this.ground.tileSize / 2;
-        this.zmin = this.az - this.constructor.tileZ * this.ground.tileSize / 2;
-        this.zmax = this.az + this.constructor.tileZ * this.ground.tileSize / 2;
+        //ax az n'sont pas le centre mais la premiere case
+        this.xmin = this.ax + this.ground.tileSize / 2 - this.constructor.tileX * this.ground.tileSize / 2;
+        this.xmax = this.ax + this.ground.tileSize / 2 + this.constructor.tileX * this.ground.tileSize / 2;
+        this.zmin = this.az + this.ground.tileSize / 2 - this.constructor.tileZ * this.ground.tileSize / 2;
+        this.zmax = this.az + this.ground.tileSize / 2 + this.constructor.tileZ * this.ground.tileSize / 2;
         this.timer1 = 0;
         this.timer2 = 0;
         this.timer3 = 0;

@@ -1,7 +1,7 @@
 const THREE = require('../tools/threejs');
 const meshSelector = require('./boxSelector').meshSelector;
 
-module.exports = class Member {
+module.exports = class Character {
 
     constructor(model, parent) {
         this.currentMesh = null;
