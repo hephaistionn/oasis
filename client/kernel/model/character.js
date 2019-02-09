@@ -76,7 +76,7 @@ class Character {
                     targetTiles = [instanceTargets[0].getTiles()];
                 }
             } else if (target.entity) {
-                instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az);
+                instanceTargets = pathfinding.nearestEntities(ground.ENTITIES, target.entity, target.resource, this.ax, this.az, target.put); 
                 if(instanceTargets.length === 0) { //si pas de solution
                     this.autoRemove();
                     if(this.origin) this.ground.getEntity(this.origin).reStart();

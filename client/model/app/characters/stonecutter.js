@@ -11,7 +11,7 @@ class Stonecutter extends Character {
         this.capacity = 5;
         this.workingDuration = 4000; 
         this.targets.push({ entity: Stone, resource: Stats.STONE });
-        this.targets.push({ entity: Repository});
+        this.targets.push({ entity: Repository, resource: Stats.STONE,  put:true });
         this.targets.push({ id: this.origin });
     }
 

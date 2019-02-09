@@ -8,6 +8,8 @@ class Repository extends Building {
         super(config, ground);
         this.maxByBlock = 16;
         this.maxBlock = 15;
+        this.isFull = false;
+        this.isFullType = {};
         this.blocksType = new Uint8Array(this.maxBlock);
     }
 
@@ -17,6 +19,7 @@ class Repository extends Building {
         let availableBlocks = 0;
         let freeBlockIndex = -1;
         let i = 0;
+
         for (i; i < this.maxBlock; i++) {
             if (this.blocksType[i] === type) {
                 availableBlocks++;
@@ -28,7 +31,7 @@ class Repository extends Building {
 
         const neededBlocks = Math.ceil(targetValue / this.maxByBlock);
         let missingBlocks = neededBlocks - availableBlocks;
-
+        this.isFullType[type] = false;
         while (missingBlocks !== 0) {
             if (missingBlocks < 0) {
                 i = this.blocksType.lastIndexOf(type);
@@ -54,6 +57,12 @@ class Repository extends Building {
 
     pushResource(type, value) {
         const availableValue = this.updateBlocks(type, value);
+        if (this.blocksType.lastIndexOf(0) === -1){// plus de block libre
+            this.isFull = true;
+            if(availableValue <= value) {// plus de place dans les block occupés pas ce materiaux
+                this.isFullType[type] = true;
+            }
+        }
         this.stats.push(type, availableValue);
         this.updated = true;
     }
@@ -61,6 +70,8 @@ class Repository extends Building {
     pullResource(type, value) {
         const availableValue = this.stats.pull(type, value);
         this.updateBlocks(type, -availableValue);
+        this.isFullType[type] = false;
+        this.isFull = this.blocksType.lastIndexOf(0) === -1;
         this.updated = true;
         return availableValue;
     }
