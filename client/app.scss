@@ -47,6 +47,10 @@ body {
   pointer-events:auto;
 }
 
+.icon_-1 {
+  background-image: url('/pic/ico_all.png');
+  @include icon;
+}
 
 .icon_1 {
   background-image: url('/pic/ico_wood.png');
@@ -59,7 +63,7 @@ body {
 }
 
 .icon_3 {
-  background-image: url('/pic/ico_corn.png');
+  background-image: url('/pic/ico_meat.png');
   @include icon;
 }
 

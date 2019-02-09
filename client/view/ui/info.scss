@@ -3,9 +3,9 @@
     width: 800px;
     height: 240px;
     bottom: 30px;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
+    left: 35%;
+    -webkit-transform: translateX(-35%);
+    transform: translateX(-35%);
     background-image: url(pic/panel2x1.png);
     box-shadow: 0 0 18px 3px #000000;
 
@@ -26,9 +26,9 @@
     &__description  {
         position: absolute;
         top: 40px;
-        left: 192px;
-        width: 299px;
-        color: #d0cbc2;
+        left: 226px;
+        width: 300px;
+        color: #5c3e2d;
         font-size: 1.2rem;
     }
 
@@ -36,35 +36,97 @@
         position: absolute;
         top: 40px;
         left: 40px;
+        border: solid 4px #634330;
     }
 
 
     &__remove {
         position: absolute;
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
         text-align: center;
-        line-height: 50px;
+        line-height: 35px;
         cursor: pointer;
         pointer-events: auto;
         background-image: url(pic/button_remove.png);
         background-size: 100%;
-        transform: rotate(-8deg);
-        top: 101px;
-        left: 191px;
+        transform: rotate(-3deg);
+        top: -55px;
+        left: 229px;
     }
     &__upgrade {
         position: absolute;
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
         text-align: center;
-        line-height: 50px;
+        line-height: 35px;
         cursor: pointer;
         pointer-events: auto;
         background-image: url(pic/button_upgrade.png);
         background-size: 100%;
-        transform: rotate(-8deg);
-        top: 101px;
-        left: 307px;
+        transform: rotate(-3deg);
+        top: -55px;
+        left: 316px;
+    }
+
+    &__ajust {
+        position: absolute;
+        display: block;
+        top: 35px;
+        right: 0px;
+        height: 180px;
+        width: 242px;
+        border-left: solid #a7905b 6px;
+        padding-left: 11px;
+        &__item {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 17px;
+            height: 48px;
+            &__label {
+                position: relative;
+                display: inline-block;
+                color: #65402b;
+                line-height: 22px;
+                margin: 0;
+                padding: 0;
+                vertical-align: top;
+                width: 78px;
+            }
+            &__arrow {
+                position: relative;
+                display: inline-block;
+                height: 48px;
+                width: 35px;
+                &.left {
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 25px 40px 25px 0;
+                    border-color: transparent #65402b transparent transparent;
+                }
+
+                &.right {
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 25px 0 25px 40px;
+                    border-color: transparent transparent transparent #65402b;
+                }
+            }
+
+            &__icon {
+                position: relative;
+                display: inline-block;
+                height: 50px;
+                width: 48px;
+                background-color: white;
+                border-bottom: solid #65402b;
+                border-top: solid #65402b;
+                box-sizing: border-box;
+            }   
+
+        }
+
     }
 }

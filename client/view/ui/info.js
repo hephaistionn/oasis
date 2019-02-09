@@ -22,6 +22,8 @@ module.exports = class Info {
         this.nodePicture.className = 'info__picture';
         this.node.appendChild(this.nodePicture);
 
+        this.prepareAjustNode(model);
+
         this.add(parent);
 
         this.update(0, model);
@@ -38,6 +40,14 @@ module.exports = class Info {
                 this.node.appendChild(this.buttonUpgrade);
             } else if(this.buttonUpgrade.parentNode) {
                 this.node.removeChild(this.buttonUpgrade);
+            }
+
+            if(model.entity.reservations) {
+                this.refreshAjustNode(model);
+                if(!this.nodeAjust.parentNode)
+                    this.node.appendChild(this.nodeAjust);
+            } else if(this.nodeAjust.parentNode) {
+                this.node.removeChild(this.nodeAjust);
             }
 
             this.nodeTitle.textContent = model.entity.constructor.label;
@@ -59,6 +69,34 @@ module.exports = class Info {
         if (text)
             node.textContent = text;
         return node;
+    }
+
+    prepareAjustNode(model) {
+        this.nodeAjust = this.makeNode('info__ajust');
+        this.nodeAjustIcons = [];
+        for(let i=0; i<3; i++) {
+            const item = this.makeNode('info__ajust__item');
+            const label = this.makeNode('info__ajust__item__label', 'Réserver 5/15 pour');
+            const arrowLeft = this.makeNode('info__ajust__item__arrow left');
+            const arrowRight = this.makeNode('info__ajust__item__arrow right');
+            arrowLeft.onclick = model.descreaseAjut.bind(model, i);
+            arrowRight.onclick = model.increaseAjut.bind(model, i);
+            const icon =  this.makeNode('info__ajust__item__icon');
+            item.appendChild(label);
+            item.appendChild(arrowLeft);
+            item.appendChild(icon);
+            item.appendChild(arrowRight);
+            this.nodeAjust.appendChild(item);
+            this.nodeAjustIcons.push(icon);
+        }
+    }
+
+    refreshAjustNode(model)  {
+        let type, className;
+        for(let i=0; i<3; i++) {
+            type = model.entity.reservations[i];
+            this.nodeAjustIcons[i].className = `info__ajust__item__icon icon_${type}`;
+        }
     }
 
     add(parent) {

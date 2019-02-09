@@ -1,4 +1,12 @@
 const ee = require('../../kernel/tools/eventemitter');
+const Stats = require('../../kernel/model/stats');
+
+const ajustableType = [
+    -1,
+    Stats.WOOD,
+    Stats.STONE,
+    Stats.MEAT
+];
 
 class Info {
 
@@ -7,6 +15,8 @@ class Info {
         this.entity = null;
         this.opened = false;
         this.entities = entities;
+        this.ajustResources = ajustableType;
+        this.ajustCurrentFocus = [0, 0, 0]
         this._open = this.open.bind(this);
         this._close = this.close.bind(this);
         ee.on('select', this._open);
@@ -38,6 +48,22 @@ class Info {
 
     upgrade() {
         this.entity.upgrade();  
+        this.updated = true;
+    }
+
+    increaseAjut(index) {
+        this.ajustCurrentFocus[index]++;
+        if(this.ajustCurrentFocus[index]>this.ajustResources.length-1) this.ajustCurrentFocus[index] = 0;
+        const type = this.ajustResources[this.ajustCurrentFocus[index]];
+        this.entity.ajustResources(index, type);
+        this.updated = true;
+    }
+
+    descreaseAjut(index) {
+        this.ajustCurrentFocus[index]--;
+        if(this.ajustCurrentFocus[index]<0) this.ajustCurrentFocus[index] = this.ajustResources.length-1;
+        const type = this.ajustResources[this.ajustCurrentFocus[index]];
+        this.entity.ajustResources(index, type);
         this.updated = true;
     }
 

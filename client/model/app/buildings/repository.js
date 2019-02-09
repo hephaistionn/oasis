@@ -11,6 +11,8 @@ class Repository extends Building {
         this.isFull = false;
         this.isFullType = {};
         this.blocksType = new Uint8Array(this.maxBlock);
+
+        this.reservations = [-1,-1,-1];
     }
 
     updateBlocks(type, value) {
@@ -75,6 +77,11 @@ class Repository extends Building {
         this.updated = true;
         return availableValue;
     }
+
+    ajustResources(index, type) {
+        this.reservations[index] = type;
+        this.updated = true;
+    }
 }
 Repository.selectable = true;
 Repository.removable = true;
@@ -94,7 +101,6 @@ Repository.require = {
 Repository.enabled = {
     wood: 5
 };
-Repository.displayed = ['wood', 'stone'];
 Repository.constuctDuration = 1000;
 Repository.waterLevelNeeded = 0;
 Repository.instances = [];
