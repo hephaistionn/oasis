@@ -33,10 +33,10 @@ class Catalog {
                     ENTITIES['Repository'],
                     ENTITIES['Attic'],
                     ENTITIES['Bridge'],
-                    {name: 'Road1', label: 'chemin'},
-                    {name: 'Road2', label: 'route'},
-                    {name: 'Canal', label: 'canal'},
-                    {name: 'Remover', label: 'effaceur'},
+                    {name: 'Road1', label: 'chemin',  picture: '/pic/peon.png'},
+                    {name: 'Road2', label: 'route',  picture: '/pic/peon.png'},
+                    {name: 'Canal', label: 'canal',  picture: '/pic/peon.png'},
+                    {name: 'Remover', label: 'effaceur',  picture: '/pic/peon.png'},
                 ]
             },
             {
@@ -45,7 +45,7 @@ class Catalog {
                 list: [
                     ENTITIES['Barrack'],
                     ENTITIES['Tower'],
-                    {name: 'Wall', level:0, label: 'mur de bois'}
+                    {name: 'Wall', level:0, label: 'mur de bois',  picture: '/pic/peon.png'}
                 ]
             }
         ]
