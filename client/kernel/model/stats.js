@@ -37,9 +37,9 @@ const Stats = class Stats {
     }
 };
 
-Stats.WOOD = 0;
-Stats.STONE = 1;
-Stats.MEAT = 2;
-Stats.POP = 3;
+Stats.WOOD = 1;
+Stats.STONE = 2;
+Stats.MEAT = 3;
+Stats.POP = 4;
 
 module.exports = Stats;

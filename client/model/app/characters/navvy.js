@@ -22,6 +22,7 @@ class Navvy extends Character {
         }
         const cost = entity.getCost();
         for (let key in cost) {
+            key = parseInt(key, 10);
             const need = cost[key];
             if (need > 0) {
                 neededType = key;
@@ -42,7 +43,7 @@ class Navvy extends Character {
 			const tileSize = this.ground.tileSize;
             const realNearestRepos = pathfinding.nearestEntities(this.ground.ENTITIES, 'Repository', neededType, tile[0] * tileSize, tile[1] * tileSize);
             if (realNearestRepos.length) {
-                const value = realNearestRepos[0].stats.pull(neededType, Math.min(neededValue, this.capacity));
+                const value = realNearestRepos[0].pullResource(neededType, Math.min(neededValue, this.capacity));
                 this.stats.set(neededType, value);
                 this.ax = realNearestRepos[0].ax;
                 this.ay = realNearestRepos[0].ay;

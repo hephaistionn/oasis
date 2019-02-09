@@ -8,7 +8,7 @@ module.exports = class ForestHut extends Building {
 	initMesh(model) {
 		this.meshLevel.push(THREE.getMesh('obj/buildings/foundation_00.obj', material, model._id));
 		this.meshLevel.push(THREE.getMesh('obj/buildings/forestHut_00.obj', material, model._id));
-		this.meshLevel.push(THREE.getMesh('obj/buildings/forestHut_00.obj', material, model._id));
+		// this.meshLevel.push(THREE.getMesh('obj/buildings/forestHut_00.obj', material, model._id));
 		this.draft = THREE.getMesh('obj/buildings/forestHut_00.obj', materialSelect);
 	}
 

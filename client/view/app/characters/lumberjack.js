@@ -3,11 +3,11 @@ const Character = require('../../../kernel/view/character');
 const THREE = require('three');
 const material = require('../material/materialB');
 const materialHead = require('../material/materialA');
+const Stats = require('../../../kernel/model/stats');
 
 const WALK = 0;
 const WORK = 1;
-const WOOD = 0;
-const MEAT = 2
+const WOOD = Stats.WOOD;
 
 animationsBody = {};
 animationsHead = {};

@@ -20,6 +20,7 @@ class Provider extends Character {
             this.autoRemove();
         }
         for (let key in entity.constructor.cost) {
+            key = parseInt(key, 10);
             const need = entity.constructor.cost[key] - entity.materials[key];
             if (need > 0) {
                 neededType = key;
@@ -38,7 +39,7 @@ class Provider extends Character {
         } else { // sinon la ressource est prise dans les repo du jeu.
             const realNearestRepos = pathfinding.nearestEntities(this.ground.ENTITIES, 'Repository', neededType, entity.ax, entity.az);
             if (realNearestRepos.length) {
-                const value = realNearestRepos[0].stats.pull(neededType, Math.min(neededValue, this.capacity));
+                const value = realNearestRepos[0].pullResource(neededType, Math.min(neededValue, this.capacity));
                 this.stats.set(neededType, value);
                 this.ax = realNearestRepos[0].ax;
                 this.ay = realNearestRepos[0].ay;
