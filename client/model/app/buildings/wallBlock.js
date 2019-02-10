@@ -25,6 +25,7 @@ WallBlock.levelMax = 2;
 WallBlock.description = 'This building increase the enable places for your population';
 WallBlock.label = 'Mur';
 WallBlock.picture = '/pic/house.png';
+WallBlock.display = [];
 WallBlock.tileX = 1;
 WallBlock.tileZ = 1;
 WallBlock.walkable = 0;

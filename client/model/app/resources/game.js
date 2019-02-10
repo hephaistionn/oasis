@@ -97,4 +97,5 @@ Game.instances = [];
 Game.description = 'This building increase the enable places for your population';
 Game.label = 'Gibier';
 Game.picture = '/pic/game.png';
+Game.display = [Stats.MEAT];
 module.exports = Game;

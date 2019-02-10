@@ -113,6 +113,7 @@ Tower.levelMax = 2;
 Tower.description = 'This building increase the enable places for your population';
 Tower.label = 'Tour';
 Tower.picture = '/pic/house.png';
+Tower.display = [];
 Tower.tileX = 1;
 Tower.tileZ = 1;
 Tower.walkable = 0;

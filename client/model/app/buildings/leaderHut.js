@@ -15,6 +15,7 @@ LeaderHut.levelMax = 1;
 LeaderHut.description = 'This building increase the enable places for your population';
 LeaderHut.label = 'Hutte du chef';
 LeaderHut.picture = '/pic/house.png';
+LeaderHut.display = [];
 LeaderHut.tileX = 1;
 LeaderHut.tileZ = 1;
 LeaderHut.walkable = 0;

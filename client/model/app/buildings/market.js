@@ -16,6 +16,7 @@ Market.levelMax = 1;
 Market.description = 'This building increase the enable places for your population';
 Market.label = 'Marché';
 Market.picture = '/pic/market.png';
+Market.display = [Stats.MEAT];
 Market.tileX = 1;
 Market.tileZ = 1;
 Market.cost = {[Stats.WOOD]: 5};

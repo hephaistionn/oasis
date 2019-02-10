@@ -25,6 +25,7 @@ StoneMine.levelMax = 2;
 StoneMine.description = 'This building increase the enable places for your population';
 StoneMine.label = 'Mineur';
 StoneMine.picture = '/pic/stoneHut.png';
+StoneMine.display = [];
 StoneMine.tileX = 1;
 StoneMine.tileZ = 1;
 StoneMine.walkable = 0;

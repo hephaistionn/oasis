@@ -39,6 +39,7 @@ Bridge.levelMax = 2;
 Bridge.description = 'This building increase the enable places for your population';
 Bridge.label = 'Pont';
 Bridge.picture = '/pic/house.png';
+Bridge.display = [];
 Bridge.tileX = 1;
 Bridge.tileZ = 1;
 Bridge.walkable = 1;

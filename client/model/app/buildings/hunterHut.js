@@ -21,6 +21,7 @@ HunterHut.levelMax = 1;
 HunterHut.description = 'This building increase the enable places for your population';
 HunterHut.label = 'Chasseur';
 HunterHut.picture = '/pic/hunterHut.png';
+HunterHut.display = [];
 HunterHut.tileX = 1;
 HunterHut.tileZ = 1;
 HunterHut.walkable = 0;

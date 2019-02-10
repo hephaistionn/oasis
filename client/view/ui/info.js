@@ -24,6 +24,8 @@ module.exports = class Info {
 
         this.prepareAjustNode(model);
 
+        this.nodeStats = this.makeNode('info__stats');
+
         this.add(parent);
 
         this.update(0, model);
@@ -50,6 +52,16 @@ module.exports = class Info {
                 this.node.removeChild(this.nodeAjust);
             }
 
+
+            if(model.entity.constructor.display.length) {
+                if(this.nodeStats.parentNode)
+                    this.node.removeChild(this.nodeStats);
+                this.refreshAjustStats(model);
+                this.node.appendChild(this.nodeStats);
+            } else if(this.nodeStats.parentNode) {
+                this.node.removeChild(this.nodeStats);
+            }
+
             this.nodeTitle.textContent = model.entity.constructor.label;
             this.nodeDescription.textContent = model.entity.constructor.description;
             this.nodePicture.src = model.entity.constructor.picture;
@@ -66,7 +78,7 @@ module.exports = class Info {
     makeNode(classname, text) {
         const node = document.createElement('div');
         node.className = classname;
-        if (text)
+        if (text !== undefined)
             node.textContent = text;
         return node;
     }
@@ -92,11 +104,30 @@ module.exports = class Info {
     }
 
     refreshAjustNode(model)  {
-        let type, className;
+        let type;
         for(let i=0; i<3; i++) {
             type = model.entity.reservations[i];
             this.nodeAjustIcons[i].className = `info__ajust__item__icon icon_${type}`;
         }
+    }
+
+    refreshAjustStats(model) {
+        let value;
+        const entity = model.entity;
+        const display = model.entity.constructor.display;
+        while (this.nodeStats.firstChild) {
+            this.nodeStats.removeChild(this.nodeStats.firstChild);
+        }
+		for (let i=0,l=display.length;i<l;i++) {
+            value = entity.stats[display[i]];
+            const nodeItem = this.makeNode('info__stats__item');
+            const nodeValue =  this.makeNode('info__stats__item__value', value);
+            const nodeIcon =  this.makeNode(`info__stats__item__icon icon_${display[i]}`);
+            nodeItem.appendChild(nodeIcon);
+            nodeItem.appendChild(nodeValue);
+            this.nodeStats.appendChild(nodeItem);
+		}
+
     }
 
     add(parent) {

@@ -22,4 +22,5 @@ Tree.instances = [];
 Tree.description = 'This building increase the enable places for your population';
 Tree.label = 'Arbre';
 Tree.picture = '/pic/tree.png';
+Tree.display = [Stats.WOOD];
 module.exports = Tree;

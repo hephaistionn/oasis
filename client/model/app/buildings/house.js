@@ -6,7 +6,9 @@ class House extends Building {
 
     constructor(config, ground) {
         super(config, ground);
+        this.stats.set(Stats.POP, 2);
         this.cycleDuration = 4000;
+        ee.emit('onUpdateStats');
     }
 
     working() {
@@ -21,6 +23,7 @@ House.levelMax = 3;
 House.description = 'This building increase the enable places for your population';
 House.label = 'Hutte Basique';
 House.picture = '/pic/house.png';
+House.display = [Stats.POP];
 House.tileX = 1;
 House.tileZ = 1;
 House.walkable = 0;

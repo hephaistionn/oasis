@@ -15,6 +15,7 @@ Well.levelMax = 3;
 Well.description = 'This building increase the enable places for your population';
 Well.label = 'Puits';
 Well.picture = '/pic/well.png';
+Well.display = [];
 Well.tileX = 1;
 Well.tileZ = 1;
 Well.walkable = 0;

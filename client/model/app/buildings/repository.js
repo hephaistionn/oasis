@@ -92,15 +92,10 @@ Repository.picture = '/pic/repository.png';
 Repository.tileX = 2;
 Repository.tileZ = 2;
 Repository.walkable = 0;
-Repository.cost = {
-    [Stats.WOOD]: 5
-};
-Repository.require = {
-    inactive: 2
-};
-Repository.enabled = {
-    wood: 5
-};
+Repository.cost = {[Stats.WOOD]: 5};
+Repository.require = {inactive: 2};
+Repository.enabled = {wood: 5};
+Repository.display = [Stats.WOOD, Stats.STONE, Stats.MEAT];
 Repository.constuctDuration = 1000;
 Repository.waterLevelNeeded = 0;
 Repository.instances = [];

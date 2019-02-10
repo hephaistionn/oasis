@@ -20,4 +20,5 @@ Stone.instances = [];
 Stone.description = 'This building increase the enable places for your population';
 Stone.label = 'Pierre';
 Stone.picture = '/pic/stone.png';
+Stone.display = [Stats.STONE];
 module.exports = Stone;

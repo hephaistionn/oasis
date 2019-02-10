@@ -15,7 +15,7 @@ const Stats = class Stats {
         const available = this[TYPE]-Math.max(this[TYPE] - value, 0);
         this[TYPE] -= available;
         if (this.watched)
-            ee.emit(eventState);
+            ee.emit(eventState); 
         return available;
     }
 

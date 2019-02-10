@@ -82,6 +82,7 @@ module.exports = class ScreenMap extends Screen {
 
         this.store.watch(ENTITIES.Repository.instances);
         this.store.watch(ENTITIES.Attic.instances);
+        this.store.watch(ENTITIES.House.instances);
 
         ee.emit('onUpdateStats');
     }

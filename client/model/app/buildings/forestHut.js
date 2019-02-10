@@ -26,6 +26,7 @@ ForestHut.levelMax = 2;
 ForestHut.description = 'This building increase the enable places for your population';
 ForestHut.label = 'Bucheron';
 ForestHut.picture = '/pic/forestHut.png';
+ForestHut.display = [];
 ForestHut.tileX = 1;
 ForestHut.tileZ = 1;
 ForestHut.cost = { [Stats.WOOD]: 5 };
