@@ -14,5 +14,5 @@ window.addEventListener('load', () => {
         app.openScreen(id, params);
     });
 
-    app.openScreen('ScreenMap', {repository:{wood:10}});
+    app.openScreen('ScreenMap', {repository:{wood:15}});
 });

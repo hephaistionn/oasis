@@ -47,9 +47,9 @@ module.exports = class Repository extends Building {
 		this.meshLevel.push(THREE.getMesh('obj/buildings/foundation_00.obj', material, model._id));
 		this.meshLevel.push(THREE.getMesh('obj/buildings/repository_00.obj', material, model._id));
 		this.draft = THREE.getMesh('obj/buildings/repository_00.obj', materialSelect);
+		this.blocksType = new Uint8Array(model.maxBlock);
+        this.blocksValue = new Uint8Array(model.maxBlock);
 		this.resources = [];
-		this.blockTypeCount = new Map();
-		this.indexblock = 0;
 	}
 
 	update(dt, model) {
@@ -63,48 +63,37 @@ module.exports = class Repository extends Building {
 	}
 
 	updateResources(model) {
-		let i;
-		for (i = 0; i < this.resources.length; i++) {
-			if (this.resources[i]) {
-				this.currentMesh.remove(this.resources[i]);
-				this.resources[i] = null;
-			}
-		}
-
-		for (let key of this.blockTypeCount.keys()) {
-			this.blockTypeCount.set(key, 1);
-		}
-
-		let count, type, rest, matrixWorld;
-		for (i = 0; i < model.maxBlock; i++) {
+		let type, value, matrixWorld;
+		for (let i = 0; i < model.maxBlock; i++) {
 			type = model.blocksType[i];
+			value = model.blocksValue[i];
 
-			if (type === 0) { // block vide
-				continue;
-			}
+			if(this.blocksType[i] !== type || this.blocksValue[i] !== value) {
+				if(this.resources[i]) {
+					this.currentMesh.remove(this.resources[i]);
+					this.resources[i] = null;
+				}
+				this.blocksType[i] === type;
+				this.blocksValue[i] === value;
 
-			count = this.blockTypeCount.get(type)||1;
-			if ( model.stats[type] / (count * model.maxByBlock) < 1) { // block non plein
-				rest = model.stats[type] % model.maxByBlock;
-				if (rest > 8) {
+				if(value === 16) {
+					this.resources[i] = THREE.getMesh(obj[type][3], material);
+				} else if (value > 8) {
 					this.resources[i] = THREE.getMesh(obj[type][2], material);
-				} else if (rest > 4) {
+				} else if (value > 4) {
 					this.resources[i] = THREE.getMesh(obj[type][1], material);
-				} else if (rest > 0) {
+				} else if(value > 0) {
 					this.resources[i] = THREE.getMesh(obj[type][0], material);
 				}
-			} else { // block plein
-				this.resources[i] = THREE.getMesh(obj[type][3], material);
+
+				if(value > 0) {
+					matrixWorld = this.resources[i].matrixWorld.elements;
+					matrixWorld[12] = blockPosX[i] + model.ax;
+					matrixWorld[14] = blockPosZ[i] + model.az;
+					matrixWorld[13] = 0.5 + model.ay;
+					this.currentMesh.add(this.resources[i]);
+				}	
 			}
-
-			matrixWorld = this.resources[i].matrixWorld.elements;
-			matrixWorld[12] = blockPosX[i] + model.ax;
-			matrixWorld[14] = blockPosZ[i] + model.az;
-			matrixWorld[13] = 0.5 + model.ay;
-			this.currentMesh.add(this.resources[i]);
-
-			this.blockTypeCount.set(type, count+1);
-
 		}
 	}
 

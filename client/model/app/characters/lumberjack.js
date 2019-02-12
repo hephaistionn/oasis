@@ -8,8 +8,8 @@ const Repository = 'Repository';
 class Lumberjack extends Character {
     constructor(params, ground) {
         super(params, ground);
-        this.capacity = 5;
-        this.workingDuration = 4000; 
+        this.capacity = 10;
+        this.workingDuration = 500; 
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
         this.targets.push({ entity: Repository, resource: Stats.WOOD, put: true });
         this.targets.push({ id: this.origin });

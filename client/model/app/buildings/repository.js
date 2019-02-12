@@ -8,78 +8,89 @@ class Repository extends Building {
         super(config, ground);
         this.maxByBlock = 16;
         this.maxBlock = 15;
-        this.isFull = false;
-        this.isFullType = {};
+        this.full = false;
+        this.fullType = {};
         this.blocksType = new Uint8Array(this.maxBlock);
+        this.blocksValue = new Uint8Array(this.maxBlock);
+        this.blocksTypeForce = new Uint8Array(this.maxBlock);
+    }
 
-        this.reservations = [-1,-1,-1];
+    updateFullStatus(type) {
+        this.fullType[type] = true;
+        this.full = true;
+        for (let i=0; i < this.maxBlock; i++) {
+            if(this.blocksType[i] === type && this.blocksValue[i]<this.maxByBlock  && (this.blocksTypeForce[i] === type || this.blocksTypeForce[i] === 0)) {
+                this.fullType[type] = false;
+            }else if( this.blocksType[i] === 0) {
+                this.fullType[type] = false;
+                this.full = false;
+            }else  if(this.blocksValue[i] === 0)  {
+                this.fullType[this.blocksType[i]] = false;
+            }
+        }
     }
 
     updateBlocks(type, value) {
-        const targetValue = this.stats[type] + value;
-
-        let availableBlocks = 0;
-        let freeBlockIndex = -1;
-        let i = 0;
-
-        for (i; i < this.maxBlock; i++) {
-            if (this.blocksType[i] === type) {
-                availableBlocks++;
-            } else if (this.blocksType[i] === 0) {
-                freeBlockIndex = i;
-                break;
-            }
-        }
-
-        const neededBlocks = Math.ceil(targetValue / this.maxByBlock);
-        let missingBlocks = neededBlocks - availableBlocks;
-        this.isFullType[type] = false;
-        while (missingBlocks !== 0) {
-            if (missingBlocks < 0) {
-                i = this.blocksType.lastIndexOf(type);
-                this.blocksType[i] = 0;
-                missingBlocks++;
-                availableBlocks--;
-            } else if (missingBlocks > 0) {
-                if (freeBlockIndex !== -1) {
-                    this.blocksType[i] = type;
-                    missingBlocks--;
-                    availableBlocks++;
-                    freeBlockIndex = this.blocksType.indexOf(0);
-                } else { //aucune place disponible
-                    const rest = targetValue - availableBlocks * this.maxByBlock;
-                    missingBlocks = 0;
-                    return value - rest;
+        let restValue = value, available;
+        let sum = 0;
+        for (let i = 0; i < this.maxBlock; i++) {
+            if (this.blocksType[i] === type || this.blocksType[i] === 0) {
+                if(restValue > 0) {
+                    if(this.blocksTypeForce[i] === type || this.blocksTypeForce[i] === 0) {
+                        available = Math.min(this.maxByBlock-this.blocksValue[i], restValue);
+                        this.blocksValue[i] += available; 
+                        this.blocksType[i] = type;// type reservé
+                        restValue -= available;
+                    }
+                } else if(restValue < 0) {
+                    available = Math.min(this.blocksValue[i], -restValue);
+                    this.blocksValue[i] -= available; 
+                    restValue += available;
+                    if(this.blocksValue[i] === 0) {
+                        this.blocksType[i] = this.blocksTypeForce[i]
+                    }
                 }
+                sum+=this.blocksValue[i];
             }
         }
 
-        return value;
+        if(this.stats[type] < sum) {
+            this.stats.push(type, sum-this.stats[type]);
+        } else {
+            return this.stats.pull(type, this.stats[type]-sum);
+        }
     }
 
     pushResource(type, value) {
-        const availableValue = this.updateBlocks(type, value);
-        if (this.blocksType.lastIndexOf(0) === -1){// plus de block libre
-            this.isFull = true;
-            if(availableValue <= value) {// plus de place dans les block occupés pas ce materiaux
-                this.isFullType[type] = true;
-            }
-        }
-        this.stats.push(type, availableValue);
+        this.updateBlocks(type, value);
+        this.updateFullStatus(type);
         this.updated = true;
     }
 
     pullResource(type, value) {
-        const availableValue = this.stats.pull(type, value);
-        this.updateBlocks(type, -availableValue);
-        this.isFullType[type] = false;
-        this.isFull = this.blocksType.lastIndexOf(0) === -1;
+        const gettedValue = this.updateBlocks(type, -value);
+        this.updateFullStatus(type);
         this.updated = true;
-        return availableValue;
+        return gettedValue;
+        
     }
 
     ajustResources(index, type) {
-        this.reservations[index] = type;
+        const erased = {};
+        let k;
+        for(let i=0; i<5; i++) {
+            k = i+index*5
+            this.blocksTypeForce[k] = type;
+            if(this.blocksType[k] === 0 || this.blocksType[k] === type || this.blocksValue[k]===0) {
+                this.blocksType[k] = type;
+            } else {
+                erased[this.blocksType[k]] = true;
+            }
+        }
+        this.updateFullStatus(type);
+        for(let key in erased) {
+            this.updateFullStatus(key);
+        }
         this.updated = true;
     }
 }

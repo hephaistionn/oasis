@@ -44,7 +44,7 @@ module.exports = class Info {
                 this.node.removeChild(this.buttonUpgrade);
             }
 
-            if(model.entity.reservations) {
+            if(model.entity.ajustResources) {
                 this.refreshAjustNode(model);
                 if(!this.nodeAjust.parentNode)
                     this.node.appendChild(this.nodeAjust);
@@ -106,7 +106,7 @@ module.exports = class Info {
     refreshAjustNode(model)  {
         let type;
         for(let i=0; i<3; i++) {
-            type = model.entity.reservations[i];
+            type = model.entity.blocksTypeForce[i*5];
             this.nodeAjustIcons[i].className = `info__ajust__item__icon icon_${type}`;
         }
     }

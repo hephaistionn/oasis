@@ -2,7 +2,7 @@ const ee = require('../../kernel/tools/eventemitter');
 const Stats = require('../../kernel/model/stats');
 
 const ajustableType = [
-    -1,
+    0,
     Stats.WOOD,
     Stats.STONE,
     Stats.MEAT

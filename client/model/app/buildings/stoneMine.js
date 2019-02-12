@@ -6,7 +6,7 @@ class StoneMine extends Building {
 
     constructor(config, ground) {
         super(config, ground);
-        this.cycleDuration = 5000;
+        this.cycleDuration = 1000;
     }
 
     working() {
