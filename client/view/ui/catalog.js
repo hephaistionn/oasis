@@ -12,9 +12,6 @@ module.exports = class Catalog {
         this.nodeCategories = this.makeNode('catalog__categories');
         this.node.appendChild(this.nodeCategories);
 
-        this.nodeListBackground = this.makeNode('catalog__listbackground');
-        this.node.appendChild(this.nodeListBackground);
-
         this.nodeList = [];
         for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
@@ -30,7 +27,7 @@ module.exports = class Catalog {
 
         this.buttonClose = this.makeNode('catalog__closer');
         this.buttonClose.onclick = model.close.bind(model);
-        this.nodeListBackground.appendChild(this.buttonClose);
+        this.node.appendChild(this.buttonClose);
 
         this.add(parent);
 
@@ -39,7 +36,6 @@ module.exports = class Catalog {
 
     update(dt, model) {
         this.nodeCategories.style.display = none;
-        this.nodeListBackground.style.display = none;
         this.nodeList[0].style.display = none;
         this.nodeList[1].style.display = none;
         this.nodeList[2].style.display = none;
@@ -49,11 +45,12 @@ module.exports = class Catalog {
             this.buttonOpen.style.display = none;
             this.buttonClose.style.display = empty;
             this.nodeCategories.style.display = empty;
-            this.nodeListBackground.style.display = empty;
+            this.buttonClose.className = this.buttonClose.className.replace(' listmode', '');
             for (let i = 0; i < model.categories.length; i++) {
                 if (model.categories[i].displayed) {
                     this.nodeList[i].style.display = empty;
                     this.nodeCategories.style.display = none;
+                    this.buttonClose.className+=' listmode'
                     this.refreshItems(i, model);
                 }
             }
@@ -107,8 +104,8 @@ module.exports = class Catalog {
         const nodeItemPic = this.makeNode('catalog__list__item__pic');
         nodeItemPic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
-        nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemPic);
+        nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeCost);
         nodeItem.onclick = model.select.bind(model, item);
         return nodeItem;
@@ -119,8 +116,8 @@ module.exports = class Catalog {
         if (item) {
             const cost =  item.cost;
             for (let key in cost) {
+                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`));
                 nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__value  code_${key}`, cost[key]));
-                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`, cost[key]));
             }
         }
         return nodeCost;

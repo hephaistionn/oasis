@@ -25,7 +25,7 @@ class Lumberjack extends Character {
             const place = entity.getWorkerSlot();
             this.move(place.x, place.y, place.z, place.rotY);
         } else if (entity.constructor.name === ForestHut){
-            entity.working()
+            entity.working();
         }
     }
 
