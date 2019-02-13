@@ -19,7 +19,7 @@ function nearestEntities(ENTITIES, entity, resource, x, z, putResource) {
     let instances;
     if (resource)  {
         if (putResource) {
-            instances = ENTITIES[entity].instances.filter(instance => instance.fullType[resource]===false || (instance.full === false));
+            instances = ENTITIES[entity].instances.filter(instance => instance.limitBlock[resource]===false || instance.fullBlock[resource] === false );
         } else {
             instances = ENTITIES[entity].instances.filter(instance => instance.stats[resource]);
         }

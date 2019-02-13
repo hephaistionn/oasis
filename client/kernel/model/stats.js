@@ -41,5 +41,6 @@ Stats.WOOD = 1;
 Stats.STONE = 2;
 Stats.MEAT = 3;
 Stats.POP = 4;
+Stats.materialTypes = [0, Stats.WOOD, Stats.STONE, Stats.MEAT];
 
 module.exports = Stats;

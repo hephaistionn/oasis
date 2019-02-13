@@ -119,6 +119,10 @@ class App {
 
     _update(dt) {
         this.model.updateScreen(dt);
+        if(this.selected && this.selected.updated) {
+            ee.emit('selectedUpdated');
+        }
+
         this.view.update(dt, this.model);
     }
 

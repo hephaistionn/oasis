@@ -106,7 +106,7 @@ module.exports = class Info {
     refreshAjustNode(model)  {
         let type;
         for(let i=0; i<3; i++) {
-            type = model.entity.blocksTypeForce[i*5];
+            type = model.entity.currentType[i];
             this.nodeAjustIcons[i].className = `info__ajust__item__icon icon_${type}`;
         }
     }

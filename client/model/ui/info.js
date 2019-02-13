@@ -1,12 +1,6 @@
 const ee = require('../../kernel/tools/eventemitter');
 const Stats = require('../../kernel/model/stats');
 
-const ajustableType = [
-    0,
-    Stats.WOOD,
-    Stats.STONE,
-    Stats.MEAT
-];
 
 class Info {
 
@@ -15,10 +9,9 @@ class Info {
         this.entity = null;
         this.opened = false;
         this.entities = entities;
-        this.ajustResources = ajustableType;
-        this.ajustCurrentFocus = [0, 0, 0]
         this._open = this.open.bind(this);
         this._close = this.close.bind(this);
+        this._refresh = this.refresh.bind(this);
         ee.on('select', this._open);
         ee.on('mouseClick', this._close);
         ee.on('mouseDownRight', this._close);
@@ -28,14 +21,17 @@ class Info {
         const entity = this.entities.get(entityId);
         this.entity = entity;
         this.opened = true;
-        this.refresh(entity);
+        this.updated = true;
+        ee.on('selectedUpdated', this._refresh);
     }
 
     refresh(entity) {
+        console.log('refresh')
         this.updated = true;
     }
 
     close() {
+        ee.off('selectedUpdated', this._refresh);
         this.opened = false;
         this.updated = true;
     }
@@ -52,18 +48,20 @@ class Info {
     }
 
     increaseAjut(index) {
-        this.ajustCurrentFocus[index]++;
-        if(this.ajustCurrentFocus[index]>this.ajustResources.length-1) this.ajustCurrentFocus[index] = 0;
-        const type = this.ajustResources[this.ajustCurrentFocus[index]];
-        this.entity.ajustResources(index, type);
+        const types = Stats.materialTypes;
+        let i = types.indexOf(this.entity.currentType[index]);
+        i++;
+        if(i>types.length-1) i = 0;
+        this.entity.ajustResources(index,types[i]);
         this.updated = true;
     }
 
     descreaseAjut(index) {
-        this.ajustCurrentFocus[index]--;
-        if(this.ajustCurrentFocus[index]<0) this.ajustCurrentFocus[index] = this.ajustResources.length-1;
-        const type = this.ajustResources[this.ajustCurrentFocus[index]];
-        this.entity.ajustResources(index, type);
+        const types = Stats.materialTypes;
+        let i = types.indexOf(this.entity.currentType[index]);
+        i--;
+        if(i<0) i = types.length-1;
+        this.entity.ajustResources(index,types[i]);
         this.updated = true;
     }
 
