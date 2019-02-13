@@ -26,6 +26,8 @@ module.exports = class Info {
 
         this.nodeStats = this.makeNode('info__stats');
 
+        this.nodeMaterials = this.makeNode('info__materials');
+
         this.add(parent);
 
         this.update(0, model);
@@ -52,14 +54,24 @@ module.exports = class Info {
                 this.node.removeChild(this.nodeAjust);
             }
 
+            if(model.entity.level !== undefined && model.entity.level === 0) {
+                if(this.nodeMaterials.parentNode) {
+                    this.node.removeChild(this.nodeMaterials);
+                }
+                this.refreshMaterial(model);
+                this.node.appendChild(this.nodeMaterials);
+            } else if(this.nodeMaterials.parentNode) {
+                this.node.removeChild(this.nodeMaterials);
+            }
 
-            if(model.entity.constructor.display.length) {
-                if(this.nodeStats.parentNode)
-                    this.node.removeChild(this.nodeStats);
-                this.refreshAjustStats(model);
-                this.node.appendChild(this.nodeStats);
+            
+            if(model.entity.constructor.display.length && !this.nodeMaterials.parentNode) {
+                    if(this.nodeStats.parentNode)
+                        this.node.removeChild(this.nodeStats);
+                    this.refreshStats(model);
+                    this.node.appendChild(this.nodeStats);
             } else if(this.nodeStats.parentNode) {
-                this.node.removeChild(this.nodeStats);
+                    this.node.removeChild(this.nodeStats);
             }
 
             this.nodeTitle.textContent = model.entity.constructor.label;
@@ -111,7 +123,7 @@ module.exports = class Info {
         }
     }
 
-    refreshAjustStats(model) {
+    refreshStats(model) {
         let value;
         const entity = model.entity;
         const display = model.entity.constructor.display;
@@ -128,6 +140,26 @@ module.exports = class Info {
             this.nodeStats.appendChild(nodeItem);
 		}
 
+    }
+
+    refreshMaterial(model) {
+        const entity = model.entity;
+        const materials = entity.materials;
+        const costs = entity.constructor.cost;
+        while (this.nodeMaterials.firstChild) {
+            this.nodeMaterials.removeChild(this.nodeMaterials.firstChild);
+        }
+        const nodeLabel =  this.makeNode('info__materials__label', 'Construction en cours');
+        this.nodeMaterials.appendChild(nodeLabel);
+        for (let key in costs) {
+            const nodeItem = this.makeNode('info__materials__item');
+            const nodeValue =  this.makeNode('info__materials__item__value', materials[key] + '/' +costs[key]);
+            const nodeIcon =  this.makeNode(`info__materials__item__icon icon_${key}`);
+            nodeItem.appendChild(nodeIcon);
+            nodeItem.appendChild(nodeValue);
+            this.nodeMaterials.appendChild(nodeItem);
+
+        }
     }
 
     add(parent) {

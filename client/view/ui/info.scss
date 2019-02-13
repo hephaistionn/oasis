@@ -132,10 +132,45 @@
 
     &__stats {
         position: absolute;
+        top: 104px;
+        left: 221px;
+        width: 340px;
+        height: 112px;
+        &__item {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            margin-bottom: 0;
+            margin-right: 5px;
+            &__value {
+                display: inline-block;
+                vertical-align: top;
+                height: 30px;
+                line-height: 30px;
+                margin-left: 3px;
+                color: #5c3e2d;
+            }
+            &__icon {
+                display: inline-block;
+            }
+        }
+    }
+
+
+    &__materials {
+        position: absolute;
         top: 97px;
         left: 221px;
         width: 340px;
         height: 112px;
+        &__label {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin: 12px;
+            margin-left: 0;
+            color: #5c3e2d;
+        }
         &__item {
             position: relative;
             display: inline-block;
