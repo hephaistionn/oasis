@@ -10,6 +10,7 @@ const COMPONENTS = {
     Stone: require('../../view/app/resources/stone'),
     Tree: require('../../view/app/resources/tree'),
     Catalog: require('../../view/ui/catalog'),
+    Menu: require('../../view/ui/menu'),
     Info: require('../../view/ui/info'),
     Stats: require('../../view/ui/stats'),
     Attic: require('../../view/app/building/attic'),

@@ -2,9 +2,6 @@ const Building = require('../../../kernel/model/building');
 const ee = require('../../../kernel/tools/eventemitter');
 const Stats = require('../../../kernel/model/stats');
 
-
-
-
 class Repository extends Building {
 
     constructor(config, ground) {

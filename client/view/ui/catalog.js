@@ -9,15 +9,17 @@ module.exports = class Catalog {
 
         this.node = this.makeNode('catalog');
 
-        this.nodeCategories = this.makeNode('catalog__categories');
+        this.currentCategory = 3;
+
+        this.nodeCategories = this.makeNode('catalog__categories v');
         this.node.appendChild(this.nodeCategories);
 
         this.nodeList = [];
         for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
             const categoryNodes = this.makeCategory(category, i, model);
-            this.nodeCategories.appendChild(categoryNodes.button);
             this.node.appendChild(categoryNodes.list);
+            this.nodeCategories.appendChild(categoryNodes.button);
             this.nodeList.push(categoryNodes.list);
         }
 
@@ -35,28 +37,27 @@ module.exports = class Catalog {
     }
 
     update(dt, model) {
-        this.nodeCategories.style.display = none;
-        this.nodeList[0].style.display = none;
-        this.nodeList[1].style.display = none;
-        this.nodeList[2].style.display = none;
-        this.nodeList[3].style.display = none;
 
         if (model.displayed) {
-            this.buttonOpen.style.display = none;
-            this.buttonClose.style.display = empty;
-            this.nodeCategories.style.display = empty;
-            this.buttonClose.className = this.buttonClose.className.replace(' listmode', '');
-            for (let i = 0; i < model.categories.length; i++) {
-                if (model.categories[i].displayed) {
-                    this.nodeList[i].style.display = empty;
-                    this.nodeCategories.style.display = none;
-                    this.buttonClose.className+=' listmode'
-                    this.refreshItems(i, model);
-                }
+            if(this.buttonOpen.style.display !== none) {
+                this.buttonOpen.style.display = none;
+                this.buttonClose.style.display = empty;
             }
+            if(this.nodeCategories.style.display !== empty) {
+                this.nodeCategories.style.display = empty;
+            }
+            if(this.nodeList[model.currentCategory].style.display !== empty) {
+                this.nodeList[this.currentCategory].style.display = none;
+                this.currentCategory = model.currentCategory;
+                this.nodeList[model.currentCategory].style.display = empty;
+                this.nodeCategories.className = this.nodeCategories.className.substring(0,21) + model.currentCategory;
+            }
+            this.refreshItems(model.currentCategory, model); 
         } else {
             this.buttonOpen.style.display = empty;
             this.buttonClose.style.display = none;
+            this.nodeCategories.style.display = none;
+            this.nodeList[this.currentCategory].style.display = none;
         }
     }
 
@@ -79,7 +80,7 @@ module.exports = class Catalog {
     }
 
     makeCategory(category, index, model) {
-        const buttonNode = this.makeNode('catalog__categories__category');
+        const buttonNode = this.makeNode('catalog__categories__category w'+index);
         const labelNode = this.makeNode('catalog__categories__category__label', category.label);
         buttonNode.appendChild(labelNode);
         buttonNode.onclick = model.openCategory.bind(model, index);
@@ -95,6 +96,7 @@ module.exports = class Catalog {
             listNode.scrollLeft -= (delta * 100); e.preventDefault();
         }
 
+        listNode.style.display = none;
         return { button: buttonNode, list: listNode };
     }
 
@@ -102,10 +104,12 @@ module.exports = class Catalog {
         const nodeItem = this.makeNode('catalog__list__item');
         const nodeItemLabel = this.makeNode('catalog__list__item__label', item.label);
         const nodeItemPic = this.makeNode('catalog__list__item__pic');
+        const nodeItemDesc = this.makeNode('catalog__list__item__desc', item.description);
         nodeItemPic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
-        nodeItem.appendChild(nodeItemPic);
         nodeItem.appendChild(nodeItemLabel);
+        nodeItem.appendChild(nodeItemPic);
+        nodeItem.appendChild(nodeItemDesc);
         nodeItem.appendChild(nodeCost);
         nodeItem.onclick = model.select.bind(model, item);
         return nodeItem;
@@ -116,8 +120,10 @@ module.exports = class Catalog {
         if (item) {
             const cost =  item.cost;
             for (let key in cost) {
-                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`));
-                nodeCost.appendChild(this.makeNode(`catalog__list__item__cost__value  code_${key}`, cost[key]));
+                const nodeItem = this.makeNode(`catalog__list__item__cost__item code_${key}`);
+                nodeItem.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`));
+                nodeItem.appendChild(this.makeNode(`catalog__list__item__cost__value`, cost[key]));
+                nodeCost.appendChild(nodeItem);
             }
         }
         return nodeCost;

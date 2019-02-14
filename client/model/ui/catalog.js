@@ -5,11 +5,11 @@ class Catalog {
     constructor(config, ENTITIES, store) {
         this.ENTITIES = ENTITIES;
         this.store = store;
+        this.currentCategory = 0;
 
         this.categories = [
             {
                 label: 'Civil',
-                displayed: false,
                 list: [
                     ENTITIES['House'],
                     ENTITIES['LeaderHut'],
@@ -19,7 +19,6 @@ class Catalog {
             },
             {
                 label: 'Ressources',
-                displayed: false,
                 list: [
                     ENTITIES['ForestHut'],
                     ENTITIES['HunterHut'],
@@ -28,7 +27,6 @@ class Catalog {
             },
             {
                 label: 'Infrastructure',
-                displayed: false,
                 list: [
                     ENTITIES['Repository'],
                     ENTITIES['Attic'],
@@ -41,14 +39,15 @@ class Catalog {
             },
             {
                 label: 'Militaire',
-                displayed: false,
                 list: [
                     ENTITIES['Barrack'],
                     ENTITIES['Tower'],
                     {name: 'Wall', level:0, label: 'mur de bois',  picture: '/pic/peon.png'}
                 ]
             }
-        ]
+        ];
+
+        this._refresh = this.refresh.bind(this);
 
         this.displayed = false;
         this.updated = false;
@@ -58,24 +57,26 @@ class Catalog {
     open() {
         this.displayed = true;
         this.updated = true;
+        ee.on('onUpdateStats', this._refresh);
     }
 
     openCategory(index) {
-        this.categories[index].displayed = true;
+        this.currentCategory = index;
+        this.updated = true;
+    }
+
+    refresh(entity) {
         this.updated = true;
     }
 
     close() {
+        ee.off('onUpdateStats', this._refresh);
         this.displayed = false;
-        this.categories[0].displayed = false;
-        this.categories[1].displayed = false;
-        this.categories[2].displayed = false;
-        this.categories[3].displayed = false;
         this.updated = true;
     }
 
     select(item) {
-        this.close();
+        //this.close();
         switch (item.name) {
             case 'Canal':
                 ee.emit('draftCanal', { drafted: true });

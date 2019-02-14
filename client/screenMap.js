@@ -5,6 +5,7 @@ const Light = require('./model/app/light');
 const Ground = require('./model/app/ground');
 const pixelMap = require('./kernel/tools/pixelmap');
 const Catalog = require('./model/ui/catalog');
+const Menu = require('./model/ui/menu');
 const Info = require('./model/ui/info');
 const Stats = require('./model/ui/stats');
 const Store = require('./kernel/tools/store');
@@ -60,6 +61,7 @@ module.exports = class ScreenMap extends Screen {
         this.canal = new Canal({}, this.ground, this.store);
         this.wall = new Wall({}, this.ground, this.store);
         this.catalog = new Catalog(mapConfig, ENTITIES, this.store);
+        this.menu = new Menu(mapConfig, this.store);
         this.info = new Info({}, this._components);
         this.stats = new Stats({}, this.store);
         this.remover = new Remover({}, this.ground);
@@ -71,6 +73,7 @@ module.exports = class ScreenMap extends Screen {
         this.add(this.light);
         this.add(this.ground);
         this.add(this.catalog);
+        this.add(this.menu);
         this.add(this.info);
         this.add(this.stats);
         this.add(this.road);
