@@ -12,7 +12,7 @@ class Well extends Building {
 Well.selectable = true;
 Well.removable = true;
 Well.levelMax = 3;
-Well.description = 'This building increase the enable places for your population';
+Well.description = 'Distribution de l\'eau';
 Well.label = 'Puits';
 Well.picture = '/pic/well.png';
 Well.display = [];

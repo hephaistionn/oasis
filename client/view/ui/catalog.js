@@ -14,6 +14,16 @@ module.exports = class Catalog {
         this.nodeCategories = this.makeNode('catalog__categories v');
         this.node.appendChild(this.nodeCategories);
 
+        this.background = this.makeNode('catalog__background');
+        ///const backgroundLeft  = this.makeNode('catalog__background__left');
+        //const backgroundRight  = this.makeNode('catalog__background__right');
+        //const backgroundMid  = this.makeNode('catalog__background__mid');
+        //this.background.appendChild(backgroundMid);
+        //this.background.appendChild(backgroundLeft);
+        //this.background.appendChild(backgroundRight);
+
+        this.node.appendChild(this.background);
+
         this.nodeList = [];
         for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
@@ -23,11 +33,14 @@ module.exports = class Catalog {
             this.nodeList.push(categoryNodes.list);
         }
 
+        const buttonLogo = this.makeNode('catalog__opener__logo');
         this.buttonOpen = this.makeNode('catalog__opener');
+        this.buttonOpen.appendChild(buttonLogo);
         this.buttonOpen.onclick = model.open.bind(model);
         this.node.appendChild(this.buttonOpen);
 
         this.buttonClose = this.makeNode('catalog__closer');
+
         this.buttonClose.onclick = model.close.bind(model);
         this.node.appendChild(this.buttonClose);
 
@@ -45,6 +58,7 @@ module.exports = class Catalog {
             }
             if(this.nodeCategories.style.display !== empty) {
                 this.nodeCategories.style.display = empty;
+                this.background.style.display = empty;
             }
             if(this.nodeList[model.currentCategory].style.display !== empty) {
                 this.nodeList[this.currentCategory].style.display = none;
@@ -58,6 +72,7 @@ module.exports = class Catalog {
             this.buttonClose.style.display = none;
             this.nodeCategories.style.display = none;
             this.nodeList[this.currentCategory].style.display = none;
+            this.background.style.display = none;
         }
     }
 

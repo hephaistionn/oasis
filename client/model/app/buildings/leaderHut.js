@@ -12,8 +12,8 @@ class LeaderHut extends Building {
 LeaderHut.selectable = true;
 LeaderHut.removable = true;
 LeaderHut.levelMax = 1;
-LeaderHut.description = 'This building increase the enable places for your population';
-LeaderHut.label = 'Hutte du chef';
+LeaderHut.description = 'Augmente la population limite';
+LeaderHut.label = 'Hutte Alpha';
 LeaderHut.picture = '/pic/house.png';
 LeaderHut.display = [];
 LeaderHut.tileX = 1;

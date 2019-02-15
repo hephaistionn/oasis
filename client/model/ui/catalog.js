@@ -48,6 +48,7 @@ class Catalog {
         ];
 
         this._refresh = this.refresh.bind(this);
+        this._close = this.close.bind(this);
 
         this.displayed = false;
         this.updated = false;
@@ -55,9 +56,11 @@ class Catalog {
     }
 
     open() {
+        ee.emit('onOpenPanel');
         this.displayed = true;
         this.updated = true;
         ee.on('onUpdateStats', this._refresh);
+        ee.on('onOpenPanel', this._close);
     }
 
     openCategory(index) {
@@ -71,6 +74,7 @@ class Catalog {
 
     close() {
         ee.off('onUpdateStats', this._refresh);
+        ee.off('onOpenPanel', this._close);
         this.displayed = false;
         this.updated = true;
     }

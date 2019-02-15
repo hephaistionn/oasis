@@ -7,16 +7,20 @@ class Menu {
         this.displayed = false;
         this.updated = false;
         this._id = 6;
+        this._close = this.close.bind(this);
     }
 
     open() {
+        ee.emit('onOpenPanel');
         this.displayed = true;
         this.updated = true;
+        ee.on('onOpenPanel', this._close);
     }
 
 
 
     close() {
+        ee.off('onOpenPanel', this._close);
         this.displayed = false;
         this.updated = true;
     }

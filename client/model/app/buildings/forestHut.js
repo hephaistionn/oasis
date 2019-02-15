@@ -23,7 +23,7 @@ class ForestHut extends Building {
 ForestHut.selectable = true;
 ForestHut.removable = true;
 ForestHut.levelMax = 2;
-ForestHut.description = 'This building increase the enable places for your population';
+ForestHut.description = 'Increase the enable places for your population';
 ForestHut.label = 'Bucheron';
 ForestHut.picture = '/pic/forestHut.png';
 ForestHut.display = [];

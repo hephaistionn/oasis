@@ -20,7 +20,7 @@ class House extends Building {
 House.selectable = true;
 House.removable = true;
 House.levelMax = 3;
-House.description = 'This building increase the enable places for your population';
+House.description = 'Augmente la population';
 House.label = 'Hutte Basique';
 House.picture = '/pic/house.png';
 House.display = [Stats.POP];

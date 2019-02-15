@@ -156,7 +156,7 @@ class Repository extends Building {
 Repository.selectable = true;
 Repository.removable = true;
 Repository.levelMax = 1;
-Repository.description = 'This building increase the enable places for your population';
+Repository.description = 'Increase the enable places for your population';
 Repository.label = 'Entrepot';
 Repository.picture = '/pic/repository.png';
 Repository.tileX = 2;

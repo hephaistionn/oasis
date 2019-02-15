@@ -22,7 +22,7 @@ class StoneMine extends Building {
 StoneMine.selectable = true;
 StoneMine.removable = true;
 StoneMine.levelMax = 2;
-StoneMine.description = 'This building increase the enable places for your population';
+StoneMine.description = 'Increase the enable places for your population';
 StoneMine.label = 'Mineur';
 StoneMine.picture = '/pic/stoneHut.png';
 StoneMine.display = [];

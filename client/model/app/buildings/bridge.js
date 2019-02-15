@@ -36,7 +36,7 @@ class Bridge extends Building {
 Bridge.selectable = true;
 Bridge.removable = true;
 Bridge.levelMax = 2;
-Bridge.description = 'This building increase the enable places for your population';
+Bridge.description = 'Increase the enable places for your population';
 Bridge.label = 'Pont';
 Bridge.picture = '/pic/house.png';
 Bridge.display = [];

@@ -110,7 +110,7 @@ class Tower extends Building {
 Tower.selectable = true;
 Tower.removable = true;
 Tower.levelMax = 2;
-Tower.description = 'This building increase the enable places for your population';
+Tower.description = 'Increase the enable places for your population';
 Tower.label = 'Tour';
 Tower.picture = '/pic/house.png';
 Tower.display = [];

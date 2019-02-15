@@ -18,22 +18,25 @@ class Info {
     }
 
     open(entityId) {
+        ee.emit('onOpenPanel');
         const entity = this.entities.get(entityId);
         this.entity = entity;
         this.opened = true;
         this.updated = true;
+        ee.on('onOpenPanel', this._close);
         ee.on('selectedUpdated', this._refresh);
     }
 
     refresh(entity) {
-        console.log('refresh')
         this.updated = true;
     }
 
     close() {
         ee.off('selectedUpdated', this._refresh);
+        ee.off('onOpenPanel', this._close);
         this.opened = false;
         this.updated = true;
+
     }
 
     remove() {

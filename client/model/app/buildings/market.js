@@ -13,7 +13,7 @@ class Market extends Building {
 Market.selectable = true;
 Market.removable = true;
 Market.levelMax = 1;
-Market.description = 'This building increase the enable places for your population';
+Market.description = 'Distribution des ressources';
 Market.label = 'Marché';
 Market.picture = '/pic/market.png';
 Market.display = [Stats.MEAT];
