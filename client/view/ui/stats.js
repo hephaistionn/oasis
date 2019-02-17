@@ -10,7 +10,7 @@ module.exports = class State {
             stat = model.stats[key];
 
             const nodeItem = document.createElement('div');
-            nodeItem.className = 'stats__item';
+            nodeItem.className = `stats__item item_${stat.code}`;
 
             const nodelabel = document.createElement('div');
             nodelabel.className = `stats__item__icon icon_${stat.code}`;

@@ -9,7 +9,7 @@ module.exports = class Catalog {
 
         this.node = this.makeNode('catalog');
 
-        this.currentCategory = 3;
+        this.currentCategory = 2;
 
         this.nodeCategories = this.makeNode('catalog__categories v');
         this.node.appendChild(this.nodeCategories);
@@ -33,14 +33,14 @@ module.exports = class Catalog {
             this.nodeList.push(categoryNodes.list);
         }
 
-        const buttonLogo = this.makeNode('catalog__opener__logo');
         this.buttonOpen = this.makeNode('catalog__opener');
-        this.buttonOpen.appendChild(buttonLogo);
         this.buttonOpen.onclick = model.open.bind(model);
         this.node.appendChild(this.buttonOpen);
 
-        this.buttonClose = this.makeNode('catalog__closer');
 
+        const closeLogo = this.makeNode('catalog__closer__logo');
+        this.buttonClose = this.makeNode('catalog__closer');
+        this.buttonClose.appendChild(closeLogo);
         this.buttonClose.onclick = model.close.bind(model);
         this.node.appendChild(this.buttonClose);
 
@@ -96,7 +96,7 @@ module.exports = class Catalog {
 
     makeCategory(category, index, model) {
         const buttonNode = this.makeNode('catalog__categories__category w'+index);
-        const labelNode = this.makeNode('catalog__categories__category__label', category.label);
+        const labelNode = this.makeNode('catalog__categories__category__label');
         buttonNode.appendChild(labelNode);
         buttonNode.onclick = model.openCategory.bind(model, index);
 

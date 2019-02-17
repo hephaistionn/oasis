@@ -14,7 +14,10 @@ class Catalog {
                     ENTITIES['House'],
                     ENTITIES['LeaderHut'],
                     ENTITIES['Market'],
-                    ENTITIES['Well']
+                    ENTITIES['Well'],
+                    {name: 'Road1', label: 'chemin',  picture: '/pic/peon.png'},
+                    // {name: 'Road2', label: 'route',  picture: '/pic/peon.png'},
+                    // ENTITIES['Bridge'],
                 ]
             },
             {
@@ -23,18 +26,9 @@ class Catalog {
                     ENTITIES['ForestHut'],
                     ENTITIES['HunterHut'],
                     ENTITIES['StoneMine'],
-                ]
-            },
-            {
-                label: 'Infrastructure',
-                list: [
                     ENTITIES['Repository'],
                     ENTITIES['Attic'],
-                    ENTITIES['Bridge'],
-                    {name: 'Road1', label: 'chemin',  picture: '/pic/peon.png'},
-                    {name: 'Road2', label: 'route',  picture: '/pic/peon.png'},
-                    {name: 'Canal', label: 'canal',  picture: '/pic/peon.png'},
-                    {name: 'Remover', label: 'effaceur',  picture: '/pic/peon.png'},
+                    {name: 'Canal', label: 'canal',  picture: '/pic/peon.png'}
                 ]
             },
             {

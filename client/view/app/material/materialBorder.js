@@ -36,6 +36,7 @@ const fragShader = "" +
     "           gl_FragColor.xyz = colorGreen*0.85; \n" +
     "       }" +
     "   }" +
+    " gl_FragColor.a = 1.0;"+
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([]);

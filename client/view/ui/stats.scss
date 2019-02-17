@@ -8,11 +8,19 @@
         margin-bottom: 0px;
         &__value{
             display: inline-block;
-            margin: 10px;
+            margin-left: 7px;
             font-size: 1.6rem;
+            line-height: 35px;
+            vertical-align: top;
         }   
         &__icon{
             display: inline-block;
         }
+    }
+
+    .item_4 {
+        position: fixed;
+        bottom: 47px;
+        left: 76px;    
     }
 }

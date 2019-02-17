@@ -1,11 +1,12 @@
 const THREE = require('three');
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('D3'), antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('D3'), antialias: true, alpha: true });
 module.exports = class Scene {
 
     constructor(canvas) {
         this.canvas = canvas;
         this.renderer = renderer;
-        this.renderer.setClearColor(0x000000);
+        this.renderer.setClearColor(0xffffff, 0);
+        //this.renderer.setClearColor(0x928684);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
         this.renderer.shadowMap.enabled = true;
         this.scene = new THREE.Scene();
