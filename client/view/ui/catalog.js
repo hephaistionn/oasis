@@ -1,7 +1,7 @@
 const disabled = ' disabled';
 const none = 'none';
 const empty = '';
-const classItem = 'catalog__list__item';
+const classItem = 'catalog__category__list__item';
 
 module.exports = class Catalog {
 
@@ -11,26 +11,13 @@ module.exports = class Catalog {
 
         this.currentCategory = 2;
 
-        this.nodeCategories = this.makeNode('catalog__categories v');
-        this.node.appendChild(this.nodeCategories);
-
-        this.background = this.makeNode('catalog__background');
-        ///const backgroundLeft  = this.makeNode('catalog__background__left');
-        //const backgroundRight  = this.makeNode('catalog__background__right');
-        //const backgroundMid  = this.makeNode('catalog__background__mid');
-        //this.background.appendChild(backgroundMid);
-        //this.background.appendChild(backgroundLeft);
-        //this.background.appendChild(backgroundRight);
-
-        this.node.appendChild(this.background);
-
         this.nodeList = [];
+        this.categoryList = [];
         for (let i = 0; i < model.categories.length; i++) {
             const category = model.categories[i];
-            const categoryNodes = this.makeCategory(category, i, model);
-            this.node.appendChild(categoryNodes.list);
-            this.nodeCategories.appendChild(categoryNodes.button);
-            this.nodeList.push(categoryNodes.list);
+            const categoryNode = this.makeCategory(category, i, model);
+            this.node.appendChild(categoryNode);
+            this.categoryList.push(categoryNode);
         }
 
         this.buttonOpen = this.makeNode('catalog__opener');
@@ -56,32 +43,27 @@ module.exports = class Catalog {
                 this.buttonOpen.style.display = none;
                 this.buttonClose.style.display = empty;
             }
-            if(this.nodeCategories.style.display !== empty) {
-                this.nodeCategories.style.display = empty;
-                this.background.style.display = empty;
-            }
-            if(this.nodeList[model.currentCategory].style.display !== empty) {
-                this.nodeList[this.currentCategory].style.display = none;
+
+            if(model.currentCategory !== this.currentCategory) {
+                this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`
                 this.currentCategory = model.currentCategory;
-                this.nodeList[model.currentCategory].style.display = empty;
-                this.nodeCategories.className = this.nodeCategories.className.substring(0,21) + model.currentCategory;
+                this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory} focus`
             }
             this.refreshItems(model.currentCategory, model); 
         } else {
             this.buttonOpen.style.display = empty;
             this.buttonClose.style.display = none;
-            this.nodeCategories.style.display = none;
-            this.nodeList[this.currentCategory].style.display = none;
-            this.background.style.display = none;
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`
         }
     }
 
     refreshItems(index, model) {
-        const nodeList = this.nodeList[index];
+        const nodeList = this.nodeList[index].children[0];
         const category = model.categories[index];
         let entity;
-        for (let i = 0; i < category.list.length; i++) {
-            entity = category.list[i];
+        const l = category.list.length+1;
+        for (let i = 1; i < l; i++) {
+            entity = category.list[i-1];
             if (entity) {
                 for (let key in entity.cost) {
                     nodeList.children[i].className = classItem;
@@ -95,37 +77,48 @@ module.exports = class Catalog {
     }
 
     makeCategory(category, index, model) {
-        const buttonNode = this.makeNode('catalog__categories__category w'+index);
-        const labelNode = this.makeNode('catalog__categories__category__label');
+        const groupNode = this.makeNode('catalog__category v'+index);
+
+        const buttonNode = this.makeNode('catalog__category__button  v'+index);
+        const labelNode = this.makeNode('catalog__category__button__label');
         buttonNode.appendChild(labelNode);
         buttonNode.onclick = model.openCategory.bind(model, index);
+        groupNode.appendChild(buttonNode);
 
-        const listNode = this.makeNode('catalog__list');
+        const listNode = this.makeNode('catalog__category__list');
+        const scrollContainer = this.makeNode('catalog__category__list__container');
+        const background = this.makeNode('catalog__category__list__background');
+        scrollContainer.appendChild(background);
+
         category.list.forEach(item => {
             const nodeItem = this.makeItem(item, model);
-            listNode.appendChild(nodeItem);
+            scrollContainer.appendChild(nodeItem);
         })
+
+        listNode.appendChild(scrollContainer);
 
         listNode.onwheel = (e) => {
             const delta = -Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
             listNode.scrollLeft -= (delta * 100); e.preventDefault();
         }
-
-        listNode.style.display = none;
-        return { button: buttonNode, list: listNode };
+        this.nodeList.push(listNode);
+        groupNode.appendChild(listNode);
+        return groupNode;
     }
 
     makeItem(item, model) {
-        const nodeItem = this.makeNode('catalog__list__item');
-        const nodeItemLabel = this.makeNode('catalog__list__item__label', item.label);
-        const nodeItemPic = this.makeNode('catalog__list__item__pic');
-        const nodePic = this.makeNode('catalog__list__item__pic__content');
+        const nodeItem = this.makeNode('catalog__category__list__item');
+        const nodeItemTopLabel = this.makeNode('catalog__category__list__item__toplabel');
+        const nodeItemLabel = this.makeNode('catalog__category__list__item__label', item.label);
+        const nodeItemPic = this.makeNode('catalog__category__list__item__pic');
+        const nodePic = this.makeNode('catalog__category__list__item__pic__content');
         nodeItemPic.appendChild(nodePic);
-        const nodeItemDesc = this.makeNode('catalog__list__item__desc', item.description);
+        const nodeItemDesc = this.makeNode('catalog__category__list__item__desc', item.description);
         nodePic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
-        nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemPic);
+        nodeItem.appendChild(nodeItemTopLabel);
+        nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemDesc);
         nodeItem.appendChild(nodeCost);
         nodeItem.onclick = model.select.bind(model, item);
@@ -133,13 +126,13 @@ module.exports = class Catalog {
     }
 
     makeCost(item, model) {
-        const nodeCost = this.makeNode('catalog__list__item__cost');
+        const nodeCost = this.makeNode('catalog__category__list__item__cost');
         if (item) {
             const cost =  item.cost;
             for (let key in cost) {
-                const nodeItem = this.makeNode(`catalog__list__item__cost__item code_${key}`);
-                nodeItem.appendChild(this.makeNode(`catalog__list__item__cost__icon icon_${key}`));
-                nodeItem.appendChild(this.makeNode(`catalog__list__item__cost__value`, cost[key]));
+                const nodeItem = this.makeNode(`catalog__category__list__item__cost__item code_${key}`);
+                nodeItem.appendChild(this.makeNode(`catalog__category__list__item__cost__icon icon_${key}`));
+                nodeItem.appendChild(this.makeNode(`catalog__category__list__item__cost__value`, cost[key]));
                 nodeCost.appendChild(nodeItem);
             }
         }
