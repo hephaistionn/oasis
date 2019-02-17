@@ -119,8 +119,10 @@ module.exports = class Catalog {
         const nodeItem = this.makeNode('catalog__list__item');
         const nodeItemLabel = this.makeNode('catalog__list__item__label', item.label);
         const nodeItemPic = this.makeNode('catalog__list__item__pic');
+        const nodePic = this.makeNode('catalog__list__item__pic__content');
+        nodeItemPic.appendChild(nodePic);
         const nodeItemDesc = this.makeNode('catalog__list__item__desc', item.description);
-        nodeItemPic.style.backgroundImage = `url(${item.picture})`;
+        nodePic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
         nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemPic);
