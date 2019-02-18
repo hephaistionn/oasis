@@ -5,8 +5,6 @@ class Catalog {
     constructor(config, ENTITIES, store) {
         this.ENTITIES = ENTITIES;
         this.store = store;
-        this.currentCategory = 0;
-
         this.categories = [
             {
                 label: 'Civil',
@@ -18,7 +16,8 @@ class Catalog {
                     {name: 'Road1', label: 'chemin',  picture: '/pic/peon.png'},
                     // {name: 'Road2', label: 'route',  picture: '/pic/peon.png'},
                     // ENTITIES['Bridge'],
-                ]
+                ],
+                opened: false
             },
             {
                 label: 'Ressources',
@@ -29,7 +28,8 @@ class Catalog {
                     ENTITIES['Repository'],
                     ENTITIES['Attic'],
                     {name: 'Canal', label: 'canal',  picture: '/pic/peon.png'}
-                ]
+                ],
+                opened: false
             },
             {
                 label: 'Militaire',
@@ -37,39 +37,44 @@ class Catalog {
                     ENTITIES['Barrack'],
                     ENTITIES['Tower'],
                     {name: 'Wall', level:0, label: 'mur de bois',  picture: '/pic/peon.png'}
-                ]
+                ],
+                opened: false
             }
         ];
 
         this._refresh = this.refresh.bind(this);
         this._close = this.close.bind(this);
-
-        this.displayed = false;
         this.updated = false;
         this._id = 4;
     }
 
-    open() {
-        ee.emit('onOpenPanel');
-        this.displayed = true;
-        this.updated = true;
-        ee.on('onUpdateStats', this._refresh);
-        ee.on('onOpenPanel', this._close);
-    }
-
     openCategory(index) {
-        this.currentCategory = index;
-        this.updated = true;
-    }
-
-    refresh(entity) {
+        if(this.categories[index].opened===false) {
+            ee.emit('onOpenPanel');
+            this.categories[0].opened=false;
+            this.categories[1].opened=false;
+            this.categories[2].opened=false;
+            this.categories[index].opened=true;
+            ee.on('onUpdateStats', this._refresh);
+            ee.on('onOpenPanel', this._close);
+        }else{
+            ee.off('onUpdateStats', this._refresh);
+            ee.off('onOpenPanel', this._close);
+            this.categories[index].opened=false;
+        }
         this.updated = true;
     }
 
     close() {
         ee.off('onUpdateStats', this._refresh);
         ee.off('onOpenPanel', this._close);
-        this.displayed = false;
+        this.categories[0].opened=false;
+        this.categories[1].opened=false;
+        this.categories[2].opened=false;
+        this.updated = true;
+    }
+
+    refresh(entity) {
         this.updated = true;
     }
 

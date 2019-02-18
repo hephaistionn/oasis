@@ -9,7 +9,7 @@ module.exports = class Catalog {
 
         this.node = this.makeNode('catalog');
 
-        this.currentCategory = 2;
+        this.currentCategory = 3;
 
         this.nodeList = [];
         this.categoryList = [];
@@ -20,17 +20,6 @@ module.exports = class Catalog {
             this.categoryList.push(categoryNode);
         }
 
-        this.buttonOpen = this.makeNode('catalog__opener');
-        this.buttonOpen.onclick = model.open.bind(model);
-        this.node.appendChild(this.buttonOpen);
-
-
-        const closeLogo = this.makeNode('catalog__closer__logo');
-        this.buttonClose = this.makeNode('catalog__closer');
-        this.buttonClose.appendChild(closeLogo);
-        this.buttonClose.onclick = model.close.bind(model);
-        this.node.appendChild(this.buttonClose);
-
         this.add(parent);
 
         this.update(0, model);
@@ -38,23 +27,35 @@ module.exports = class Catalog {
 
     update(dt, model) {
 
-        if (model.displayed) {
-            if(this.buttonOpen.style.display !== none) {
-                this.buttonOpen.style.display = none;
-                this.buttonClose.style.display = empty;
-            }
 
-            if(model.currentCategory !== this.currentCategory) {
-                this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`
-                this.currentCategory = model.currentCategory;
-                this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory} focus`
-            }
-            this.refreshItems(model.currentCategory, model); 
-        } else {
-            this.buttonOpen.style.display = empty;
-            this.buttonClose.style.display = none;
-            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`
+        if(!model.categories[0].opened && this.currentCategory === 0) {
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`;
+            this.currentCategory = 3;
+        } else if(!model.categories[1].opened && this.currentCategory === 1) {
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`;
+            this.currentCategory = 3;
+        } else if(!model.categories[2].opened && this.currentCategory === 2) {
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory}`;
+            this.currentCategory = 3;
         }
+
+        if(model.categories[0].opened && this.currentCategory !== 0) {
+            this.currentCategory = 0;
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory} focus`;
+            this.currentCategory = 0;
+        } else if(model.categories[1].opened && this.currentCategory !== 1) {
+            this.currentCategory = 1;
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory} focus`;
+            
+        } else if(model.categories[2].opened && this.currentCategory !== 2) {
+            this.currentCategory = 2;
+            this.categoryList[this.currentCategory].className = `catalog__category v${this.currentCategory} focus`;
+        } 
+
+        if(this.currentCategory === 2 || this.currentCategory === 1 || this.currentCategory === 0) {
+            this.refreshItems(this.currentCategory, model); 
+        }
+
     }
 
     refreshItems(index, model) {

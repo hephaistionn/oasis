@@ -81,17 +81,17 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #cabb99; 
 }
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #6f4b36; 
+  background: #887b5d; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #6f4b36; 
+  background: #887b5d; 
 }
 
 @import "./view/ui/catalog.scss";
