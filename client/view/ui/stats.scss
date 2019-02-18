@@ -3,24 +3,52 @@
     color: white;
     display: flex;
     flex-direction: row;
+
     &__item {
         margin: 40px;
         margin-bottom: 0px;
-        &__value{
+        display: none;
+
+        &__value {
             display: inline-block;
             margin-left: 7px;
             font-size: 1.6rem;
             line-height: 35px;
             vertical-align: top;
-        }   
-        &__icon{
+        }
+
+        &__icon {
             display: inline-block;
         }
     }
 
-    .item_4 {
-        position: fixed;
-        bottom: 15px;
-        left: 2px;  
+    &.v1 {
+        .item_1 {
+            display: inline-block;
+        }
     }
+
+    &.v2 {
+        .item_2 {
+            display: inline-block;
+        }
+    }
+
+    &.v3 {
+        .item_3 {
+            display: inline-block;
+        }
+    }
+
+    &.v4 {
+        .item_4 {
+            display: inline-block;
+        }
+    }
+
+    //.item_4 {
+    //    position: fixed;
+    //    bottom: 15px;
+    //    left: 2px;  
+    //}
 }
