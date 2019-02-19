@@ -14,5 +14,13 @@ window.addEventListener('load', () => {
         app.openScreen(id, params);
     });
 
-    app.openScreen('ScreenMap', {repository:{wood:15}});
+    app.openScreen('ScreenMap', {
+        repository: { wood: 15 },
+        cityName: 'Poleony',
+        goals: {
+            demography: 5,
+            houses: {'1': 2}, // 2 habitation de niveau 1
+            stats: {stone: 200}
+        }
+    });
 });

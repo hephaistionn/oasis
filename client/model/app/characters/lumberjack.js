@@ -13,7 +13,6 @@ class Lumberjack extends Character {
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
         this.targets.push({ entity: Repository, resource: Stats.WOOD, put: true });
         this.targets.push({ id: this.origin });
-        console.log('---ini model')
     }
 
     onEndPath(entity) {
