@@ -28,9 +28,13 @@ module.exports = class Menu {
 
         this.statValue = {};
         this.statItem = {};
-        this.nodeStats = this.makeNode('menu__stats');
-        this.createStatsBlock(model);
-        container.appendChild(this.nodeStats);
+        this.scoreProsperity = null;
+        this.scorePower = null;
+        this.scoreDemography = null;
+        
+        this.createStatsBlock(model, container);
+        this.createScoreBlock(model, container);
+        this.createGoalsBlock(model, container);
 
         this.add(parent);
 
@@ -48,13 +52,16 @@ module.exports = class Menu {
             }
 
             this.updateStats(model);
+            this.updateScrore(model);
+            this.updateGoals(model);
         } else {
             this.buttonOpen.style.display = empty;
             this.nodePanel.style.display = none;
         }
     }
 
-    createStatsBlock(model) {
+    createStatsBlock(model, container) {
+        this.nodeStats = this.makeNode('menu__stats');
         const stats = model.store.stats;
         let value, type;;
         const nodeLabel = this.makeNode('menu__stats__label', 'ressources');
@@ -78,10 +85,34 @@ module.exports = class Menu {
             this.statValue[type] = nodeValue;
             this.statItem[type] = nodeItem;
             nodeItem.onclick = model.updateDisplayed.bind(model, type);
-
             this.nodeStats.appendChild(nodeItem);
         }
+
+        container.appendChild(this.nodeStats);
     }
+
+    createScoreBlock(model, container) {
+        this.nodeScore= this.makeNode('menu__score');
+        const nodeLabel = this.makeNode('menu__score__label', 'score');
+        const nodeProsperity = this.makeNode('menu__score__prosperity');
+        const nodePower = this.makeNode('menu__score__power');
+        const nodeDemography = this.makeNode('menu__score__demography');
+        this.nodeScore.appendChild(nodeLabel);
+        this.nodeScore.appendChild(nodeProsperity);
+        this.nodeScore.appendChild(nodePower);
+        this.nodeScore.appendChild(nodeDemography);
+        this.scoreProsperity = nodeProsperity;
+        this.scorePower = nodePower;
+        this.scoreDemography = nodeDemography;
+        container.appendChild(this.nodeScore);
+    }
+
+    createGoalsBlock(model, container) {
+        this.nodeGolas = this.makeNode('menu__goals');
+        const nodeLabel = this.makeNode('menu__goals__label', 'objectifs');
+        this.nodeGolas.appendChild(nodeLabel);
+        container.appendChild(this.nodeGolas);
+    }  
 
     updateStats(model) {
         const stats = model.store.stats;
@@ -96,6 +127,18 @@ module.exports = class Menu {
                 this.statItem[type].className = 'menu__stats__item';
             }
         }
+    }
+
+    updateScrore(model) {
+        const store = model.store;
+        this.scoreProsperity.textContent = store.prosperity;
+        this.scorePower.textContent = store.power;
+        this.scoreDemography.textContent = store.demography;
+    }
+
+    updateGoals(model) {
+
+
     }
 
     makeNode(classname, text) {

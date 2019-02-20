@@ -74,6 +74,69 @@
         }
     }
 
+    &__score {
+        position: absolute;
+        background: #c7baaa;
+        width: 500px;
+        height: 300px;
+        top: 13px;
+        left: 236px;
+
+        &__label {
+            font-size: 1.4rem;
+            text-transform: capitalize;
+            padding: 10px 16px;
+        }
+
+        @mixin score {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-repeat: no-repeat;
+            text-shadow: 0px 1px 7px black;
+            color: white;
+            line-height: 150px;
+            text-align: center;
+        }
+
+        &__prosperity {
+            @include score;
+            top: 34px;
+            left: 168px;
+            background-image: url(pic/scoreB.png);
+        }
+
+        &__power {
+            @include score;
+            top: 135px;
+            right: 96px;
+
+            background-image: url(pic/scoreA.png);
+        }
+
+        &__demography {
+            @include score;
+            top: 125px;
+            left: 81px;
+            background-image: url(pic/scoreC.png);
+        }
+    }
+
+    &__goals {
+        position: absolute;
+        background: #c7baaa;
+        width: 500px;
+        height: 300px;
+        top: 400px;
+        left: 236px;
+
+        &__label {
+            font-size: 1.4rem;
+            text-transform: capitalize;
+            padding: 10px 16px;
+        }
+    }
+
     &__opener {
         position: absolute;
         width: 150px;
