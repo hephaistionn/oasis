@@ -48,6 +48,26 @@ body {
   pointer-events:auto;
 }
 
+.icon_demography {
+  background-image: url(pic/scoreC.png);
+  @include icon;
+}
+
+.icon_power {
+  background-image: url(pic/scoreA.png);
+  @include icon;
+}
+
+.icon_prosperity {
+  background-image: url(pic/scoreB.png);
+  @include icon;
+}
+
+.icon_building {
+  background-image: url(pic/icon3.png);
+  @include icon;
+}
+
 .icon_0 {
   background-image: url('/pic/ico_all.png');
   @include icon;

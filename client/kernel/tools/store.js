@@ -16,6 +16,12 @@ module.exports = class Store {
         this.power = 0;
         this.demography = 0;
 
+        this.labels = {
+            prosperity : 'prosperité',
+            power : 'puissance',
+            demography : 'démographie',
+        }
+
         this.houseType = {};
         this.towerType = {};
 

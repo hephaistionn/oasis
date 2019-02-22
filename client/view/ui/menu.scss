@@ -135,6 +135,26 @@
             text-transform: capitalize;
             padding: 10px 16px;
         }
+
+        &__item {
+            display: block;
+            margin: 10px;
+            &__icon {
+                display: inline-block;
+            }
+            &__label {
+                display: inline-block;
+                vertical-align: top;
+                line-height: 30px;
+                padding-left: 10px;
+            }
+            &__value {
+                display: inline-block;
+                vertical-align: top;
+                line-height: 30px;
+                padding-left: 10px;
+            }
+        }
     }
 
     &__opener {

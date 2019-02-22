@@ -31,6 +31,7 @@ module.exports = class Menu {
         this.scoreProsperity = null;
         this.scorePower = null;
         this.scoreDemography = null;
+        this.goalsValue = [];
         
         this.createStatsBlock(model, container);
         this.createScoreBlock(model, container);
@@ -111,6 +112,13 @@ module.exports = class Menu {
         this.nodeGolas = this.makeNode('menu__goals');
         const nodeLabel = this.makeNode('menu__goals__label', 'objectifs');
         this.nodeGolas.appendChild(nodeLabel);
+        const goals = model.store.goals;
+        for(let goalsType in goals) {
+            for(let goal in goals[goalsType]) {
+                const nodeGoal = this.createItemGoal(model.store, goalsType, goal);
+                this.nodeGolas.appendChild(nodeGoal);
+            }
+        }
         container.appendChild(this.nodeGolas);
     }  
 
@@ -137,8 +145,37 @@ module.exports = class Menu {
     }
 
     updateGoals(model) {
+        const goals = model.store.goals;
+        let i = 0;
+        for(let goalsType in goals) {
+            for(let goal in goals[goalsType]) {
+                i++;
+            }
+        }
+    }
 
+    createItemGoal(store, goalsType, goal) {
+        const nodeGolal = this.makeNode(`menu__goals__item`);
+        let icon;
+        let label;
+        if(goalsType === 'stats') {
+            icon  = this.makeNode(`menu__goals__item__icon  icon_${goal}`);
+            label = this.makeNode(`menu__goals__item__label`, Stats.labels[goal]);
+        } else if (goalsType === 'score') {
+            icon  = this.makeNode(`menu__goals__item__icon  icon_${goal}`);
+            label = this.makeNode(`menu__goals__item__label`, store.labels[goal]);
+        } else if (goalsType === 'building') {
+            icon  = this.makeNode(`menu__goals__item__icon  icon_building`);
+            label = this.makeNode(`menu__goals__item__label`, store.ENTITIES[goal].label);
+        }
 
+        const value =  this.makeNode(`menu__goals__item__value`, '0 %');
+        this.goalsValue.push(value);
+        
+        nodeGolal.appendChild(icon);
+        nodeGolal.appendChild(label);
+        nodeGolal.appendChild(value);
+        return nodeGolal;
     }
 
     makeNode(classname, text) {

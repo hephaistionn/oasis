@@ -41,6 +41,7 @@ Stats.WOOD = 1;
 Stats.STONE = 2;
 Stats.MEAT = 3;
 Stats.POP = 4;
+Stats.labels = [0, 'bois', 'stone', 'viande', 'population'];
 Stats.materialTypes = [0, Stats.WOOD, Stats.STONE, Stats.MEAT];
 Stats.allType = [Stats.POP, Stats.WOOD, Stats.STONE, Stats.MEAT];
 
