@@ -32,7 +32,7 @@ module.exports = class Menu {
         this.scorePower = null;
         this.scoreDemography = null;
         this.goalsValue = [];
-        
+
         this.createStatsBlock(model, container);
         this.createScoreBlock(model, container);
         this.createGoalsBlock(model, container);
@@ -93,7 +93,7 @@ module.exports = class Menu {
     }
 
     createScoreBlock(model, container) {
-        this.nodeScore= this.makeNode('menu__score');
+        this.nodeScore = this.makeNode('menu__score');
         const nodeLabel = this.makeNode('menu__score__label', 'score');
         const nodeProsperity = this.makeNode('menu__score__prosperity');
         const nodePower = this.makeNode('menu__score__power');
@@ -113,14 +113,14 @@ module.exports = class Menu {
         const nodeLabel = this.makeNode('menu__goals__label', 'objectifs');
         this.nodeGolas.appendChild(nodeLabel);
         const goals = model.store.goals;
-        for(let goalsType in goals) {
-            for(let goal in goals[goalsType]) {
-                const nodeGoal = this.createItemGoal(model.store, goalsType, goal);
-                this.nodeGolas.appendChild(nodeGoal);
-            }
+        let goal;
+        for (let i = 0; i < goals.length; i++) {
+            goal = goals[i];
+            const nodeGoal = this.createItemGoal(model.store, goal.group, goal.type, goal.value);
+            this.nodeGolas.appendChild(nodeGoal);
         }
         container.appendChild(this.nodeGolas);
-    }  
+    }
 
     updateStats(model) {
         const stats = model.store.stats;
@@ -146,35 +146,32 @@ module.exports = class Menu {
 
     updateGoals(model) {
         const goals = model.store.goals;
-        let i = 0;
-        for(let goalsType in goals) {
-            for(let goal in goals[goalsType]) {
-                i++;
-            }
+        for (let i = 0; i < goals.length; i++) {
+            this.goalsValue[i].textContent = goals[i].value + ' %';
         }
     }
 
-    createItemGoal(store, goalsType, goal) {
+    createItemGoal(store, group, type, value) {
         const nodeGolal = this.makeNode(`menu__goals__item`);
         let icon;
         let label;
-        if(goalsType === 'stats') {
-            icon  = this.makeNode(`menu__goals__item__icon  icon_${goal}`);
-            label = this.makeNode(`menu__goals__item__label`, Stats.labels[goal]);
-        } else if (goalsType === 'score') {
-            icon  = this.makeNode(`menu__goals__item__icon  icon_${goal}`);
-            label = this.makeNode(`menu__goals__item__label`, store.labels[goal]);
-        } else if (goalsType === 'building') {
-            icon  = this.makeNode(`menu__goals__item__icon  icon_building`);
-            label = this.makeNode(`menu__goals__item__label`, store.ENTITIES[goal].label);
+        if (group === 'stats') {
+            icon = this.makeNode(`menu__goals__item__icon  icon_${type}`);
+            label = this.makeNode(`menu__goals__item__label`, Stats.labels[type]);
+        } else if (group === 'score') {
+            icon = this.makeNode(`menu__goals__item__icon  icon_${type}`);
+            label = this.makeNode(`menu__goals__item__label`, store.labels[type]);
+        } else if (group === 'building') {
+            icon = this.makeNode(`menu__goals__item__icon  icon_building`);
+            label = this.makeNode(`menu__goals__item__label`, store.ENTITIES[type].label);
         }
 
-        const value =  this.makeNode(`menu__goals__item__value`, '0 %');
-        this.goalsValue.push(value);
-        
+        const progress = this.makeNode(`menu__goals__item__value`, value + ' %');
+        this.goalsValue.push(progress);
+
         nodeGolal.appendChild(icon);
         nodeGolal.appendChild(label);
-        nodeGolal.appendChild(value);
+        nodeGolal.appendChild(progress);
         return nodeGolal;
     }
 

@@ -8,18 +8,18 @@ module.exports = class Store {
 
         this.stats = new Stats();
         this.cityName = config.cityName;
-        this.goals = config.goals;
         this.jobs = 0;
         this.level = 0;
+        this.victory = false;
 
         this.prosperity = 0;
         this.power = 0;
         this.demography = 0;
 
         this.labels = {
-            prosperity : 'prosperité',
-            power : 'puissance',
-            demography : 'démographie',
+            prosperity: 'prosperité',
+            power: 'puissance',
+            demography: 'démographie',
         }
 
         this.houseType = {};
@@ -35,6 +35,7 @@ module.exports = class Store {
         this.displayed[Stats.WOOD] = true;
         this.displayed[Stats.MEAT] = true;
 
+        this.goals = this.prepareGoals(config.goals);
         this._refreshStats = this.refreshStats.bind(this);
         this._update = this.update.bind(this);
         ee.on('onUpdateStats', this._refreshStats);
@@ -46,9 +47,7 @@ module.exports = class Store {
         this.updatePower();
         this.updateDemography();
         this.checkGoals();
-        console.log('prosperity ', this.prosperity);
-        console.log('power ', this.power);
-        console.log('demography ', this.demography);
+        ee.emit('onUpdateStats');
     }
 
     updateProsperity() {
@@ -106,8 +105,50 @@ module.exports = class Store {
         this.demography = this.stats[Stats.POP];
     }
 
+    prepareGoals(confGoals) {
+        const goals = [];
+        for (let goalsType in confGoals) {
+            for (let goal in confGoals[goalsType]) {
+                const item = {
+                    group: goalsType,
+                    type: goal,
+                    target: confGoals[goalsType][goal],
+                    value: 0
+                };
+                goals.push(item);
+            }
+        }
+        return goals;
+    }
+
     checkGoals() {
-        this.goals
+        let goal;
+        let success = 0;
+        for (let i = 0; i < this.goals.length; i++) {
+            goal = this.goals[i];
+            switch (goal.group) {
+                case 'score':
+                    goal.value = Math.floor(Math.min(this[goal.type] / goal.target, 1) * 100);
+                    break;
+                case 'stats':
+                    goal.value = Math.floor(Math.min(this.stats[goal.type] / goal.target, 1) * 100);
+                    break;
+                case 'building':
+                    const level = goal.target[0];
+                    const numberExpect = goal.target[1];
+                    const number = this.ENTITIES[goal.type].instances.filter(a => a.level >= level).length;
+                    goal.value = Math.floor(Math.min(number / numberExpect, 1) * 100);
+                    break;
+            }
+
+            if (goal.value === 100) {
+                success++;
+            }
+        }
+
+        if (success === this.goals.length) {
+            this.victory = true;
+        }
     }
 
     watch(instances) {
