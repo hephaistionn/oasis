@@ -48,6 +48,11 @@ body {
   pointer-events:auto;
 }
 
+.icon_city_0 {
+  background-image: url(pic/icon3.png);
+  @include icon;
+}
+
 .icon_prestige {
   background-image: url(pic/scoreC.png);
   @include icon;

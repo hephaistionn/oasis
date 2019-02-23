@@ -22,6 +22,12 @@ module.exports = class Store {
             prestige: 'prestige',
         }
 
+        this.cityLabel = [
+            'Campement',
+            'Tribue inconnu',
+            'Village insignifiant',
+        ]
+
         this.houseType = {};
         this.towerType = {};
 
@@ -113,7 +119,8 @@ module.exports = class Store {
                     group: goalsType,
                     type: goal,
                     target: confGoals[goalsType][goal],
-                    value: 0
+                    value: 0,
+                    progress: 0
                 };
                 goals.push(item);
             }
@@ -128,16 +135,19 @@ module.exports = class Store {
             goal = this.goals[i];
             switch (goal.group) {
                 case 'score':
-                    goal.value = Math.floor(Math.min(this[goal.type] / goal.target, 1) * 100);
+                    goal.value = this[goal.type];
+                    goal.progress = Math.floor(Math.min(goal.value / goal.target, 0) * 100);
                     break;
                 case 'stats':
-                    goal.value = Math.floor(Math.min(this.stats[goal.type] / goal.target, 1) * 100);
+                    goal.value = this.stats[goal.type];
+                    goal.progress = Math.floor(Math.min(goal.value / goal.target, 0) * 100);
                     break;
                 case 'building':
                     const level = goal.target[0];
                     const numberExpect = goal.target[1];
                     const number = this.ENTITIES[goal.type].instances.filter(a => a.level >= level).length;
-                    goal.value = Math.floor(Math.min(number / numberExpect, 1) * 100);
+                    goal.value = number;
+                    goal.progress = Math.floor(Math.min(goal.value / numberExpect, 0) * 100);
                     break;
             }
 

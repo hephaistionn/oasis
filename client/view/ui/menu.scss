@@ -74,6 +74,21 @@
         }
     }
 
+    &__info {
+        position: absolute;
+        top: 0px;
+        left: 120px;
+        &__picture {
+            display: block;
+        }
+        &__name {
+            display: block;
+        }
+        &__label {
+            display: block;
+        }
+    }
+
     &__score {
         position: absolute;
         background: #c7baaa;
@@ -81,12 +96,6 @@
         height: 300px;
         top: 13px;
         left: 236px;
-
-        &__label {
-            font-size: 1.4rem;
-            text-transform: capitalize;
-            padding: 10px 16px;
-        }
 
         @mixin score {
             position: absolute;
@@ -97,6 +106,38 @@
             color: white;
             line-height: 150px;
             text-align: center;
+        }
+
+        &__item {
+            position: relative;
+            display: block;
+            width: 200px;
+            height: 70px;
+            margin: 15px;
+            background-repeat: no-repeat;
+            background-size: 70px;
+            background-color: #5a483d;
+            &__label {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }   
+
+            &__value {
+                position: absolute;
+                top: 30px;
+                left: 0;
+            }
+
+            &.prosperity {
+                background-image: url(pic/scoreB.png);
+            }
+            &.power {
+                background-image: url(pic/scoreA.png);
+            }
+            &.prestige {
+                background-image: url(pic/scoreC.png);  
+            }
         }
 
         &__prosperity {
@@ -148,11 +189,21 @@
                 line-height: 30px;
                 padding-left: 10px;
             }
-            &__value {
+
+            &__progress {
                 display: inline-block;
-                vertical-align: top;
-                line-height: 30px;
+                width: 300px;
+                height: 40px;
                 padding-left: 10px;
+                background-color: #e0e0e0;
+                
+            }
+            &__progressbar {
+                display: inline-block;
+                line-height: 40px;
+                background-color: #e0e0e0;
+                height: 40px;
+                width: 0;
             }
         }
     }

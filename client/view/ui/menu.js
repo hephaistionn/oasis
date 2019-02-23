@@ -32,8 +32,12 @@ module.exports = class Menu {
         this.scorePower = null;
         this.scorePrestige = null;
         this.goalsValue = [];
+        this.labelCity = null;
+        this.picutreCity = null;
+        this.cityLevel = -1;
 
         this.createStatsBlock(model, container);
+        this.createInfoBlack(model, container);
         this.createScoreBlock(model, container);
         this.createGoalsBlock(model, container);
 
@@ -53,12 +57,27 @@ module.exports = class Menu {
             }
 
             this.updateStats(model);
+            this.updateInfos(model);
             this.updateScrore(model);
             this.updateGoals(model);
+            this.cityLevel = model.store.level;
         } else {
             this.buttonOpen.style.display = empty;
             this.nodePanel.style.display = none;
         }
+    }
+
+    createInfoBlack(model, container) {
+        this.nodeInfo = this.makeNode('menu__info');
+        const picutreCity = this.makeNode('menu__info__picture icon__city' + model.store.level);
+        const nameCity = this.makeNode('menu__info__name', model.store.cityName);
+        const labelCity = this.makeNode('menu__info__label', model.store.cityLabel[model.store.level]);
+        this.nodeInfo.appendChild(picutreCity);
+        this.nodeInfo.appendChild(nameCity);
+        this.nodeInfo.appendChild(labelCity);
+        this.labelCity = labelCity;
+        this.picutreCity = picutreCity;
+        container.appendChild(this.nodeInfo);
     }
 
     createStatsBlock(model, container) {
@@ -94,17 +113,31 @@ module.exports = class Menu {
 
     createScoreBlock(model, container) {
         this.nodeScore = this.makeNode('menu__score');
-        const nodeLabel = this.makeNode('menu__score__label', 'score');
-        const nodeProsperity = this.makeNode('menu__score__prosperity');
-        const nodePower = this.makeNode('menu__score__power');
-        const nodePrestige = this.makeNode('menu__score__prestige');
-        this.nodeScore.appendChild(nodeLabel);
-        this.nodeScore.appendChild(nodeProsperity);
-        this.nodeScore.appendChild(nodePower);
-        this.nodeScore.appendChild(nodePrestige);
-        this.scoreProsperity = nodeProsperity;
-        this.scorePower = nodePower;
-        this.scorePrestige = nodePrestige;
+
+        const prosperityItem = this.makeNode('menu__score__item prosperity');
+        const powerItem = this.makeNode('menu__score__item power');
+        const prestigeItem = this.makeNode('menu__score__item prestige');
+
+        const prosperityLabel = this.makeNode('menu__score__item__label', model.store.labels.prosperity);
+        const powerlabel = this.makeNode('menu__score__item__label', model.store.labels.power);;
+        const prestigelabel = this.makeNode('menu__score__item__label', model.store.labels.prestige);
+
+        this.scoreProsperity = this.makeNode('menu__score__item__value', model.store.prosperity);
+        this.scorePower = this.makeNode('menu__score__item__value', model.store.power);
+        this.scorePrestige = this.makeNode('menu__score__item__value', model.store.prestige);
+
+        prosperityItem.appendChild(prosperityLabel);
+        prosperityItem.appendChild(this.scoreProsperity);
+
+        powerItem.appendChild(powerlabel);
+        powerItem.appendChild(this.scorePower);
+
+        prestigeItem.appendChild(prestigelabel);
+        prestigeItem.appendChild(this.scorePrestige);
+
+        this.nodeScore.appendChild(prosperityItem);
+        this.nodeScore.appendChild(powerItem);
+        this.nodeScore.appendChild(prestigeItem);
         container.appendChild(this.nodeScore);
     }
 
@@ -137,6 +170,13 @@ module.exports = class Menu {
         }
     }
 
+    updateInfos(model) {
+        if (this.cityLevel !== model.store.level) {
+            this.labelCity.textContent = model.store.cityLabel[model.store.level];
+            this.picutreCity.className = 'menu__info__picture icon_city_' + model.store.level;
+        }
+    }
+
     updateScrore(model) {
         const store = model.store;
         this.scoreProsperity.textContent = store.prosperity;
@@ -147,7 +187,8 @@ module.exports = class Menu {
     updateGoals(model) {
         const goals = model.store.goals;
         for (let i = 0; i < goals.length; i++) {
-            this.goalsValue[i].textContent = goals[i].value + ' %';
+            this.goalsValue[i].textContent = goals[i].value;
+            this.goalsValue[i].style.with = goals[i].progress + '%';
         }
     }
 
@@ -166,8 +207,10 @@ module.exports = class Menu {
             label = this.makeNode(`menu__goals__item__label`, store.ENTITIES[type].label);
         }
 
-        const progress = this.makeNode(`menu__goals__item__value`, value + ' %');
-        this.goalsValue.push(progress);
+        const progress = this.makeNode(`menu__goals__item__progress`);
+        const progressbar = this.makeNode(`menu__goals__item__progressbar`, value);
+        progress.appendChild(progressbar)
+        this.goalsValue.push(progressbar);
 
         nodeGolal.appendChild(icon);
         nodeGolal.appendChild(label);
