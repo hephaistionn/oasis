@@ -30,7 +30,7 @@ module.exports = class Menu {
         this.statItem = {};
         this.scoreProsperity = null;
         this.scorePower = null;
-        this.scoreDemography = null;
+        this.scorePrestige = null;
         this.goalsValue = [];
 
         this.createStatsBlock(model, container);
@@ -97,14 +97,14 @@ module.exports = class Menu {
         const nodeLabel = this.makeNode('menu__score__label', 'score');
         const nodeProsperity = this.makeNode('menu__score__prosperity');
         const nodePower = this.makeNode('menu__score__power');
-        const nodeDemography = this.makeNode('menu__score__demography');
+        const nodePrestige = this.makeNode('menu__score__prestige');
         this.nodeScore.appendChild(nodeLabel);
         this.nodeScore.appendChild(nodeProsperity);
         this.nodeScore.appendChild(nodePower);
-        this.nodeScore.appendChild(nodeDemography);
+        this.nodeScore.appendChild(nodePrestige);
         this.scoreProsperity = nodeProsperity;
         this.scorePower = nodePower;
-        this.scoreDemography = nodeDemography;
+        this.scorePrestige = nodePrestige;
         container.appendChild(this.nodeScore);
     }
 
@@ -141,7 +141,7 @@ module.exports = class Menu {
         const store = model.store;
         this.scoreProsperity.textContent = store.prosperity;
         this.scorePower.textContent = store.power;
-        this.scoreDemography.textContent = store.demography;
+        this.scorePrestige.textContent = store.prestige;
     }
 
     updateGoals(model) {

@@ -14,12 +14,12 @@ module.exports = class Store {
 
         this.prosperity = 0;
         this.power = 0;
-        this.demography = 0;
+        this.prestige = 0;
 
         this.labels = {
             prosperity: 'prosperité',
             power: 'puissance',
-            demography: 'démographie',
+            prestige: 'prestige',
         }
 
         this.houseType = {};
@@ -45,7 +45,7 @@ module.exports = class Store {
     update() {
         this.updateProsperity();
         this.updatePower();
-        this.updateDemography();
+        this.updatePrestige();
         this.checkGoals();
         ee.emit('onUpdateStats');
     }
@@ -101,8 +101,8 @@ module.exports = class Store {
         this.power += tl ? pointT / tl : 0;
     }
 
-    updateDemography() {
-        this.demography = this.stats[Stats.POP];
+    updatePrestige() {
+        this.prestige = this.stats[Stats.POP];
     }
 
     prepareGoals(confGoals) {

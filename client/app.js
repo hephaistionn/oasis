@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
         repository: { wood: 15 },
         cityName: 'Poleony',
         goals: {
-            score: {demography: 5},
+            score: {prestige: 5},
             building: {House: [1, 2]}, // 2 habitation de niveau 1
             stats: {[Stats.STONE]: 200}
         }
