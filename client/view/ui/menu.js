@@ -20,6 +20,12 @@ module.exports = class Menu {
         this.buttonClose.onclick = model.close.bind(model);
         this.nodePanel.appendChild(this.buttonClose);
 
+        this.buttonRestart = this.makeNode('menu__restart', 'Recommencer');
+        this.nodePanel.appendChild(this.buttonRestart);
+
+        this.buttonWorld = this.makeNode('menu__world', 'Retour');
+        this.nodePanel.appendChild(this.buttonWorld);
+
         const nodeTitle = this.makeNode('menu__title', 'tableau de bord');
         this.nodePanel.appendChild(nodeTitle);
 
@@ -38,7 +44,7 @@ module.exports = class Menu {
 
         this.createStatsBlock(model, container);
         this.createInfoBlack(model, container);
-        this.createScoreBlock(model, container);
+        this.createScoreBlock(model, this.nodeInfo);
         this.createGoalsBlock(model, container);
 
         this.add(parent);
@@ -69,9 +75,11 @@ module.exports = class Menu {
 
     createInfoBlack(model, container) {
         this.nodeInfo = this.makeNode('menu__info');
+        const label = this.makeNode('menu__info__label', 'Details');
         const picutreCity = this.makeNode('menu__info__picture icon__city' + model.store.level);
         const nameCity = this.makeNode('menu__info__name', model.store.cityName);
-        const labelCity = this.makeNode('menu__info__label', model.store.cityLabel[model.store.level]);
+        const labelCity = this.makeNode('menu__info__level', model.store.cityLabel[model.store.level]);
+        this.nodeInfo.appendChild(label);
         this.nodeInfo.appendChild(picutreCity);
         this.nodeInfo.appendChild(nameCity);
         this.nodeInfo.appendChild(labelCity);
@@ -149,7 +157,7 @@ module.exports = class Menu {
         let goal;
         for (let i = 0; i < goals.length; i++) {
             goal = goals[i];
-            const nodeGoal = this.createItemGoal(model.store, goal.group, goal.type, goal.value);
+            const nodeGoal = this.createItemGoal(model.store, goal);
             this.nodeGolas.appendChild(nodeGoal);
         }
         container.appendChild(this.nodeGolas);
@@ -192,28 +200,33 @@ module.exports = class Menu {
         }
     }
 
-    createItemGoal(store, group, type, value) {
+    createItemGoal(store, goal) {
         const nodeGolal = this.makeNode(`menu__goals__item`);
         let icon;
         let label;
-        if (group === 'stats') {
-            icon = this.makeNode(`menu__goals__item__icon  icon_${type}`);
-            label = this.makeNode(`menu__goals__item__label`, Stats.labels[type]);
-        } else if (group === 'score') {
-            icon = this.makeNode(`menu__goals__item__icon  icon_${type}`);
-            label = this.makeNode(`menu__goals__item__label`, store.labels[type]);
-        } else if (group === 'building') {
+        let instruction;
+        if (goal.group === 'stats') {
+            icon = this.makeNode(`menu__goals__item__icon  icon_${goal.type}`);
+            label = this.makeNode(`menu__goals__item__label`, 'Ressources');
+            instruction = this.makeNode(`menu__goals__item__instruction`, `Obtenir ${goal.target} ${Stats.labels[goal.type]}`);
+        } else if (goal.group === 'score') {
+            icon = this.makeNode(`menu__goals__item__icon  icon_${goal.type}`);
+            label = this.makeNode(`menu__goals__item__label`, 'Score');
+            instruction = this.makeNode(`menu__goals__item__instruction`, `Atteindre ${goal.target} en ${store.labels[goal.type]}`);
+        } else if (goal.group === 'building') {
             icon = this.makeNode(`menu__goals__item__icon  icon_building`);
-            label = this.makeNode(`menu__goals__item__label`, store.ENTITIES[type].label);
+            label = this.makeNode(`menu__goals__item__label`, 'Construction');
+            instruction = this.makeNode(`menu__goals__item__instruction`, `Posseder ${goal.target} ${store.ENTITIES[goal.type].label}`);
         }
 
         const progress = this.makeNode(`menu__goals__item__progress`);
-        const progressbar = this.makeNode(`menu__goals__item__progressbar`, value);
+        const progressbar = this.makeNode(`menu__goals__item__progressbar`, goal.value);
         progress.appendChild(progressbar)
         this.goalsValue.push(progressbar);
 
         nodeGolal.appendChild(icon);
         nodeGolal.appendChild(label);
+        nodeGolal.appendChild(instruction);
         nodeGolal.appendChild(progress);
         return nodeGolal;
     }
