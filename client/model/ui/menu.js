@@ -5,6 +5,7 @@ class Menu {
     constructor(config, store) {
         this.store = store;
         this.displayed = false;
+        this.currentTab = 0;
         this.updated = false;
         this._id = 6;
         this.store = store;
@@ -18,6 +19,11 @@ class Menu {
 
     updateDisplayed(type) {
         this.store.updateDisplayed(type);
+        this.updated = true;
+    }
+
+    displayTab(num) {
+        this.currentTab = num;
         this.updated = true;
     }
 

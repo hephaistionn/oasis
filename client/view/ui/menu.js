@@ -29,8 +29,23 @@ module.exports = class Menu {
         const nodeTitle = this.makeNode('menu__title', 'tableau de bord');
         this.nodePanel.appendChild(nodeTitle);
 
-        const container = this.makeNode('menu__container');
-        this.nodePanel.appendChild(container);
+        this.containers = [];
+
+        this.containers.push(this.makeNode('menu__container'));
+        this.nodePanel.appendChild(this.containers[0]);
+
+        this.containers.push(this.makeNode('menu__container'));
+        this.nodePanel.appendChild(this.containers[1]);
+
+        this.nodetabs = [];
+
+        this.nodetabs.push(this.makeNode('menu__tab tab_0', 'Stats'));
+        this.nodePanel.appendChild(this.nodetabs[0]);
+        this.nodetabs[0].onclick = model.displayTab.bind(model, 0);
+
+        this.nodetabs.push(this.makeNode('menu__tab tab_1', 'Ressources'));
+        this.nodePanel.appendChild(this.nodetabs[1]);
+        this.nodetabs[1].onclick = model.displayTab.bind(model, 1);
 
         this.statValue = {};
         this.statItem = {};
@@ -41,11 +56,12 @@ module.exports = class Menu {
         this.labelCity = null;
         this.picutreCity = null;
         this.cityLevel = -1;
+        this.currentTab = -1;
 
-        this.createStatsBlock(model, container);
-        this.createInfoBlack(model, container);
+        this.createStatsBlock(model, this.containers[1]);
+        this.createInfoBlack(model, this.containers[0]);
         this.createScoreBlock(model, this.nodeInfo);
-        this.createGoalsBlock(model, container);
+        this.createGoalsBlock(model, this.containers[0]);
 
         this.add(parent);
 
@@ -62,10 +78,23 @@ module.exports = class Menu {
                 this.nodePanel.style.display = empty;
             }
 
-            this.updateStats(model);
-            this.updateInfos(model);
-            this.updateScrore(model);
-            this.updateGoals(model);
+            if(this.currentTab !== model.currentTab) {
+                this.containers[0].style.display = none;
+                this.containers[1].style.display = none;
+                this.nodetabs[0].className = 'menu__tab tab_0';
+                this.nodetabs[1].className = 'menu__tab tab_1';
+                this.containers[model.currentTab].style.display = empty;
+                this.nodetabs[model.currentTab].className += ' focus';
+                this.currentTab = model.currentTab;
+            }
+
+            if(model.currentTab === 0 ) {
+                this.updateInfos(model);
+                this.updateScrore(model);
+                this.updateGoals(model);
+            } else {
+                this.updateStats(model);
+            };
             this.cityLevel = model.store.level;
         } else {
             this.buttonOpen.style.display = empty;
@@ -75,11 +104,9 @@ module.exports = class Menu {
 
     createInfoBlack(model, container) {
         this.nodeInfo = this.makeNode('menu__info');
-        const label = this.makeNode('menu__info__label', 'Details');
         const picutreCity = this.makeNode('menu__info__picture icon__city' + model.store.level);
         const nameCity = this.makeNode('menu__info__name', model.store.cityName);
         const labelCity = this.makeNode('menu__info__level', model.store.cityLabel[model.store.level]);
-        this.nodeInfo.appendChild(label);
         this.nodeInfo.appendChild(picutreCity);
         this.nodeInfo.appendChild(nameCity);
         this.nodeInfo.appendChild(labelCity);
@@ -92,8 +119,6 @@ module.exports = class Menu {
         this.nodeStats = this.makeNode('menu__stats');
         const stats = model.store.stats;
         let value, type;;
-        const nodeLabel = this.makeNode('menu__stats__label', 'ressources');
-        this.nodeStats.appendChild(nodeLabel);
 
         for (let i = 0; i < Stats.allType.length; i++) {
             type = Stats.allType[i];
@@ -151,7 +176,7 @@ module.exports = class Menu {
 
     createGoalsBlock(model, container) {
         this.nodeGolas = this.makeNode('menu__goals');
-        const nodeLabel = this.makeNode('menu__goals__label', 'objectifs');
+        const nodeLabel = this.makeNode('menu__goals__label', 'Objectifs');
         this.nodeGolas.appendChild(nodeLabel);
         const goals = model.store.goals;
         let goal;
