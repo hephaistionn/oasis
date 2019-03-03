@@ -5,8 +5,14 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'segoe ui', 'lucida sans unicode', 'lucida grande', lucida, sans-serif;
 }
+
+$color-primary-0: #B1996C;	// Main Primary color */
+$color-primary-1: #FFE0A4;
+$color-primary-2: #EED3A0;
+$color-primary-3: #7B6C4F;
+$color-primary-4: #3C3527;
 
 #container {
   position: absolute;
@@ -111,12 +117,12 @@ body {
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #887b5d; 
+  background: #6f4b36; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #887b5d; 
+  background: #6f4b36; 
 }
 
 @import "./view/ui/catalog.scss";

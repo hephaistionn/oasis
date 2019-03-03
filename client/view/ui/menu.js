@@ -53,6 +53,7 @@ module.exports = class Menu {
         this.scorePower = null;
         this.scorePrestige = null;
         this.goalsValue = [];
+        this.goalsProgress = [];
         this.labelCity = null;
         this.picutreCity = null;
         this.cityLevel = -1;
@@ -221,7 +222,7 @@ module.exports = class Menu {
         const goals = model.store.goals;
         for (let i = 0; i < goals.length; i++) {
             this.goalsValue[i].textContent = goals[i].value;
-            this.goalsValue[i].style.with = goals[i].progress + '%';
+            this.goalsProgress[i].style.with = goals[i].progress + '%';
         }
     }
 
@@ -245,9 +246,12 @@ module.exports = class Menu {
         }
 
         const progress = this.makeNode(`menu__goals__item__progress`);
-        const progressbar = this.makeNode(`menu__goals__item__progressbar`, goal.value);
-        progress.appendChild(progressbar)
-        this.goalsValue.push(progressbar);
+        const progressbar = this.makeNode(`menu__goals__item__progressbar`);
+        const progressValue = this.makeNode(`menu__goals__item__value`, goal.value);
+        progress.appendChild(progressbar);
+        progress.appendChild(progressValue);
+        this.goalsProgress.push(progressbar);
+        this.goalsValue.push(progressValue);
 
         nodeGolal.appendChild(icon);
         nodeGolal.appendChild(label);

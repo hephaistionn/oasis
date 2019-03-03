@@ -5,6 +5,9 @@ module.exports = class Info {
         this.node = document.createElement('div');
         this.node.className = 'info';
 
+        this.container = document.createElement('div');
+        this.container.className = 'info__container';
+
         this.buttonRemove = this.makeNode('info__remove');
         this.buttonRemove.onclick = model.remove.bind(model);
 
@@ -13,14 +16,16 @@ module.exports = class Info {
         this.buttonUpgrade.onclick = model.upgrade.bind(model);
 
         this.nodeTitle = this.makeNode('info__title');
-        this.node.appendChild(this.nodeTitle);
+        this.container.appendChild(this.nodeTitle);
 
         this.nodeDescription = this.makeNode('info__description');
-        this.node.appendChild(this.nodeDescription);
+        this.container.appendChild(this.nodeDescription);
 
         this.nodePicture = document.createElement('IMG');
         this.nodePicture.className = 'info__picture';
-        this.node.appendChild(this.nodePicture);
+        this.container.appendChild(this.nodePicture);
+
+        this.node.appendChild(this.container);
 
         this.prepareAjustNode(model);
 
@@ -36,42 +41,42 @@ module.exports = class Info {
     update(dt, model) {
         if(model.entity) {
             if(model.entity.constructor.removable) {
-                this.node.appendChild(this.buttonRemove);
+                this.container.appendChild(this.buttonRemove);
             } else if(this.buttonRemove.parentNode) {
-                this.node.removeChild(this.buttonRemove);
+                this.container.removeChild(this.buttonRemove);
             }
             if(model.entity.constructor.levelMax && model.entity.constructor.levelMax > model.entity.level) {
-                this.node.appendChild(this.buttonUpgrade);
+                this.container.appendChild(this.buttonUpgrade);
             } else if(this.buttonUpgrade.parentNode) {
-                this.node.removeChild(this.buttonUpgrade);
+                this.container.removeChild(this.buttonUpgrade);
             }
 
             if(model.entity.ajustResources) {
                 this.refreshAjustNode(model);
                 if(!this.nodeAjust.parentNode)
-                    this.node.appendChild(this.nodeAjust);
+                    this.container.appendChild(this.nodeAjust);
             } else if(this.nodeAjust.parentNode) {
-                this.node.removeChild(this.nodeAjust);
+                this.container.removeChild(this.nodeAjust);
             }
 
             if(model.entity.level !== undefined && model.entity.level === 0) {
                 if(this.nodeMaterials.parentNode) {
-                    this.node.removeChild(this.nodeMaterials);
+                    this.container.removeChild(this.nodeMaterials);
                 }
                 this.refreshMaterial(model);
-                this.node.appendChild(this.nodeMaterials);
+                this.container.appendChild(this.nodeMaterials);
             } else if(this.nodeMaterials.parentNode) {
-                this.node.removeChild(this.nodeMaterials);
+                this.container.removeChild(this.nodeMaterials);
             }
 
             
             if(model.entity.constructor.display.length && !this.nodeMaterials.parentNode) {
                     if(this.nodeStats.parentNode)
-                        this.node.removeChild(this.nodeStats);
+                        this.container.removeChild(this.nodeStats);
                     this.refreshStats(model);
-                    this.node.appendChild(this.nodeStats);
+                    this.container.appendChild(this.nodeStats);
             } else if(this.nodeStats.parentNode) {
-                    this.node.removeChild(this.nodeStats);
+                    this.container.removeChild(this.nodeStats);
             }
 
             this.nodeTitle.textContent = model.entity.constructor.label;
@@ -100,7 +105,7 @@ module.exports = class Info {
         this.nodeAjustIcons = [];
         for(let i=0; i<3; i++) {
             const item = this.makeNode('info__ajust__item');
-            const label = this.makeNode('info__ajust__item__label', 'Réserver 5/15 pour');
+            const label = this.makeNode('info__ajust__item__label', 'Réserver 5/15');
             const arrowLeft = this.makeNode('info__ajust__item__arrow left');
             const arrowRight = this.makeNode('info__ajust__item__arrow right');
             arrowLeft.onclick = model.descreaseAjut.bind(model, i);

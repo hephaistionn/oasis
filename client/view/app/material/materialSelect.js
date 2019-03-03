@@ -32,7 +32,7 @@ const fragShader = "" +
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([]);
-uniforms.color = { type: "c", value: new THREE.Color(0xeeeeee) }
+uniforms.color = { type: "c", value: new THREE.Color(0xd0ac8f) }
 const material = new THREE.RawShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,

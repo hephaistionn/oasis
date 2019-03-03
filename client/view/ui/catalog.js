@@ -109,7 +109,7 @@ module.exports = class Catalog {
 
     makeItem(item, model) {
         const nodeItem = this.makeNode('catalog__category__list__item');
-        const nodeItemTopLabel = this.makeNode('catalog__category__list__item__toplabel');
+        // const nodeItemTopLabel = this.makeNode('catalog__category__list__item__toplabel');
         const nodeItemLabel = this.makeNode('catalog__category__list__item__label', item.label);
         const nodeItemPic = this.makeNode('catalog__category__list__item__pic');
         const nodePic = this.makeNode('catalog__category__list__item__pic__content');
@@ -118,7 +118,7 @@ module.exports = class Catalog {
         nodePic.style.backgroundImage = `url(${item.picture})`;
         const nodeCost = this.makeCost(item, model);
         nodeItem.appendChild(nodeItemPic);
-        nodeItem.appendChild(nodeItemTopLabel);
+        // nodeItem.appendChild(nodeItemTopLabel);
         nodeItem.appendChild(nodeItemLabel);
         nodeItem.appendChild(nodeItemDesc);
         nodeItem.appendChild(nodeCost);
