@@ -11,7 +11,7 @@ class Stonecutter extends Character {
         this.capacity = 10;
         this.workingDuration = 500; 
         this.targets.push({ entity: Stone, resource: Stats.STONE });
-        this.targets.push({ entity: Repository, resource: Stats.STONE,  put:true });
+        this.targets.push({ entity: Repository, resource: Stats.STONE, put:true });
         this.targets.push({ id: this.origin });
     }
 
@@ -40,4 +40,7 @@ Stonecutter.description = 'This building increase the enable places for your pop
 Stonecutter.label = 'Mineur';
 Stonecutter.selectable = true;
 Stonecutter.picture = '/pic/peon.png';
+Stonecutter.targets = [];
+Stonecutter.targets.push({ entity: Stone, resource: Stats.STONE });
+Stonecutter.targets.push({ entity: Repository, resource: Stats.STONE, put:true });
 module.exports = Stonecutter;

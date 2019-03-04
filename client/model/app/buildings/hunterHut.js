@@ -10,8 +10,8 @@ class HunterHut extends Building {
     }
 
     working() {
-        this.started = false; 
-        this.spawnCharacter('Hunter');
+        const success = this.spawnCharacter('Hunter'); 
+        this.started = !success; // désactive le cycle update()=>working()
     }
 }
 

@@ -11,8 +11,8 @@ class ForestHut extends Building {
 
 
     working() {
-        this.started = false; // désactive le cycle update()=>working()
-        this.spawnCharacter('Lumberjack');
+        const success = this.spawnCharacter('Lumberjack'); 
+        this.started = !success; // désactive le cycle update()=>working()
     }
 
     repoFilter(rep) {

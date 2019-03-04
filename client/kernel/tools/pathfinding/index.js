@@ -14,6 +14,22 @@ function init(ground, entities) {
     currentGround = ground;
 }
 
+function availableTarget(ground, entity, resource, x, z, putResource) {
+    const instances = nearestEntities(ground.ENTITIES, entity, resource, x, z, putResource);
+    if(instances.length === 0) return false;
+    const targetTiles = instances.map(instance => instance.getTiles());
+    const originTile = [Math.floor(x / ground.tileSize), Math.floor(z / ground.tileSize)];
+    const grid = ground.grid;
+    let i, tileType = 1, solution;
+    for (i = 0; i < targetTiles.length; i++) {
+        solution = finder.findPathBetweenArea(originTile, targetTiles[i], grid, tileType);
+        if(solution.length>0){
+            return true;
+        }
+    }
+    return false;
+}
+
 function nearestEntities(ENTITIES, entity, resource, x, z, putResource) {
     const max = 80;
     let instances;
@@ -129,7 +145,8 @@ const pathfinding = {
     computePath: computePath,
     getPathLength: getPathLength,
     revert: revert,
-    breakPath: breakPath
+    breakPath: breakPath,
+    availableTarget: availableTarget
 };
 
 module.exports = pathfinding;

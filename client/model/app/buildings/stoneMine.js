@@ -10,8 +10,8 @@ class StoneMine extends Building {
     }
 
     working() {
-        this.started = false; // désactive le cycle update()=>working()
-        this.spawnCharacter('Stonecutter');
+        const success = this.spawnCharacter('Stonecutter'); 
+        this.started = !success; // désactive le cycle update()=>working()
     }
 
     repoFilter(rep) {

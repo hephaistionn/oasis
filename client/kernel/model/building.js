@@ -1,5 +1,6 @@
 const ee = require('../tools/eventemitter');
 const Stats = require('./stats');
+const pathfinding = require('../tools/pathfinding');
 
 class Building {
 
@@ -163,9 +164,26 @@ class Building {
     }
 
     spawnCharacter(typeCharacter, option) {
-        const config = { x: this.ax, y: this.ay, z: this.az, type: typeCharacter, origin: this._id };
-        Object.assign(config, option);
-        ee.emit('addEntity', config);
+        const Character = this.ground.ENTITIES[typeCharacter];
+        let target, available = true;
+        if(Character.targets) { // verifie si les zones ciblées sont accessibles 
+            for(let i=0; i<Character.targets.length; i++) {
+                target = Character.targets[i];
+                available = pathfinding.availableTarget(this.ground, target.entity, target.resource, this.ax, this.az, target.put);
+                if(!available) {
+                    break;
+                }
+            }
+        }
+
+        // l'unité est créée uniquement si le chemin qu'elle doit prendre n'est pas bloqué.
+        if(available) {
+            const config = { x: this.ax, y: this.ay, z: this.az, type: typeCharacter, origin: this._id };
+            Object.assign(config, option);
+            ee.emit('addEntity', config);
+            return true;
+        } 
+        return false;
     }
 
     autoRemove() {

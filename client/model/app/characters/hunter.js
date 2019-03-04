@@ -41,4 +41,7 @@ Hunter.selectable = true;
 Hunter.description = 'This building increase the enable places for your population';
 Hunter.label = 'Chasseur';
 Hunter.picture = '/pic/peon.png';
+Hunter.targets = [];
+Hunter.targets.push({ entity: Game, resource: Stats.MEAT });
+Hunter.targets.push({ entity: Repository, resource: Stats.MEAT, put:true });
 module.exports = Hunter;

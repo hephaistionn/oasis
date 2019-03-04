@@ -7,7 +7,7 @@ const Repository = 'Repository';
 
 class Lumberjack extends Character {
     constructor(params, ground) {
-        super(params, ground);
+        super(params, ground); 
         this.capacity = 10;
         this.workingDuration = 500; 
         this.targets.push({ entity: Tree, resource: Stats.WOOD });
@@ -40,4 +40,8 @@ Lumberjack.selectable = true;
 Lumberjack.description = 'This building increase the enable places for your population';
 Lumberjack.label = 'Bucheron';
 Lumberjack.picture = '/pic/peon.png';
+Lumberjack.targets = [];
+Lumberjack.targets.push({ entity: Tree, resource: Stats.WOOD });
+Lumberjack.targets.push({ entity: Repository, resource: Stats.WOOD, put: true });
+
 module.exports = Lumberjack;
